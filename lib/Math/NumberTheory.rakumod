@@ -12,8 +12,27 @@ sub factorial($n) is export { ([*] 1..$n) or 1 }
 # Integer factors
 #==========================================================
 
-sub integer-factors(Int:D $n is copy, UInt:D $b= 10) is export {
+sub integer-factors(Int $n) is export {
+    my @factors;
+    my $count = 0;
+    while $n %% 2 {
+        $n div= 2;
+        $count++;
+    }
+    @factors.push: (2, $count) if $count > 0;
 
+    my $d = 3;
+    while $d * $d <= $n {
+        $count = 0;
+        while $n %% $d {
+            $n div= $d;
+            $count++;
+        }
+        @factors.push: ($d, $count) if $count > 0;
+        $d += 2;
+    }
+    @factors.push: ($n, 1) if $n > 1;
+    return @factors;
 }
 
 #==========================================================
