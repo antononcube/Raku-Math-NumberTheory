@@ -12,27 +12,106 @@ sub factorial($n) is export { ([*] 1..$n) or 1 }
 # Integer factors
 #==========================================================
 
-sub integer-factors(Int $n) is export {
+sub factor-integer(Int $n is copy, $k is copy = Whatever, :$method is copy = Whatever) is export {
+    if $n < 0 {
+        return [|(-1, 1), |factor-integer(abs($n), $k, :$method)].List;
+    }
+
+    if $k.isa(Whatever) { $k = Inf }
+    die 'The second argument is expected to be a positive integer or Whatever.'
+    unless $k ~~ Int:D && $k > 0 || $k ~~ Inf;
+
+    if $method.isa(Whatever) { $method = 'rho' }
+    die 'The argument $methos is expected to be Whatever or one of "pollard-rho" or "trial-division".'
+    unless $method ∈ <rho pollard pollard-rho trial trial-division>;
+
+    return trial-factor-integer($n, $k) if $k < Inf;
+
+    return do given $method {
+        when $_.lc ∈ <rho pollard pollard-rho> {
+            my @res = rho-factor-integer($n);
+            if $k ≤ @res.elems {
+                @res.head($k)
+            } else {
+                #@res = @res.map( -> @f { trial-factor-integer(@f.head, Inf).map({ ($_.head, $_.tail * @f.tail) }) }).map(*.Slip);
+                $k < Inf ?? @res.head($k) !! @res
+            }
+        }
+        when $_.lc ∈ <trial trial-division> { trial-factor-integer($n, $k) }
+    }
+}
+
+sub factors-of(UInt:D $n is copy, UInt:D $p = 2) {
     my @factors;
     my $count = 0;
-    while $n %% 2 {
-        $n div= 2;
-        $count++;
-    }
-    @factors.push: (2, $count) if $count > 0;
+    while $n %% $p { $n div= $p; $count++; }
+    @factors.push(($p, $count)».clone) if $count > 0;
+    return $n, @factors;
+}
+
+sub trial-factor-integer(Int $n is copy, $k is copy = Whatever) is export {
+
+    return ((1, 1),) if $n == 1;
+
+    my @res = factors-of($n, 2);
+    my @factors = |@res.tail;
+    $n = @res.head;
 
     my $d = 3;
-    while $d * $d <= $n {
-        $count = 0;
-        while $n %% $d {
-            $n div= $d;
-            $count++;
+    while $d.Num ** 2 <= $n && @factors.elems < $k {
+        if is-prime($d) {
+            my $count = 0;
+            while $n %% $d {
+                $n div= $d;
+                $count++;
+            }
+            @factors.push( ($d, $count)».clone ) if $count > 0;
         }
-        @factors.push: ($d, $count) if $count > 0;
-        $d += 2;
+        $d++;
     }
-    @factors.push: ($n, 1) if $n > 1;
+    @factors.push( ($n.clone, 1) ) if $n > 1;
     return @factors;
+}
+
+sub pollard-rho(Int $n, Int :$seed = 2, Int :$c = 1) {
+    my $x = $seed;
+    my $y = $seed;
+    my $d = 1;
+    while $d == 1 {
+        $x = ($x * $x + $c) % $n;
+        $y = ($y * $y + $c) % $n;
+        $y = ($y * $y + $c) % $n;
+        $d = ($x - $y).abs gcd $n;
+    }
+    return $d;
+}
+
+sub rho-factor-integer(UInt:D $n is copy) {
+    return ((1, 1),) if $n == 1;
+
+    my @res = factors-of($n, 2);
+    my @factors = |@res.tail;
+    $n = @res.head;
+
+    my &factorize = sub (Int $n is copy, UInt $c = 1) {
+        return if $n == 1;
+        if $n.is-prime {
+            @factors.push( ($n.clone, 1) );
+            return;
+        }
+        my $factor = pollard-rho($n, :$c);
+        $factor = &factorize($n, c => $c + 1) if $factor == $n;
+        my $exp = 0;
+        while $n %% $factor {
+            $n div= $factor;
+            $exp++;
+        }
+        @factors.push(($factor, $exp)».clone);
+        &factorize($n);
+    }
+
+    &factorize($n);
+    return @factors.sort(*.head).List;
 }
 
 #==========================================================
