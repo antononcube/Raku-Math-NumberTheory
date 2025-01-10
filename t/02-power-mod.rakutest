@@ -1,0 +1,45 @@
+use v6.d;
+use Test;
+use Test;
+
+use lib <. lib>;
+use Math::NumberTheory;
+
+plan *;
+
+## 1
+subtest {
+    is power-mod(3, 2, 7), 2, "all positive";
+
+    is power-mod(3, -2, 7), 4, "power mod with negative exponent";
+
+    is
+            power-mod(2, [10, 11, 12, 13, 14], 5),
+            (4, 3, 1, 2, 4),
+            "power mod with array of exponents";
+
+    is power-mod(10 ** 300 + 1, 7, 5), 1, "power mod with large integer";
+}, "power mod invocations";
+
+## 2
+subtest {
+    is power-mod(2 + 1i, 2, 3), 1i;
+    is power-mod(11 + 3i, 3, 4), 2 + 2i;
+}, "power mod for gaussian integers";
+
+## 3
+subtest {
+    is modular-inverse(3, 7), 5;
+
+    is modular-inverse(10 ** 100_000, 1009), 942;
+    is modular-inverse(-5, 7), 4;
+}, "modular-inverse with positive mod";
+
+## 4
+subtest {
+    dies-ok { modular-inverse(5, -7) }, -4;
+    dies-ok { modular-inverse(81, -2) }, -1;
+}, "modular-inverse with negative mod";
+
+
+done-testing;
