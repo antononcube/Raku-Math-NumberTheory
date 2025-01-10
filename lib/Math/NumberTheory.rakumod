@@ -6,7 +6,9 @@ unit module Math::NumberTheory;
 # Popular support functions
 #==========================================================
 
-sub factorial($n) is export { ([*] 1..$n) or 1 }
+sub factorial($n) is export {
+    ([*] 1 .. $n) or 1
+}
 
 #==========================================================
 # Integer factors
@@ -33,7 +35,7 @@ sub factor-integer(Int $n is copy, $k is copy = Whatever, :$method is copy = Wha
             if $k ≤ @res.elems {
                 @res.head($k)
             } else {
-                @res = @res.map( -> @f { rho-factor-integer(@f.head, seed => 3, c => 17).map({ ($_.head, $_.tail * @f.tail) }) }).map(*.Slip);
+                @res = @res.map(-> @f { rho-factor-integer(@f.head, seed => 3, c => 17).map({ ($_.head, $_.tail * @f.tail) }) }).map(*.Slip);
                 @res = @res.classify(*.head).map({ ($_.key, $_.value.map(*.tail).sum) }).sort(*.head);
                 $k < Inf ?? @res.head($k) !! @res
             }
@@ -45,7 +47,10 @@ sub factor-integer(Int $n is copy, $k is copy = Whatever, :$method is copy = Wha
 sub factors-of(UInt:D $n is copy, UInt:D $p = 2) {
     my @factors;
     my $count = 0;
-    while $n %% $p { $n div= $p; $count++; }
+    while $n %% $p {
+        $n div= $p;
+        $count++;
+    }
     @factors.push(($p, $count)».clone) if $count > 0;
     return $n, @factors;
 }
@@ -66,11 +71,11 @@ sub trial-factor-integer(Int $n is copy, $k is copy = Whatever) is export {
                 $n div= $d;
                 $count++;
             }
-            @factors.push( ($d, $count)».clone ) if $count > 0;
+            @factors.push(($d, $count)».clone) if $count > 0;
         }
         $d++;
     }
-    @factors.push( ($n.clone, 1) ) if $n > 1;
+    @factors.push(($n.clone, 1)) if $n > 1;
     return @factors;
 }
 
@@ -97,7 +102,7 @@ sub rho-factor-integer(UInt:D $n is copy, Int :$seed = 2, Int :$c = 1) {
     my &factorize = sub (Int $n is copy, UInt $c = 1) {
         return if $n == 1;
         if $n.is-prime {
-            @factors.push( ($n.clone, 1) );
+            @factors.push(($n.clone, 1));
             return;
         }
         my $factor = pollard-rho($n, :$seed, :$c);
@@ -130,8 +135,8 @@ sub divisors($n) is export {
     }
 }
 
-sub divisor-sigma($n, $exponent=1) is export {
-    [+] divisors($n).map( -> $j { $j ** $exponent });
+sub divisor-sigma($n, $exponent= 1) is export {
+    [+] divisors($n).map(-> $j { $j ** $exponent });
 }
 
 #==========================================================
@@ -159,20 +164,50 @@ sub integer-exponent(Int:D $n is copy, UInt:D $b= 10) is export {
 # Power mod
 #==========================================================
 # http://reference.wolfram.com/language/ref/PowerMod.html
-sub power-mod(Int:D $b is copy, Int:D $e is copy, Int:D $m) is export {
-    if $m == 1 {
-        return 0
-    }
+# $b ^ e mod m
+proto sub power-mod(Int:D $b, $e, Int:D $m) is export {*}
+
+multi sub power-mod(Int:D $b is copy, @e is copy, Int:D $m) {
+    return @e.map({ power-mod($b, $_, $m) }).List;
+}
+multi sub power-mod(Int:D $b is copy, Int:D $e is copy, Int:D $m) {
+    return expmod($b, $e, $m);
+}
+
+sub complex-mod(Complex:D $a, Int:D $m) {
+    return ($a.re mod $m) + ($a.im mod $m) * i;
+}
+
+multi sub power-mod(Complex:D $b is copy, Int:D $e is copy, Int:D $m) is export {
+    die 'If the first argument is a complex number, then it is expected to be a Gaussian integer.'
+    unless ($b.re == $b.re.floor) && ($b.im == $b.im.floor);
+
+    if $m == 1 { return 0 }
     my $r = 1;
-    $b = $b mod $m;
+    $b = complex-mod($b, $m);
     while $e > 0 {
         if $e mod 2 == 1 {
-            $r = ($r * $b) % $m
+            $r = complex-mod($r * $b, $m)
         }
-        $b = ($b * $b) % $m;
+        $b = complex-mod($b * $b, $m);
         $e = floor($e / 2);
     }
     return $r;
+}
+
+#==========================================================
+# Modular inverse
+#==========================================================
+# https://reference.wolfram.com/language/ref/ModularInverse.html
+# Find k^-1 such that k * k^-1 mod n = 1.
+sub modular-inverse(Int:D $k, Int:D $n) is export {
+    return do if $n < 0 {
+        die "Negative modulus is not implemented (yet.)"
+    } elsif $k < 0  {
+        power-mod($n - abs($k) mod $n, -1, $n)
+    } else {
+        power-mod($k, -1, $n)
+    }
 }
 
 #==========================================================
