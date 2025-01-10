@@ -33,7 +33,8 @@ sub factor-integer(Int $n is copy, $k is copy = Whatever, :$method is copy = Wha
             if $k ≤ @res.elems {
                 @res.head($k)
             } else {
-                #@res = @res.map( -> @f { trial-factor-integer(@f.head, Inf).map({ ($_.head, $_.tail * @f.tail) }) }).map(*.Slip);
+                @res = @res.map( -> @f { rho-factor-integer(@f.head, seed => 3, c => 17).map({ ($_.head, $_.tail * @f.tail) }) }).map(*.Slip);
+                @res = @res.classify(*.head).map({ ($_.key, $_.value.map(*.tail).sum) }).sort(*.head);
                 $k < Inf ?? @res.head($k) !! @res
             }
         }
@@ -86,7 +87,7 @@ sub pollard-rho(Int $n, Int :$seed = 2, Int :$c = 1) {
     return $d;
 }
 
-sub rho-factor-integer(UInt:D $n is copy) {
+sub rho-factor-integer(UInt:D $n is copy, Int :$seed = 2, Int :$c = 1) {
     return ((1, 1),) if $n == 1;
 
     my @res = factors-of($n, 2);
@@ -99,8 +100,7 @@ sub rho-factor-integer(UInt:D $n is copy) {
             @factors.push( ($n.clone, 1) );
             return;
         }
-        my $factor = pollard-rho($n, :$c);
-        $factor = &factorize($n, c => $c + 1) if $factor == $n;
+        my $factor = pollard-rho($n, :$seed, :$c);
         my $exp = 0;
         while $n %% $factor {
             $n div= $factor;
