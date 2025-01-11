@@ -235,6 +235,35 @@ sub chinese-reminder(@r, @m, $d = 0) is export {
 }
 
 #==========================================================
+# Prime
+#==========================================================
+
+sub prime(Int:D $n) is export {
+    die "The argument is expected to be a positive integer."
+    unless $n > 0;
+
+    my $i = 0;
+    my $candidate = 0;
+    while $i < $n {
+        $candidate++;
+        if $candidate.is-prime { $i++ }
+    }
+    return $candidate;
+}
+
+#==========================================================
+# Next prime
+#==========================================================
+
+sub next-prime(Numeric:D $x) is export {
+    my $candidate = $x.floor + 1;
+    while !abs($candidate).is-prime {
+        $candidate++;
+    }
+    return $candidate;
+}
+
+#==========================================================
 # Real digits
 #==========================================================
 # http://reference.wolfram.com/language/ref/RealDigits.html
