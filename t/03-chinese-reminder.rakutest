@@ -19,16 +19,22 @@ subtest {
     # Data
     my @data = 931074546, 117172357, 482333642, 199386034, 394354985;
 
-    # Key generation
-    # Takes too long
-    #my @keys = (10 ** 9 .. 10 **12).grep(*.is-prime).pick(5);
-    #my @keys = 274199185649, 786765306443, 970592805341, 293623796783, 238475031661;
-    my @keys = 8147, 6073, 7919, 5431, 7549;
+    # Small value keys
+    #my @keys = 8147, 6073, 7919, 5431, 7549;
+    #my $encrypted = chinese-reminder(@data, @keys);
+    #is $encrypted, 9881138511053968140;
 
-    # Encrypted data:
+    # Using these larger keys is also a performance check
+    my @keys = 274199185649, 786765306443, 970592805341, 293623796783, 238475031661;
+
+    # Encrypted data
     my $encrypted = chinese-reminder(@data, @keys);
 
-    is $encrypted, 9881138511053968140;
+    is $encrypted, 6681669841357504673192908619871066558177944924838942629020;
+
+    my @decrypted = @keys.map($encrypted mod *);
+
+    is-deeply @decrypted, @data;
 
 }, "database encryption and decryption";
 
