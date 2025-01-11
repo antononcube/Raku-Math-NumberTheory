@@ -285,7 +285,7 @@ multi sub random-prime(Range:D $range, $n is copy = Whatever) {
     unless $min < $max ;
 
     die 'The second argument is expected to be a positive integer or Whatever.'
-    unless $n ~~ Int:D && $n > 0 || $n === Inf || $n.isa(Whatever);
+    unless $n ~~ Int:D && $n > 0 || $n.isa(Whatever);
 
     my $i = 0;
     my @res;
