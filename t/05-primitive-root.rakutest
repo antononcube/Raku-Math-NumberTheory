@@ -15,4 +15,7 @@ is-deeply (1..10).map({ power-mod(2, $_, 9) }).unique.sort.List, (1, 2, 4, 5, 7,
 ## 3
 is primitive-root(10) ∈ [3, 7], True;
 
+## 4
+is primitive-root-list(9), [2, 5];
+
 done-testing;

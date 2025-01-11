@@ -250,6 +250,20 @@ sub primitive-root(Int:D $n) is export {
     return Nil;
 }
 
+sub primitive-root-list(Int:D $n) is export {
+    my $phi = euler-phi($n);
+    my @factors = factor-integer($phi)».head;
+
+    my @res;
+    for 2..$n-1 -> $g {
+        next unless $g gcd $n == 1;
+        if [&&] @factors.map({ ($g ** ($phi div $_)) mod $n != 1 }) {
+            @res.push($g);
+        }
+    }
+    return @res;
+}
+
 #==========================================================
 # Prime
 #==========================================================
