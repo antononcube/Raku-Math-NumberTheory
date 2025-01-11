@@ -1,0 +1,39 @@
+use v6.d;
+use Test;
+use Test;
+
+use lib <. lib>;
+use Math::NumberTheory;
+
+plan *;
+
+## 1
+subtest {
+    is chinese-reminder([3, 4], [4, 5]), 19;
+    is chinese-reminder([2, 3, 5], [3, 5, 7]), 68;
+}, "basic";
+
+## 2
+subtest {
+
+    # Data
+    my @data = 931074546, 117172357, 482333642, 199386034, 394354985;
+
+    # Key generation
+    # Takes too long
+    #my @keys = (10 ** 9 .. 10 **12).grep(*.is-prime).pick(5);
+    #my @keys = 274199185649, 786765306443, 970592805341, 293623796783, 238475031661;
+    my @keys = 8147, 6073, 7919, 5431, 7549;
+
+    # Encrypted data:
+    my $encrypted = chinese-reminder(@data, @keys);
+
+    is $encrypted, 9881138511053968140;
+
+}, "database encryption and decryption";
+
+subtest {
+    nok chinese-reminder([1, 2], [2 * 3, 2 * 5]);
+}, "no solutions";
+
+done-testing;
