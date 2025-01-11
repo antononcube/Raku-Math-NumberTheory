@@ -264,6 +264,50 @@ sub next-prime(Numeric:D $x) is export {
 }
 
 #==========================================================
+# Next prime
+#==========================================================
+
+proto sub random-prime(|) is export {*}
+multi sub random-prime(Int:D $max, $n = Whatever) {
+    die 'If the first argument is a number then it is expected to be an integer greater than 1.'
+    unless $max > 1;
+    return random-prime(2..$max, $n);
+}
+
+multi sub random-prime(Range:D $range, $n is copy = Whatever) {
+
+    my ($min, $max) = $range.head, $range.tail;
+
+    die 'The start of the range argument is expected to start with an integer greater than 1.'
+    unless $max > 1;
+
+    die 'The end of the range argument is expected to be greater than the range start.'
+    unless $min < $max ;
+
+    die 'The second argument is expected to be a positive integer or Whatever.'
+    unless $n ~~ Int:D && $n > 0 || $n === Inf || $n.isa(Whatever);
+
+    my $i = 0;
+    my @res;
+    my $n2 = $n.isa(Whatever) ?? 1 !! $n;
+    for $min .. $max -> $c {
+        if $c.is-prime {
+            @res.push($c);
+            $i++
+        }
+        last if $i ≥ $n2
+    }
+
+    return do if $n.isa(Whatever) {
+        @res.head
+    } elsif @res.elems == $n2 {
+        @res.List
+    } else {
+        @res.roll($n2).List
+    }
+}
+
+#==========================================================
 # Real digits
 #==========================================================
 # http://reference.wolfram.com/language/ref/RealDigits.html
