@@ -32,6 +32,15 @@ subtest {
     my @ps = random-prime(5 .. 50, 40);
     is @ps.elems, 40, "expected number of primes";
 
-}, 'random primes';
+}, 'random primes, expected to pass';
+
+## 4
+subtest {
+     dies-ok { random-prime(-5) };
+     dies-ok { random-prime(15..3) };
+     dies-ok { random-prime(4, -4) };
+     dies-ok { random-prime(4..23, -4) };
+     dies-ok { random-prime(4..23, Inf) };
+}, 'random primes, expected to fail';
 
 done-testing;
