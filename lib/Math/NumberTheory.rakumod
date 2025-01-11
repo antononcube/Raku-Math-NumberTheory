@@ -171,7 +171,9 @@ multi sub power-mod(Int:D $b is copy, @e is copy, Int:D $m) {
     return @e.map({ power-mod($b, $_, $m) }).List;
 }
 multi sub power-mod(Int:D $b is copy, Int:D $e is copy, Int:D $m) {
-    return expmod($b, $e, $m);
+    my $res = try expmod($b, $e, $m);
+    if $! { return Nil }
+    return $res;
 }
 
 sub complex-mod(Complex:D $a, Int:D $m) {
@@ -208,6 +210,28 @@ sub modular-inverse(Int:D $k, Int:D $n) is export {
     } else {
         power-mod($k, -1, $n)
     }
+}
+
+#==========================================================
+# Chinese reminder
+#==========================================================
+
+sub chinese-reminder(@r, @m, $d = 0) is export {
+    my $n = @r.elems;
+    my $M = [*] @m;
+    my $x = 0;
+
+    for ^$n -> $i {
+        my $Mi = $M div @m[$i];
+        #my $yi = (1..@m[$i]).first(* * $Mi % @m[$i] == 1);
+        my $yi = modular-inverse($Mi, @m[$i]);
+        without $yi { return Nil }
+        $x += @r[$i] * $Mi * $yi;
+    }
+
+    $x = $x % $M;
+    $x += $M while $x < $d;
+    return $x;
 }
 
 #==========================================================
