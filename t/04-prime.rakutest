@@ -13,4 +13,25 @@ is-deeply (100..103)».&prime.Array, [541, 547, 557, 563];
 my @x2 = -277, -201, -84, 26, 34, 102;
 is-deeply @x2».&next-prime.Array, [-271, -199, -83, 29, 37, 103];
 
+## 3
+subtest {
+    isa-ok random-prime(5), Int:D, 'integer result with no second argument';
+
+    isa-ok random-prime(15, Whatever), Int:D, 'integer result for second argument Whatever';
+
+    my $p = random-prime(5);
+    is $p.is-prime, True, '5, gives is a prime';
+
+    my $p2 = random-prime(5 .. 50);
+    is $p2.is-prime, True, '5..50 gives a prime';
+
+    my $p3 = random-prime(5 .. 50, 3);
+    isa-ok $p3, List:D, "5 .. 50, 3 gives a list";
+    is ([&&] $p3».is-prime), True, '5..50, 3 gives all primes';
+
+    my @ps = random-prime(5 .. 50, 40);
+    is @ps.elems, 40, "expected number of primes";
+
+}, 'random primes';
+
 done-testing;
