@@ -1,0 +1,16 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+use Math::NumberTheory;
+
+plan *;
+
+## 1
+is-deeply (100..103)».&prime.Array, [541, 547, 557, 563];
+
+## 2
+my @x2 = -277, -201, -84, 26, 34, 102;
+is-deeply @x2».&next-prime.Array, [-271, -199, -83, 29, 37, 103];
+
+done-testing;

@@ -1,6 +1,5 @@
 use v6.d;
 use Test;
-use Test;
 
 use lib <. lib>;
 use Math::NumberTheory;
