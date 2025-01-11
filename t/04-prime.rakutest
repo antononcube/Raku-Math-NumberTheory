@@ -7,7 +7,7 @@ use Math::NumberTheory;
 plan *;
 
 ## 1
-is-deeply (100..103)».&prime.Array, [541, 547, 557, 563];
+is-deeply (100 .. 103)».&prime.Array, [541, 547, 557, 563];
 
 ## 2
 my @x2 = -277, -201, -84, 26, 34, 102;
@@ -36,11 +36,12 @@ subtest {
 
 ## 4
 subtest {
-     dies-ok { random-prime(-5) };
-     dies-ok { random-prime(15..3) };
-     dies-ok { random-prime(4, -4) };
-     dies-ok { random-prime(4..23, -4) };
-     dies-ok { random-prime(4..23, Inf) };
+    dies-ok { random-prime(-5) };
+    dies-ok { random-prime(15 .. 3) };
+    dies-ok { random-prime(4, -4) };
+    dies-ok { random-prime(4 .. 23, -4) };
+    dies-ok { random-prime(4 .. 23, Inf) };
+    nok random-prime(14 .. 16);
 }, 'random primes, expected to fail';
 
 done-testing;
