@@ -1,0 +1,18 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+use Math::NumberTheory;
+
+plan *;
+
+## 1
+is primitive-root(9), 2;
+
+## 2
+is-deeply (1..10).map({ power-mod(2, $_, 9) }).unique.sort.List, (1, 2, 4, 5, 7, 8);
+
+## 3
+is primitive-root(10) ∈ [3, 7], True;
+
+done-testing;
