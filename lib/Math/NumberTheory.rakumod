@@ -215,7 +215,6 @@ sub modular-inverse(Int:D $k, Int:D $n) is export {
 #==========================================================
 # Chinese reminder
 #==========================================================
-
 sub chinese-reminder(@r, @m, $d = 0) is export {
     my $n = @r.elems;
     my $M = [*] @m;
@@ -232,6 +231,23 @@ sub chinese-reminder(@r, @m, $d = 0) is export {
     $x = $x % $M;
     $x += $M while $x < $d;
     return $x;
+}
+
+#==========================================================
+# Primitive root
+#==========================================================
+
+sub primitive-root(Int:D $n) is export {
+    my $phi = euler-phi($n);
+    my @factors = factor-integer($phi)».head;
+
+    for 2..$n-1 -> $g {
+        next unless $g gcd $n == 1;
+        if [&&] @factors.map({ ($g ** ($phi div $_)) mod $n != 1 }) {
+            return $g;
+        }
+    }
+    return Nil;
 }
 
 #==========================================================
