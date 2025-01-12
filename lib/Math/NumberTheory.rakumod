@@ -31,12 +31,10 @@ sub factor-integer(Int $n is copy, $k is copy = Whatever, :$method is copy = Wha
 
     return do given $method {
         when $_.lc ∈ <rho pollard pollard-rho> {
-            my @res = rho-factor-integer($n);
+            my @res = rho-prime-fators($n);
             if $k ≤ @res.elems {
                 @res.head($k)
             } else {
-                @res = @res.map(-> @f { rho-factor-integer(@f.head, seed => 3, c => 17).map({ ($_.head, $_.tail * @f.tail) }) }).map(*.Slip);
-                @res = @res.classify(*.head).map({ ($_.key, $_.value.map(*.tail).sum) }).sort(*.head);
                 $k < Inf ?? @res.head($k) !! @res
             }
         }
@@ -55,6 +53,7 @@ sub factors-of(UInt:D $n is copy, UInt:D $p = 2) {
     return $n, @factors;
 }
 
+#----------------------------------------------------------
 sub trial-factor-integer(Int $n is copy, $k is copy = Whatever) is export {
 
     return ((1, 1),) if $n == 1;
@@ -79,6 +78,7 @@ sub trial-factor-integer(Int $n is copy, $k is copy = Whatever) is export {
     return @factors;
 }
 
+#----------------------------------------------------------
 sub pollard-rho(Int $n, Int :$seed = 2, Int :$c = 1) {
     my $x = $seed;
     my $y = $seed;
@@ -117,6 +117,51 @@ sub rho-factor-integer(UInt:D $n is copy, Int :$seed = 2, Int :$c = 1) {
 
     &factorize($n);
     return @factors.sort(*.head).List;
+}
+
+#----------------------------------------------------------
+# From RosettaCode: https://rosettacode.org/wiki/Prime_decomposition#Pure_Raku
+# With the comment:
+# This is a pure Raku version that uses no outside libraries.
+# It uses a variant of Pollard's rho factoring algorithm and is fairly performant when factoring numbers < 2⁸⁰;
+# typically taking well under a second on an i7. It starts to slow down with larger numbers,
+# but really bogs down factoring numbers that have more than 1 factor larger than about 2⁴⁰.
+
+sub rho-prime-fators(Int:D $n) {
+    return ((1, 1),) if $n == 1;
+    my @res = prime-factors($n);
+    @res = @res.classify(*).map({ ($_.key, $_.value.elems ) }).sort(*.head);
+    return @res;
+}
+
+sub prime-factors ( Int $n where * > 0 ) {
+    return $n if $n.is-prime;
+    return () if $n == 1;
+    my $factor = find-factor( $n );
+    sort flat ( $factor, $n div $factor ).map: &prime-factors;
+}
+
+sub find-factor ( Int $n, $constant = 1 ) {
+    return 2 unless $n +& 1;
+    if (my $gcd = $n gcd 6541380665835015) > 1 { # magic number: [*] primes 3 .. 43
+        return $gcd if $gcd != $n
+    }
+    my $x      = 2;
+    my $rho    = 1;
+    my $factor = 1;
+    while $factor == 1 {
+        $rho = $rho +< 1;
+        my $fixed = $x;
+        my int $i = 0;
+        while $i < $rho {
+            $x = ( $x * $x + $constant ) % $n;
+            $factor = ( $x - $fixed ) gcd $n;
+            last if 1 < $factor;
+            $i = $i + 1;
+        }
+    }
+    $factor = find-factor( $n, $constant + 1 ) if $n == $factor;
+    $factor;
 }
 
 #==========================================================
