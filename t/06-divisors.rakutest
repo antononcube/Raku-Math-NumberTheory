@@ -13,8 +13,14 @@ subtest {
 
 ## 2
 subtest {
+    is divisor-sigma(0, 20), 6;
     is divisor-sigma(2, 20), 546;
     is divisor-sigma(20, exponent => 2), 546;
+
+    is-deeply
+            (1..20).map({ divisor-sigma(0, $_) }).Array,
+            [1, 2, 2, 3, 2, 4, 2, 4, 3, 4, 2, 6, 2, 4, 4, 5, 2, 6, 2, 6];
+
 }, "divisor sigma";
 
 done-testing;
