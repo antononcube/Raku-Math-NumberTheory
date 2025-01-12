@@ -54,7 +54,7 @@ sub factors-of(UInt:D $n is copy, UInt:D $p = 2) {
 }
 
 #----------------------------------------------------------
-sub trial-factor-integer(Int $n is copy, $k is copy = Whatever) is export {
+sub trial-factor-integer(Int $n is copy, $k = Inf) is export {
 
     return ((1, 1),) if $n == 1;
 
@@ -74,7 +74,7 @@ sub trial-factor-integer(Int $n is copy, $k is copy = Whatever) is export {
         }
         $d++;
     }
-    @factors.push(($n.clone, 1)) if $n > 1;
+    @factors.push(($n.clone, 1)) if $n > 1 && @factors.elems < $k;
     return @factors;
 }
 
