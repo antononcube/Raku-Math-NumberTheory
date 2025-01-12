@@ -237,9 +237,9 @@ sub chinese-reminder(@r, @m, $d = 0) is export {
 # Primitive root
 #==========================================================
 
-sub primitive-root(Int:D $n) is export {
+sub primitive-root(Int:D $n, :$method = Whatever) is export {
     my $phi = euler-phi($n);
-    my @factors = factor-integer($phi)».head;
+    my @factors = factor-integer($phi, :$method)».head;
 
     for 2..$n-1 -> $g {
         next unless $g gcd $n == 1;
@@ -250,9 +250,9 @@ sub primitive-root(Int:D $n) is export {
     return Nil;
 }
 
-sub primitive-root-list(Int:D $n) is export {
+sub primitive-root-list(Int:D $n, :$method = Whatever) is export {
     my $phi = euler-phi($n);
-    my @factors = factor-integer($phi)».head;
+    my @factors = factor-integer($phi, :$method)».head;
 
     my @res;
     for 2..$n-1 -> $g {
@@ -309,7 +309,7 @@ multi sub random-prime(Range:D $range, $n is copy = Whatever) {
     my ($min, $max) = $range.head, $range.tail;
 
     die 'The start of the range argument is expected to start with an integer greater than 1.'
-    unless $max > 1;
+    unless $min > 1;
 
     die 'The end of the range argument is expected to be greater than the range start.'
     unless $min < $max ;
