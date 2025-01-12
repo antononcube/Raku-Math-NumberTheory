@@ -44,4 +44,11 @@ subtest {
     nok random-prime(14 .. 16);
 }, 'random primes, expected to fail';
 
+## 5
+subtest {
+    is prime-pi(15), 6;
+    is prime-pi(15.4), 6;
+    is prime-pi(7/2), 2;
+}, "prime-pi";
+
 done-testing;

@@ -356,6 +356,21 @@ sub next-prime(Numeric:D $x) is export {
 }
 
 #==========================================================
+# PrimePi
+#==========================================================
+# Give the number of primes π(x) less than or equal to the argument.
+proto sub prime-pi(Numeric:D $x, :$method = Whatever) is export {*}
+
+multi sub prime-pi(Numeric:D $x, :$method = Whatever) {
+    return do given $method {
+        when Whatever { (1..$x.floor).grep(*.&is-prime).elems }
+        default {
+            die "Only the method Whatever is implemented."
+        }
+    }
+}
+
+#==========================================================
 # Random prime
 #==========================================================
 # http://reference.wolfram.com/language/ref/RandomPrime.html
