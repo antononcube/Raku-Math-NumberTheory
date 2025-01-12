@@ -21,4 +21,13 @@ is ([*] factor-integer($n3).map({ $_.head ** $_.tail })), $n3;
 ## 4
 is-deeply factor-integer(120).Array, [(2, 3), (3, 1), (5, 1)];
 
+## 5
+subtest {
+    my $n = factorial(20);
+    is factor-integer($n, 3).elems, 3;
+    is factor-integer($n, 3, method => 'trial').elems ≤ 3, True;
+    is factor-integer(20 ** 4, 5).elems ≤ 5, True;
+    is factor-integer(20 ** 4, 5, method => 'trial').elems ≤ 5, True;
+}, "max number of factors";
+
 done-testing;
