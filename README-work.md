@@ -35,9 +35,6 @@ Gives a list of the prime factors of an integer argument, together with their ex
 use Math::NumberTheory;
 factor-integer(factorial(20))
 ```
-```
-# [(2 18) (3 8) (5 4) (7 2) (11 1) (13 1) (17 1) (19 1)]
-```
 
 **Remark:** By default `factor-integer` uses [Pollard's Rho algorithm](https://en.wikipedia.org/wiki/Pollard's_rho_algorithm) --
 specified with `method => 'rho'` --
@@ -48,9 +45,6 @@ Do partial factorization, pulling out at most `k` distinct factors:
 ```perl6
 factor-integer(factorial(20), 3, method => 'trial')
 ```
-```
-# [(2 18) (3 8) (5 4)]
-```
 
 
 ### Chinese reminders
@@ -60,18 +54,12 @@ Data:
 ```perl6
 my @data = 931074546, 117172357, 482333642, 199386034, 394354985;
 ```
-```
-# [931074546 117172357 482333642 199386034 394354985]
-```
 
 Keys:
 
 ```perl6
 #my @keys = random-prime(10**9 .. 10**12, @data.elems);
 my @keys = 274199185649, 786765306443, 970592805341, 293623796783, 238475031661;
-```
-```
-# [274199185649 786765306443 970592805341 293623796783 238475031661]
 ```
 
 **Remark:** Using these larger keys is also a performance check.
@@ -82,17 +70,11 @@ Encrypted data:
 ```perl6
 my $encrypted = chinese-reminder(@data, @keys);
 ```
-```
-# 6681669841357504673192908619871066558177944924838942629020
-```
 
 Decrypted:
 
 ```perl6
 my @decrypted = @keys.map($encrypted mod *);
-```
-```
-# [931074546 117172357 482333642 199386034 394354985]
 ```
 
 -------
