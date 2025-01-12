@@ -260,6 +260,11 @@ sub modular-inverse(Int:D $k, Int:D $n) is export {
 #==========================================================
 # Chinese reminder
 #==========================================================
+# http://reference.wolfram.com/language/ref/ChineseRemainder.html
+#| Give the smallest x with x>=0 that satisfies all the integer congruences x mod m_i == r_i mod m_i.
+#| C<:@r> -- List of reminders.
+#| C<:@m> -- List of modules
+#| C<:$d> -- Number, lower limit of the result.
 sub chinese-reminder(@r, @m, $d = 0) is export {
     my $n = @r.elems;
     my $M = [*] @m;
@@ -281,7 +286,8 @@ sub chinese-reminder(@r, @m, $d = 0) is export {
 #==========================================================
 # Primitive root
 #==========================================================
-
+# http://reference.wolfram.com/language/ref/PrimitiveRoot.html
+#| Give primitive root of the argument.
 sub primitive-root(Int:D $n, :$method = Whatever) is export {
     my $phi = euler-phi($n);
     my @factors = factor-integer($phi, :$method)».head;
@@ -295,6 +301,8 @@ sub primitive-root(Int:D $n, :$method = Whatever) is export {
     return Nil;
 }
 
+# http://reference.wolfram.com/language/ref/PrimitiveRootList.html
+#| Give a list of primitive roots of the argument.
 sub primitive-root-list(Int:D $n, :$method = Whatever) is export {
     my $phi = euler-phi($n);
     my @factors = factor-integer($phi, :$method)».head;
@@ -312,7 +320,9 @@ sub primitive-root-list(Int:D $n, :$method = Whatever) is export {
 #==========================================================
 # Prime
 #==========================================================
-
+# http://reference.wolfram.com/language/ref/Prime.html
+#| Give the n-th prime number.
+#| C<$n> -- Prime number index.
 sub prime(Int:D $n) is export {
     die "The argument is expected to be a positive integer."
     unless $n > 0;
@@ -329,7 +339,9 @@ sub prime(Int:D $n) is export {
 #==========================================================
 # Next prime
 #==========================================================
-
+# http://reference.wolfram.com/language/ref/NextPrime.html
+#| Give the smallest prime number above the argument.
+#| C<:$x> -- Number.
 sub next-prime(Numeric:D $x) is export {
     my $candidate = $x.floor + 1;
     while !abs($candidate).is-prime {
@@ -339,9 +351,12 @@ sub next-prime(Numeric:D $x) is export {
 }
 
 #==========================================================
-# Next prime
+# Random prime
 #==========================================================
-
+# http://reference.wolfram.com/language/ref/RandomPrime.html
+#| Give pseudo random prime numbers in specified ranges.
+#| C<:$range> -- Integer or Range.
+#| C<:$n> -- Number of primes to return.
 proto sub random-prime(|) is export {*}
 multi sub random-prime(Int:D $max, $n = Whatever) {
     die 'If the first argument is a number then it is expected to be an integer greater than 1.'
@@ -421,14 +436,10 @@ multi sub real-digits(Numeric:D $x is copy,
 
         my $bfe = [*] ($bf xx $exp);
         while $current / $x > $tol && @digits.elems < $length {
-            #note (:$exp, power => $bf ** $exp, :$bfe);
-            #note '$current / $bfe => ', $current / $bfe;
             my $r = $current / $bfe;
             my $digit = do if $r.round(10 ** -100) == 1 { 1 } else { ($current / $bfe).floor };
             @digits .= push($digit);
-            #note (:$digit, '$digit.FatRat * $bfe => ', $digit.FatRat * $bfe);
             $current -= $digit.FatRat * $bfe;
-            #note (:$current);
             $exp--;
             $bfe = $bfe / $bf;
         }
