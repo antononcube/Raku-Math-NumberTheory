@@ -1,0 +1,20 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+use Math::NumberTheory;
+
+plan *;
+
+## 1
+subtest {
+    is-deeply divisors(20), (1, 2, 4, 5, 10, 20);
+}, "divisors";
+
+## 2
+subtest {
+    is divisor-sigma(2, 20), 546;
+    is divisor-sigma(20, exponent => 2), 546;
+}, "divisor sigma";
+
+done-testing;

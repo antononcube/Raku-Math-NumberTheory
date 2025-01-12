@@ -180,7 +180,12 @@ sub divisors($n) is export {
     }
 }
 
-sub divisor-sigma($n, $exponent= 1) is export {
+proto divisor-sigma($n, |) is export {*}
+multi sub divisor-sigma($exponent, $n) {
+    divisor-sigma($n, :$exponent)
+}
+
+multi sub divisor-sigma($n, Int:D :e(:$exponent) = 1)  {
     [+] divisors($n).map(-> $j { $j ** $exponent });
 }
 
