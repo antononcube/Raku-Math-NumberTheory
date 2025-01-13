@@ -1,0 +1,32 @@
+use Test;
+
+use Math::NumberTheory;
+
+## 1
+isa-ok real-digits(123.456), List;
+
+## 2
+isa-ok real-digits(12), List;
+
+## 3
+is-deeply real-digits(12, e, length => 3), ([1, 1, 1], 3);
+
+## 4
+subtest {
+    isa-ok phi-number-system(32), List;
+
+    # Expected ϕ-digits for 32
+    is phi-number-system(32), [7, 2, -3, -5, -8];
+
+    # Getting many ϕ-digits
+    my @res = phi-number-system(32, :40length);
+
+    # Expected representation
+    is @res.map({ ϕ ** $_ }).sum.round(10e-7), 32;
+
+    # There is Raku-bignum lost of precision real-digits, hence, the
+    # Phi number system representation of integers cannot be demonstrated.
+    # See https://mathworld.wolfram.com/PhiNumberSystem.html
+}
+
+done-testing
