@@ -361,13 +361,35 @@ sub next-prime(Numeric:D $x) is export {
 # Give the number of primes π(x) less than or equal to the argument.
 proto sub prime-pi(Numeric:D $x, :$method = Whatever) is export {*}
 
-multi sub prime-pi(Numeric:D $x, :$method = Whatever) {
-    return do given $method {
-        when Whatever { (1..$x.floor).grep(*.&is-prime).elems }
+multi sub prime-pi(Numeric:D $x, :$method is copy = Whatever) {
+    if $method.isa(Whatever) { $method = 'legendre'}
+    die 'The value of $method is expected to be a string or Whatever.'
+    unless $method ~~ Str:D;
+
+    return do given $method.lc {
+        when 'sieve' { (1..$x.floor).grep(*.&is-prime).elems }
+        when $_ ∈ <legendre legendre-formula> { legendre-formula($x) }
         default {
-            die "Only the method Whatever is implemented."
+            die "Unknown method."
         }
     }
+}
+
+#----------------------------------------------------------
+state %legendre-formula-cache;
+sub legendre-formula(Numeric:D $x) {
+    sub phi($x, $a) {
+        return $x if $a == 0;
+        return %legendre-formula-cache{$x}{$a} //= phi($x, $a - 1) - phi(($x div prime($a)), $a - 1);
+    }
+
+    sub pi($n) {
+        return 0 if $n < 2;
+        my $a = pi(($n.sqrt).floor);
+        return phi($n, $a) + $a - 1;
+    }
+
+    return pi($x.floor);
 }
 
 #==========================================================
