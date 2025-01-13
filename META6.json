@@ -1,23 +1,24 @@
 {
-    "name": "Math::NumberTheory",
-    "description": "Raku package number theory functions.",
-    "version": "0.0.1",
-    "raku": "6.d",
-    "authors": [
-        "Anton Antonov"
-    ],
-    "auth": "zef:antononcube",
-    "build-depends": [],
-    "provides": {
-        "Math::NumberTheory": "lib/Math/NumberTheory.rakumod"
-    },
-    "license": "Artistic-2.0",
-    "tags": [
-        "math",
-        "number",
-        "number theory",
-        "power mod"
-    ],
-    "api": "0",
-    "source-url": "https://github.com/antononcube/Raku-Math-NumberTheory.git"
+  "name": "Math::NumberTheory",
+  "description": "Raku package number theory functions.",
+  "version": "0.0.1",
+  "authors": [
+    "Anton Antonov"
+  ],
+  "auth": "zef:antononcube",
+  "build-depends": [],
+  "provides": {
+    "Math::NumberTheory": "lib/Math/NumberTheory.rakumod",
+    "Math::NumberTheory::Utilities": "lib/Math/NumberTheory/Utilities.rakumod"
+  },
+  "license": "Artistic-2.0",
+  "tags": [
+    "math",
+    "number",
+    "number theory",
+    "power mod"
+  ],
+  "api": "0",
+  "source-url": "https://github.com/antononcube/Raku-Math-NumberTheory.git",
+  "raku": "6.d"
 }
