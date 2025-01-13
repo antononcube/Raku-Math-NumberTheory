@@ -50,6 +50,7 @@ subtest {
     is prime-pi(15.4), 6;
     is prime-pi(7/2), 2;
     is prime-pi(7/2, method => 'legendre'), 2;
+    is prime-pi(10 ** 5, method => 'legendre'), 9592;
 }, "prime-pi";
 
 done-testing;
