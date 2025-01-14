@@ -2,10 +2,34 @@ use v6.d;
 
 #| Spiral square lattice
 #| C<$n> -- Square side size.
-sub spiral-lattice(UInt:D $n) is export {
-    my @matrix = (0 xx $n).Array xx $n ;
-    my ($row, $col, $num) = (0, 0, 1);
-    my @directions = ([0, 1], [1, 0], [0, -1], [-1, 0]);
+sub spiral-lattice(UInt:D $n, :f(:$finish-at) is copy = Whatever) is export {
+
+    if $finish-at.isa(Whatever) { $finish-at = 'bottom-right' }
+    my @corners = <top-left top-right bottom-right bottom-left>;
+    die "The value of \$finish-at is expected to be Whatever or one of: \"{@corners.join('","')}\"."
+    unless $finish-at ~~ Str:D && $finish-at ∈ ;
+
+    my ($row, $col, $num, @directions);
+    given $finish-at {
+        when 'top-left' {
+            ($row, $col, $num) = (0, 0, 1);
+            @directions = [0, 1], [1, 0], [0, -1], [-1, 0];
+        }
+        when 'bottom-right' {
+            ($row, $col, $num) = ($n - 1, $n - 1, 1);
+            @directions = [0, -1], [-1, 0], [0, 1], [1, 0];
+        }
+        when 'top-right' {
+            ($row, $col, $num) = (0, $n - 1, 1);
+            @directions = [0, -1], [1, 0], [0, 1], [-1, 0];
+        }
+        when 'bottom-left' {
+            ($row, $col, $num) = ($n - 1, 0, 1);
+            @directions = [0, 1], [-1, 0], [0, -1], [1, 0];
+        }
+    }
+
+    my @matrix = (0 xx $n).Array xx $n;
     my $dir = 0;
 
     while $num <= $n * $n {
