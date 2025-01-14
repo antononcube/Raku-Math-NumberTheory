@@ -193,14 +193,29 @@ multi sub divisor-sigma($n, Int:D :e(:$exponent) = 1)  {
 # Euler Phi
 #==========================================================
 # http://reference.wolfram.com/language/ref/EulerPhi.html
-sub euler-phi ($n) is export() {
-    +(^$n).grep({ $_ gcd $n == 1 })
+# https://mathworld.wolfram.com/TotientFunction.html
+# https://en.wikipedia.org/wiki/Euler%27s_totient_function
+#| Gives the Euler totient function ϕ(n) that counts the positive integers up to a given integer n
+#| that are relatively prime to n.
+#| C<$n> -- Number.
+proto sub euler-phi($n) is export {*}
+multi sub euler-phi($n) {
+    (^$n).grep({ $_ gcd $n == 1 }).List
 }
+
+multi sub euler-phi(@ns) {
+    @ns.map({ euler-phi( $_ ) }).List
+}
+
+constant &totient is export(:ALL) = &euler-phi;
 
 #==========================================================
 # Integer exponent
 #==========================================================
 # http://reference.wolfram.com/language/ref/IntegerExponent.html
+#| Gives the highest power of b that divides n.
+#| C<$n> -- Integer.
+#| C<$b> -- (Base) integer.
 sub integer-exponent(Int:D $n is copy, UInt:D $b= 10) is export {
     my $k = 0;
     while ($n mod $b) == 0 {
