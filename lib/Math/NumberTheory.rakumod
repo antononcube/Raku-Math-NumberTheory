@@ -14,7 +14,7 @@ sub factorial($n) is export {
 # Integer factors
 #==========================================================
 
-sub factor-integer(Int $n is copy, $k is copy = Whatever, :$method is copy = Whatever) is export {
+sub factor-integer(Int:D $n is copy, $k is copy = Whatever, :$method is copy = Whatever) is export {
     if $n < 0 {
         return [|(-1, 1), |factor-integer(abs($n), $k, :$method)].List;
     }
@@ -200,7 +200,7 @@ multi sub divisor-sigma($n, Int:D :e(:$exponent) = 1)  {
 #| C<$n> -- Number.
 proto sub euler-phi($n) is export {*}
 multi sub euler-phi($n) {
-    (^$n).grep({ $_ gcd $n == 1 }).List
+    (^$n).grep({ $_ gcd $n == 1 }).elems
 }
 
 multi sub euler-phi(@ns) {
