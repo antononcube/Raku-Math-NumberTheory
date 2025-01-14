@@ -2,15 +2,15 @@ use v6.d;
 
 #| Spiral square lattice
 #| C<$n> -- Square side size.
-sub spiral-lattice(UInt:D $n, :f(:$finish-at) is copy = Whatever) is export {
+sub spiral-lattice(UInt:D $n, :l(:end-corner(:$last-at)) is copy = Whatever) is export {
 
-    if $finish-at.isa(Whatever) { $finish-at = 'bottom-right' }
+    if $last-at.isa(Whatever) { $last-at = 'bottom-right' }
     my @corners = <top-left top-right bottom-right bottom-left>;
-    die "The value of \$finish-at is expected to be Whatever or one of: \"{@corners.join('","')}\"."
-    unless $finish-at ~~ Str:D && $finish-at ∈ ;
+    die "The value of \$last-at is expected to be Whatever or one of the strings: ⎡{@corners.join(' ')}⎦."
+    unless $last-at ~~ Str:D && $last-at ∈ @corners;
 
     my ($row, $col, $num, @directions);
-    given $finish-at {
+    given $last-at {
         when 'top-left' {
             ($row, $col, $num) = (0, 0, 1);
             @directions = [0, 1], [1, 0], [0, -1], [-1, 0];
