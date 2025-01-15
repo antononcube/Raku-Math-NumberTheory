@@ -2,6 +2,8 @@ use Test;
 
 use Math::NumberTheory;
 
+plan *;
+
 ## 1
 isa-ok real-digits(123.456), List;
 

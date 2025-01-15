@@ -31,15 +31,48 @@ multi sub is-prime-gaussian(@p --> List) {
 }
 
 #==========================================================
-# Popular support functions
+# Factorial
 #==========================================================
-# In "Math::SpecialFunctions" has also &factorial.
+# This has to be refactored -- in "Math::SpecialFunctions" has also &factorial.
 # &factorial should work on reals:
 # factorial($n) = gamma(1+$n)
 #| Give the factorial of the argument.
 #| C<:$n> -- Integer.
 multi sub factorial(Int:D $n) is export {
     ([*] 1 .. $n) or 1
+}
+
+#==========================================================
+# Digit count
+#==========================================================
+# http://reference.wolfram.com/language/ref/DigitCount.html
+#| gives the number of digits in a base representation of the argument.
+#| C<$n> -- Integer
+#| C<:$base> - Base (integer)
+#| C<:$digits> -
+proto sub digit-count(Int:D $n, |) is export {*}
+multi sub digit-count(Int:D $n, Int:D :b(:$base) = 10, :d(:$digits) = Whatever) {
+    return do given $digits {
+        when Whatever {
+            my %h = $n.base($base).Str.comb.classify(*)».elems;
+            %h
+        }
+        when Int:D {
+            $n.base($base).Str.comb.grep($digits).elems
+        }
+        when $_ ~~ (List:D | Array:D | Seq:D) && $_.all ~~ Int:D {
+            my $s = Set.new($digits».Str);
+            my %h = $n.base($base).Str.comb.classify(*).map({ $_.key ∈ $s ?? ($_.key => $_.value.elems) !! Empty });
+            %h
+        }
+        default {
+            die 'The arugment $digit is expected to be Whatever, an integer, or a list of integers.'
+        }
+    }
+}
+
+multi sub digit-count(Int:D $n, Int:D $base = 10, $digits = Whatever) {
+    return digit-count($n, :$base, :$digits)
 }
 
 #==========================================================
