@@ -33,8 +33,12 @@ multi sub is-prime-gaussian(@p --> List) {
 #==========================================================
 # Popular support functions
 #==========================================================
-
-sub factorial($n) is export {
+# In "Math::SpecialFunctions" has also &factorial.
+# &factorial should work on reals:
+# factorial($n) = gamma(1+$n)
+#| Give the factorial of the argument.
+#| C<:$n> -- Integer.
+multi sub factorial(Int:D $n) is export {
     ([*] 1 .. $n) or 1
 }
 
