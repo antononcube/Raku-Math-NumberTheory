@@ -3,6 +3,34 @@ use v6.d;
 unit module Math::NumberTheory;
 
 #==========================================================
+# PrimeQ
+#==========================================================
+# Extending is-prime to deal with Gaussian Integers.
+
+#multi sub is-prime(Complex:D $p, Bool:D :gaussian(:$gaussian-integers) = True --> Bool) is export {...}
+#| Gives True if the argument is Gaussian prime.
+#| C<:$p> -- An integer or complex number or a list of numbers.
+proto sub is-prime-gaussian($p --> Bool) is export {*}
+
+multi sub is-prime-gaussian(Int:D $p --> Bool) {
+    return $p mod 4 == 3
+}
+multi sub is-prime-gaussian(Complex:D $p --> Bool) {
+    return do if $p.re == 0 {
+        is-prime($p.im.Int) && $p.im.Int mod 4 == 3
+    } elsif $p.im == 0 {
+        is-prime($p.re.Int) && $p.re.Int mod 4 == 3
+    } else {
+        my $a = $p.re.Int ** 2 + $p.im.Int ** 2;
+        is-prime($a)
+    }
+}
+
+multi sub is-prime-gaussian(@p --> List) {
+    return @p.map({ is-prime-gaussian($_) }).List
+}
+
+#==========================================================
 # Popular support functions
 #==========================================================
 
@@ -130,37 +158,37 @@ sub rho-factor-integer(UInt:D $n is copy, Int :$seed = 2, Int :$c = 1) {
 sub rho-prime-fators(Int:D $n) {
     return ((1, 1),) if $n == 1;
     my @res = prime-factors($n);
-    @res = @res.classify(*).map({ ($_.key, $_.value.elems ) }).sort(*.head);
+    @res = @res.classify(*).map({ ($_.key, $_.value.elems) }).sort(*.head);
     return @res;
 }
 
-sub prime-factors ( Int $n where * > 0 ) {
+sub prime-factors (Int $n where *> 0) {
     return $n if $n.is-prime;
     return () if $n == 1;
-    my $factor = find-factor( $n );
-    sort flat ( $factor, $n div $factor ).map: &prime-factors;
+    my $factor = find-factor($n);
+    sort flat ($factor, $n div $factor).map: &prime-factors;
 }
 
-sub find-factor ( Int $n, $constant = 1 ) {
+sub find-factor (Int $n, $constant = 1) {
     return 2 unless $n +& 1;
     if (my $gcd = $n gcd 6541380665835015) > 1 { # magic number: [*] primes 3 .. 43
         return $gcd if $gcd != $n
     }
-    my $x      = 2;
-    my $rho    = 1;
+    my $x = 2;
+    my $rho = 1;
     my $factor = 1;
     while $factor == 1 {
         $rho = $rho +< 1;
         my $fixed = $x;
         my int $i = 0;
         while $i < $rho {
-            $x = ( $x * $x + $constant ) % $n;
-            $factor = ( $x - $fixed ) gcd $n;
+            $x = ($x * $x + $constant) % $n;
+            $factor = ($x - $fixed) gcd $n;
             last if 1 < $factor;
             $i = $i + 1;
         }
     }
-    $factor = find-factor( $n, $constant + 1 ) if $n == $factor;
+    $factor = find-factor($n, $constant + 1) if $n == $factor;
     $factor;
 }
 
@@ -185,7 +213,7 @@ multi sub divisor-sigma($exponent, $n) {
     divisor-sigma($n, :$exponent)
 }
 
-multi sub divisor-sigma($n, Int:D :e(:$exponent) = 1)  {
+multi sub divisor-sigma($n, Int:D :e(:$exponent) = 1) {
     [+] divisors($n).map(-> $j { $j ** $exponent });
 }
 
@@ -204,7 +232,7 @@ multi sub euler-phi($n) {
 }
 
 multi sub euler-phi(@ns) {
-    @ns.map({ euler-phi( $_ ) }).List
+    @ns.map({ euler-phi($_) }).List
 }
 
 constant &totient is export(:ALL) = &euler-phi;
@@ -270,7 +298,7 @@ multi sub power-mod(Complex:D $b is copy, Int:D $e is copy, Int:D $m) is export 
 sub modular-inverse(Int:D $k, Int:D $n) is export {
     return do if $n < 0 {
         die "Negative modulus is not implemented (yet.)"
-    } elsif $k < 0  {
+    } elsif $k < 0 {
         power-mod($n - abs($k) mod $n, -1, $n)
     } else {
         power-mod($k, -1, $n)
@@ -312,7 +340,7 @@ sub primitive-root(Int:D $n, :$method = Whatever) is export {
     my $phi = euler-phi($n);
     my @factors = factor-integer($phi, :$method)».head;
 
-    for 2..$n-1 -> $g {
+    for 2 .. $n - 1 -> $g {
         next unless $g gcd $n == 1;
         if [&&] @factors.map({ ($g ** ($phi div $_)) mod $n != 1 }) {
             return $g;
@@ -328,7 +356,7 @@ sub primitive-root-list(Int:D $n, :$method = Whatever) is export {
     my @factors = factor-integer($phi, :$method)».head;
 
     my @res;
-    for 2..$n-1 -> $g {
+    for 2 .. $n - 1 -> $g {
         next unless $g gcd $n == 1;
         if [&&] @factors.map({ ($g ** ($phi div $_)) mod $n != 1 }) {
             @res.push($g);
@@ -377,12 +405,12 @@ sub next-prime(Numeric:D $x) is export {
 proto sub prime-pi(Numeric:D $x, :$method = Whatever) is export {*}
 
 multi sub prime-pi(Numeric:D $x, :$method is copy = Whatever) {
-    if $method.isa(Whatever) { $method = 'legendre'}
+    if $method.isa(Whatever) { $method = 'legendre' }
     die 'The value of $method is expected to be a string or Whatever.'
     unless $method ~~ Str:D;
 
     return do given $method.lc {
-        when 'sieve' { (1..$x.floor).grep(*.&is-prime).elems }
+        when 'sieve' { (1 .. $x.floor).grep(*.&is-prime).elems }
         when $_ ∈ <legendre legendre-formula> { legendre-formula($x) }
         default {
             die "Unknown method."
@@ -418,7 +446,7 @@ proto sub random-prime(|) is export {*}
 multi sub random-prime(Int:D $max, $n = Whatever) {
     die 'If the first argument is a number then it is expected to be an integer greater than 1.'
     unless $max > 1;
-    return random-prime(2..$max, $n);
+    return random-prime(2 .. $max, $n);
 }
 
 multi sub random-prime(Range:D $range, $n is copy = Whatever) {
@@ -429,7 +457,7 @@ multi sub random-prime(Range:D $range, $n is copy = Whatever) {
     unless $min > 1;
 
     die 'The end of the range argument is expected to be greater than the range start.'
-    unless $min < $max ;
+    unless $min < $max;
 
     die 'The second argument is expected to be a positive integer or Whatever.'
     unless $n ~~ Int:D && $n > 0 || $n.isa(Whatever);
@@ -524,7 +552,8 @@ multi sub real-digits(Numeric:D $x is copy,
 # https://mathworld.wolfram.com/PhiNumberSystem.html
 
 # Using N[Sqrt[5], 100] in Wolfram Language
-constant $sqrt5 = 2.236067977499789696409173668731276235440618359611525724270897245410520925637804899414414408378782275.FatRat;
+constant $sqrt5 = 2.236067977499789696409173668731276235440618359611525724270897245410520925637804899414414408378782275
+        .FatRat;
 
 # Fibonacci 401 and 400
 constant $fibonacci401 = 284812298108489611757988937681460995615380088782304890986477195645969271404032323901.FatRat;

@@ -1,7 +1,7 @@
 use v6.d;
 use Test;
 
-#use lib <. lib>;
+use lib <. lib>;
 use Math::NumberTheory;
 
 plan *;
@@ -52,5 +52,14 @@ subtest {
     is prime-pi(7/2, method => 'legendre'), 2;
     is prime-pi(10 ** 5, method => 'legendre'), 9592;
 }, "prime-pi";
+
+## 6
+subtest {
+    is is-prime-gaussian(5), False;
+    is is-prime-gaussian(7), True;
+    is is-prime-gaussian(1 + 2*i), True;
+    is is-prime-gaussian(1 + i), True;
+    is-deeply is-prime-gaussian([1 + i, 5 ,7]), (True, False, True);
+}, "Gaussian primes";
 
 done-testing;
