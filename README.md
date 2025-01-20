@@ -119,7 +119,7 @@ my @decrypted = @keys.map($encrypted mod *);
 # [931074546 117172357 482333642 199386034 394354985]
 ```
 
-### Power-mod
+### Modular exponentiation and modular inversion
 
 The sub `power-mod` extends the built-in sub `expmod`.
 The sub `modular-inverse` is based on `power-mod`.
@@ -143,13 +143,12 @@ power-mod(30, -1, 12).defined
 # False
 ```
 
-Also, `power-mod` 
 
 ### Number-base related
 
-There are several subs that provide number system representation functionalities.
+There are several subs that provide functionalities related to number systems representation.
 
-For examples, here we find the digit-breakdown of $100!$:
+For example, here we find the digit-breakdown of $100!$:
 
 ```perl6
 100.&factorial.&digit-count
@@ -158,7 +157,7 @@ For examples, here we find the digit-breakdown of $100!$:
 # {0 => 30, 1 => 15, 2 => 19, 3 => 10, 4 => 10, 5 => 14, 6 => 19, 7 => 7, 8 => 14, 9 => 20}
 ```
 
-Here is an examples of using `real-digits`:
+Here is an example of using `real-digits`:
 
 ```perl6
 real-digits(123.55555)
@@ -167,7 +166,7 @@ real-digits(123.55555)
 # ([1 2 3 5 5 5 5 5] 3)
 ```
 
-Non-integer bases can be used:
+Non-integer bases can be also used:
 
 ```perl6
 my $r = real-digits(π, ϕ);
@@ -176,7 +175,7 @@ my $r = real-digits(π, ϕ);
 # ([1 0 0 0 1 0 0 1 0 1 0 1 0 0 1 0 0 0 1 0 1 0 1 0 1 0 0 0 0 0 1 0 1 0 0 1 0 0 0 0 1 0 0 1 0 1 0 0 0 1 0 0 0 0 0 1 0 1 0 1 0 1] 3)
 ```
 
-Here we recover $\pi$ from the obtained Golden ratio representation:
+Here we recover $\pi$ from the Golden ratio representation obtained above:
 
 ```perl6
 $r.head.kv.map( -> $i, $d { $d * ϕ ** ($r.tail - $i - 1)  }).sum;
