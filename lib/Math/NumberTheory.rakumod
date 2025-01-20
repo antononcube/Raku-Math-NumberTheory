@@ -531,11 +531,11 @@ multi sub random-prime(Range:D $range, $n is copy = Whatever) {
 #==========================================================
 # http://reference.wolfram.com/language/ref/RealDigits.html
 #| Real digits
-#| C<$x> -- number to convert.
-#| C<:$base> -- conversion base.
-#| C<:$n> -- digit exponent to start with.
-#| C<:$tol> -- tolerance to stop the conversion with.
-#| C<:$length> -- max number of digits.
+#| C<$x> -- Number to convert.
+#| C<:$base> -- Conversion base.
+#| C<:$n> -- Digit exponent to start with.
+#| C<:$tol> -- Tolerance to stop the conversion with.
+#| C<:$length> -- Max number of digits.
 proto sub real-digits(Numeric:D $x, *@args, *%args) is export {*}
 
 multi sub real-digits($x, Numeric:D $b = 10, $n = Whatever, *%args) {
@@ -609,9 +609,9 @@ our constant \ϕ is export = $fibonacci401 / $fibonacci400;
 #our constant \ϕ is export = (1.FatRat + $sqrt5) / 2.FatRat;
 
 #| Phi number system.
-#| C<$n> -- an integer number to convert.
-#| C<:$tol> -- tolerance to stop the conversion with.
-#| C<:$length> -- max number of digits.
+#| C<$n> -- An integer number to convert.
+#| C<:$tol> -- Tolerance to stop the conversion with.
+#| C<:$length> -- Max number of digits.
 sub phi-number-system(Int:D $n, Numeric:D :tolerance(:$tol) = 10e-16, :l(:len(:$length)) is copy = Whatever) is export {
     if $length.isa(Whatever) { $length = 2 * ($sqrt5 * abs($n)).log(ϕ).floor + 1; }
     my ($digits, $exp) = real-digits($n.FatRat, ϕ, :$tol, :$length);
