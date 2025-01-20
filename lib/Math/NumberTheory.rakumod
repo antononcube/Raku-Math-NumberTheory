@@ -495,7 +495,7 @@ sub previous-prime(Numeric:D $x) {
 #==========================================================
 # PrimePi
 #==========================================================
-# Give the number of primes π(x) less than or equal to the argument.
+#| Give the number of primes π(x) less than or equal to the argument.
 proto sub prime-pi(Numeric:D $x, :$method = Whatever) is export {*}
 
 multi sub prime-pi(Numeric:D $x, :$method is copy = Whatever) {
@@ -534,6 +534,18 @@ sub legendre-formula(Numeric:D $x) {
     }
 
     return pi($x.floor);
+}
+
+#==========================================================
+# Prime omega
+#==========================================================
+#| Give the number of prime factors counting multiplicities Ω(n) in the argument.
+multi sub prime-omega($x) is export {*}
+multi sub prime-omega(@x) {
+    return @x.map({ prime-omega($_) }).List;
+}
+multi sub prime-omega(Int:D $x) {
+    return factor-integer($x)».tail.sum;
 }
 
 #==========================================================

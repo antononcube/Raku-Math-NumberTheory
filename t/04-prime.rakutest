@@ -90,4 +90,12 @@ subtest {
     is-deeply is-prime([1 + i, 5 ,7]), (True, True, True);
 }, "Gaussian primes via is-prime";
 
+subtest {
+    is prime-omega(7 ** 5), 5;
+    is prime-omega(30), 3;
+    is prime-omega(10 ** 5), 10;
+    is prime-omega([4, 12, 24]), (2, 3, 4);
+    is prime-omega(24 *40), prime-omega(24) + prime-omega(40);
+}, "prime-omega";
+
 done-testing;
