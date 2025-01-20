@@ -1,7 +1,7 @@
 use v6.d;
 use Test;
 
-use lib <. lib>;
+#use lib <. lib>;
 use Math::NumberTheory;
 
 plan *;
@@ -14,6 +14,22 @@ my @x2 = -277, -201, -84, 26, 34, 102;
 is-deeply @x2».&next-prime.Array, [-271, -199, -83, 29, 37, 103];
 
 ## 3
+subtest {
+    is next-prime(-3), -2;
+    is next-prime(-2), 2;
+    is next-prime(-1), 2;
+    is next-prime(0), 2;
+    is next-prime(1), 2;
+    is next-prime(32), 37;
+    is next-prime(32, 2), 41;
+    is next-prime(32, k => 2), 41;
+    is next-prime(31, 0), 31;
+    is next-prime(-31, 1), -29;
+    is next-prime(-31, 12), 3;
+    is-deeply next-prime([4, 8, 12, 67]), (5, 11, 13, 71);
+}, "next-prime";
+
+## 4
 subtest {
     isa-ok random-prime(5), Int:D, 'integer result with no second argument';
 
@@ -34,7 +50,7 @@ subtest {
 
 }, 'random primes, expected to pass';
 
-## 4
+## 5
 subtest {
     dies-ok { random-prime(-5) };
     dies-ok { random-prime(15 .. 3) };
@@ -44,7 +60,7 @@ subtest {
     nok random-prime(14 .. 16);
 }, 'random primes, expected to fail';
 
-## 5
+## 6
 subtest {
     is prime-pi(15), 6;
     is prime-pi(15.4), 6;
@@ -53,7 +69,7 @@ subtest {
     is prime-pi(10 ** 5, method => 'legendre'), 9592;
 }, "prime-pi";
 
-## 6
+## 7
 subtest {
     is is-prime-gaussian(5), False;
     is is-prime-gaussian(7), True;
@@ -62,7 +78,7 @@ subtest {
     is-deeply is-prime-gaussian([1 + i, 5 ,7]), (True, False, True);
 }, "Gaussian primes";
 
-## 6
+## 8
 subtest {
     is is-prime(5, :gaussian), False;
     is is-prime(7, :gaussian), True;

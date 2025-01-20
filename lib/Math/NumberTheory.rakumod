@@ -439,12 +439,57 @@ sub prime(Int:D $n) is export {
 # http://reference.wolfram.com/language/ref/NextPrime.html
 #| Give the smallest prime number above the argument.
 #| C<:$x> -- Number.
-sub next-prime(Numeric:D $x) is export {
-    my $candidate = $x.floor + 1;
+proto sub next-prime(Numeric:D $x, |) is export {*}
+multi sub next-prime(Numeric:D $x, Int:D $k) {
+    next-prime($x, :$k)
+}
+
+multi sub next-prime(@xs, Int:D :$k = 1) {
+    @xs.map({ next-prime($_, :$k) }).List
+}
+
+multi sub next-prime(Numeric:D $x, Int:D :$k = 1) {
+    given $x {
+        when $_ !~~ Int:D { next-prime($x.floor, $k) }
+        when $_ ~~ Int:D && $k == 1 {
+            if $_ < -3 || $_ > 1 {
+                integer-next-prime($_)
+            } else {
+                given $_ {
+                    when -3 { -2 }
+                    when -2 { 2 }
+                    when -1 { 2 }
+                    when 0 { 2 }
+                    when 1 { 2 }
+                }
+            }
+        }
+        when is-prime($_) && $k == 0 { $_ }
+        when $k > 0 {
+            my $res = $x;
+            for ^$k { $res = next-prime($res, k => 1) };
+            $res
+        }
+        when $k < 0 {
+            my $res = $x;
+            for ^(-$k) { $res = previous-prime($res) };
+            $res
+        }
+        default {
+            Nil
+        }
+    }
+}
+sub integer-next-prime(Int:D $n) {
+    my $candidate = $n.floor + 1 + $n mod 2;
     while !abs($candidate).is-prime {
-        $candidate++;
+        $candidate += 2;
     }
     return $candidate;
+}
+
+sub previous-prime(Numeric:D $x) {
+    return -next-prime(-$x);
 }
 
 #==========================================================
