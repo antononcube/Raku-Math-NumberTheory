@@ -30,6 +30,18 @@ multi sub is-prime-gaussian(@p --> List) {
     return @p.map({ is-prime-gaussian($_) }).List
 }
 
+#----------------------------------------------------------
+# Redefine is-prime
+multi sub is-prime(Complex:D $p) is export {
+    return is-prime-gaussian($p);
+}
+multi sub is-prime($p, Bool:D :gaussian(:$gaussian-integers)) is export {
+    return is-prime-gaussian($p);
+}
+multi sub is-prime(@p, *%args --> List) {
+    return @p.map({ is-prime($_, |%args) }).List
+}
+
 #==========================================================
 # Factorial
 #==========================================================
