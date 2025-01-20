@@ -96,7 +96,7 @@ sub factor-integer(Int:D $n is copy, $k is copy = Whatever, :$method is copy = W
 
     return do given $method {
         when $_.lc ∈ <rho pollard pollard-rho> {
-            my @res = rho-prime-fators($n);
+            my @res = rho-prime-factors($n);
             if $k ≤ @res.elems {
                 @res.head($k)
             } else {
@@ -192,7 +192,7 @@ sub rho-factor-integer(UInt:D $n is copy, Int :$seed = 2, Int :$c = 1) {
 # typically taking well under a second on an i7. It starts to slow down with larger numbers,
 # but really bogs down factoring numbers that have more than 1 factor larger than about 2⁴⁰.
 
-sub rho-prime-fators(Int:D $n) {
+sub rho-prime-factors(Int:D $n) {
     return ((1, 1),) if $n == 1;
     my @res = prime-factors($n);
     @res = @res.classify(*).map({ ($_.key, $_.value.elems) }).sort(*.head);
