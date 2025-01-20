@@ -137,7 +137,7 @@ my $r = real-digits(π, ϕ);
 Here we recover $\pi$ from the Golden ratio representation obtained above:
 
 ```perl6
-$r.head.kv.map( -> $i, $d { $d * ϕ ** ($r.tail - $i - 1)  }).sum;
+$r.head.kv.map( -> $i, $d { $d * ϕ ** ($r.tail - $i - 1)  }).sum.round(10e-12);
 ```
 
 The sub `phi-number-system` can be used to compute
