@@ -5,6 +5,9 @@ Raku package with Number theory functions.
 The function names and features follow the 
 [Number theory functions of Wolfram Language](http://reference.wolfram.com/language/guide/NumberTheory.html).
 
+**Remark:**  Raku has some nice built-in Number theory functions, like, `base`, `mod`, `polymod`, `expmod`, `is-prime`. 
+They somewhat lack generality, hence their functionalities are extended with this package. 
+For example, `is-prime` works with lists and [Gaussian integers](https://en.wikipedia.org/wiki/Gaussian_integer).
 
 -------
 
@@ -26,13 +29,27 @@ zef install https://github.com/antononcube/Raku-Math-NumberTheory
 
 ## Usage examples
 
-### Factor integers
+### Prime number tests
 
+The built-in sub `is-prime` is extended to work [Gaussian integers](https://en.wikipedia.org/wiki/Gaussian_integer):
+
+```perl6
+use Math::NumberTheory;
+say is-prime(2 + 1i);
+say is-prime(5, :gaussian-integers);
+```
+
+Another extension is threading over lists of numbers:
+
+```perl6
+is-prime(^6)
+```
+
+### Factor integers
 
 Gives a list of the prime factors of an integer argument, together with their exponents:
 
 ```perl6
-use Math::NumberTheory;
 factor-integer(factorial(20))
 ```
 
@@ -76,6 +93,64 @@ Decrypted:
 ```perl6
 my @decrypted = @keys.map($encrypted mod *);
 ```
+
+### Power-mod
+
+The sub `power-mod` extends the built-in sub `expmod`.
+The sub `modular-inverse` is based on `power-mod`.
+
+`expmod` gives an error and no result when the 1st argument cannot be inverted with the last argument:
+
+```perl6
+expmod(30, -1, 12)
+```
+
+`power-mod` returns `Nil`:
+
+```perl6
+power-mod(30, -1, 12).defined
+```
+
+Also, `power-mod` 
+
+### Number-base related
+
+There are several subs that provide number system representation functionalities.
+
+For examples, here we find the digit-breakdown of $100!$:
+
+```perl6
+100.&factorial.&digit-count
+```
+
+Here is an examples of using `real-digits`:
+
+```perl6
+real-digits(123.55555)
+```
+
+Non-integer bases can be used:
+
+```perl6
+my $r = real-digits(π, ϕ);
+```
+
+Here we recover $\pi$ from the obtained Golden ratio representation:
+
+```perl6
+$r.head.kv.map( -> $i, $d { $d * ϕ ** ($r.tail - $i - 1)  }).sum;
+```
+
+The sub `phi-number-system` can be used to compute
+[Phi number system](https://mathworld.wolfram.com/PhiNumberSystem.html)
+representations:
+
+```perl6
+.say for (^7)».&phi-number-system
+```
+
+**Remark:** Because of the approximation of the Golden ratio used in “Math::NumberTheory”,
+in order to get exact integers from phi-digits we have to round using small multiples of 10. 
 
 -------
 
