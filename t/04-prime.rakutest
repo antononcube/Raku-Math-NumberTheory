@@ -26,6 +26,8 @@ subtest {
     is next-prime(31, 0), 31;
     is next-prime(-31, 1), -29;
     is next-prime(-31, 12), 3;
+    is next-prime(9_532_323), 9_532_331;
+    is next-prime(-89_342), -89_329;
     is-deeply next-prime([4, 8, 12, 67]), (5, 11, 13, 71);
 }, "next-prime";
 
