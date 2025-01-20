@@ -456,7 +456,14 @@ multi sub prime-pi(Numeric:D $x, :$method is copy = Whatever) {
 }
 
 #----------------------------------------------------------
+# Legendre's formula counts the number of positive integers
+# less than or equal to a number x which are not divisible
+# by any of the first a primes.
+# https://mathworld.wolfram.com/LegendresFormula.html
+
+# Speeding up computations
 state %legendre-formula-cache;
+# Using the recurrence relation
 sub legendre-formula(Numeric:D $x) {
     sub phi($x, $a) {
         return $x if $a == 0;
