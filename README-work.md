@@ -29,9 +29,9 @@ zef install https://github.com/antononcube/Raku-Math-NumberTheory
 
 ## Usage examples
 
-### Prime number tests
+### Prime number testing
 
-The built-in sub `is-prime` is extended to work [Gaussian integers](https://en.wikipedia.org/wiki/Gaussian_integer):
+The built-in sub `is-prime` is extended to work with [Gaussian integers](https://en.wikipedia.org/wiki/Gaussian_integer):
 
 ```perl6
 use Math::NumberTheory;

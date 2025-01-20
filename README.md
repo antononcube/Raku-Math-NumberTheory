@@ -29,9 +29,9 @@ zef install https://github.com/antononcube/Raku-Math-NumberTheory
 
 ## Usage examples
 
-### Prime number tests
+### Prime number testing
 
-The built-in sub `is-prime` is extended to work [Gaussian integers](https://en.wikipedia.org/wiki/Gaussian_integer):
+The built-in sub `is-prime` is extended to work with [Gaussian integers](https://en.wikipedia.org/wiki/Gaussian_integer):
 
 ```perl6
 use Math::NumberTheory;
@@ -202,7 +202,7 @@ representations:
 # (3 1 -4)
 ```
 
-**Remark:** Because of the approximation of the golden ratio used in “Math::NumberTheory”,
+**Remark:** Because of the approximation of the Golden ratio used in “Math::NumberTheory”,
 in order to get exact integers from phi-digits we have to round using small multiples of 10. 
 
 -------
