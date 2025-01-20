@@ -549,6 +549,18 @@ multi sub prime-omega(Int:D $x) {
 }
 
 #==========================================================
+# Prime nu
+#==========================================================
+#| Give the number of distinct primes in the argument.
+multi sub prime-nu($x) is export {*}
+multi sub prime-nu(@x) {
+    return @x.map({ prime-nu($_) }).List;
+}
+multi sub prime-nu(Int:D $x) {
+    return factor-integer($x).elems;
+}
+
+#==========================================================
 # Random prime
 #==========================================================
 # http://reference.wolfram.com/language/ref/RandomPrime.html

@@ -95,7 +95,17 @@ subtest {
     is prime-omega(30), 3;
     is prime-omega(10 ** 5), 10;
     is prime-omega([4, 12, 24]), (2, 3, 4);
-    is prime-omega(24 *40), prime-omega(24) + prime-omega(40);
+    is prime-omega(24 * 40), prime-omega(24) + prime-omega(40);
 }, "prime-omega";
+
+subtest {
+    is prime-nu(7 ** 5), 1;
+    is prime-nu(50), 2;
+    is prime-nu(10 ** 5), 2;
+    is prime-nu([4, 12, 24]), (1, 2, 2);
+    is prime-nu(9 * 40), prime-nu(9) + prime-nu(40);
+
+    is ([&&] (1...100).map({ prime-nu($_) ≤ prime-omega($_) })), True;
+}, "prime-nu";
 
 done-testing;
