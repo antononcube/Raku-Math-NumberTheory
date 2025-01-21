@@ -2,7 +2,7 @@ use v6.d;
 
 #| Spiral square lattice
 #| C<$n> -- Square side size.
-sub spiral-lattice(UInt:D $n, :l(:end-corner(:$last-at)) is copy = Whatever) is export {
+sub spiral-lattice(UInt:D $n, :l(:end-corner(:$last-at)) is copy = Whatever, Bool:D :d(:$dataset) = False) is export {
 
     if $last-at.isa(Whatever) { $last-at = 'bottom-right' }
     my @corners = <top-left top-right bottom-right bottom-left>;
@@ -42,5 +42,35 @@ sub spiral-lattice(UInt:D $n, :l(:end-corner(:$last-at)) is copy = Whatever) is 
         $row += @directions[$dir][0];
         $col += @directions[$dir][1];
     }
-    return $n² + 1 <<->> @matrix;
+
+    @matrix = $n² + 1 <<->> @matrix;
+
+    return do if $dataset {
+        @matrix.map(*.kv.Hash).Array
+    } else {
+        @matrix
+    }
+}
+
+#| Gives a triangle within a matrix.
+sub triangle-matrix(Int $k where $k mod 2 == 1, :$missing-value = 0, Bool:D :d(:$dataset) = False) is export {
+    my $ncols = (2 * $k - 1);
+    my @matrix = [$missing-value xx $ncols] xx $k;
+    my $start = 1;
+    my $mid = $ncols div 2;
+
+    for ^$k -> $row {
+        my $offset = $row * 2;
+        my $num_elements = $row * 2 + 1;
+
+        for ^$num_elements -> $col {
+            @matrix[$row][$mid - $row + $col] = $start++;
+        }
+    }
+
+    return do if $dataset {
+        @matrix.map(*.kv.Hash).Array
+    } else {
+        @matrix
+    }
 }
