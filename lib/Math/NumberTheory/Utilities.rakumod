@@ -53,7 +53,7 @@ sub spiral-lattice(UInt:D $n, :l(:end-corner(:$last-at)) is copy = Whatever, Boo
 }
 
 #| Gives a triangle within a matrix.
-sub triangle-matrix(Int $k where $k mod 2 == 1, :$missing-value = 0, Bool:D :d(:$dataset) = False) is export {
+sub triangle-matrix-embedding(Int $k where $k mod 2 == 1, :$missing-value = 0, Bool:D :d(:$dataset) = False) is export {
     my $ncols = (2 * $k - 1);
     my @matrix = [$missing-value xx $ncols] xx $k;
     my $start = 1;
