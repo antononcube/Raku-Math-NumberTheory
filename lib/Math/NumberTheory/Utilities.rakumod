@@ -2,6 +2,8 @@ use v6.d;
 
 #| Spiral square lattice
 #| C<$n> -- Square side size.
+#| C<:l(:end-corner(:$last-at))> -- Corner to finish the spiral at.
+#| C<:d(:$dataset)> -- Should a dataset be returned or not.
 sub spiral-lattice(UInt:D $n, :l(:end-corner(:$last-at)) is copy = Whatever, Bool:D :d(:$dataset) = False) is export {
 
     if $last-at.isa(Whatever) { $last-at = 'bottom-right' }
@@ -53,7 +55,14 @@ sub spiral-lattice(UInt:D $n, :l(:end-corner(:$last-at)) is copy = Whatever, Boo
 }
 
 #| Gives a triangle within a matrix.
-sub triangle-matrix-embedding(Int $k where $k mod 2 == 1, :$missing-value = 0, Bool:D :d(:$dataset) = False) is export {
+##| C<$k> -- Number of rows of the embedding matrix. (Odd numbers only.)
+##| C<:na(:$missing-value))> -- Missing value.
+##| C<:d(:$dataset)> -- Should a dataset be returned or not.
+sub triangle-matrix-embedding(Int:D $k, :na(:$missing-value) = 0, Bool:D :d(:$dataset) = False) is export {
+
+    die "The first argument is expected to be a positve odd integer."
+    unless $k > 0 && $k mod 2 == 1;
+
     my $ncols = (2 * $k - 1);
     my @matrix = [$missing-value xx $ncols] xx $k;
     my $start = 1;
