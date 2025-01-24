@@ -13,7 +13,7 @@ unit module Math::NumberTheory;
 proto sub is-prime-gaussian($p --> Bool) is export {*}
 
 multi sub is-prime-gaussian(Int:D $p --> Bool) {
-    return $p mod 4 == 3
+    return is-prime($p) && $p mod 4 == 3;
 }
 multi sub is-prime-gaussian(Complex:D $p --> Bool) {
     return do if $p.re == 0 {
