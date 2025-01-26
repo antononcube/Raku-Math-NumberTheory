@@ -153,6 +153,23 @@ in order to get exact integers from phi-digits we have to round using small mult
 
 -------
 
+## TODO
+
+- [ ] TODO Implementation
+  - [ ] TODO Gaussian integers factorization
+  - [ ] TODO Integer partitions
+  - [ ] TODO Square-free
+  - [ ] TODO Sum of squares representation
+  - [ ] TODO CLI
+- [ ] TODO Documentation
+  - [ ] TODO Blog post on first non-zero digit of 10_000!
+  - [ ] TODO Videos
+    - [ ] TODO Neat examples 1
+    - [ ] TODO Neat examples 2
+    - [ ] TODO Neat examples 3
+
+-------
+
 ## References
 
 [RC1] Rosetta Code, [Prime decomposition](https://rosettacode.org/wiki/Prime_decomposition),
