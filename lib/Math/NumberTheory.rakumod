@@ -545,7 +545,7 @@ multi sub prime-omega(@x) {
     return @x.map({ prime-omega($_) }).List;
 }
 multi sub prime-omega(Int:D $x) {
-    return factor-integer($x)».tail.sum;
+    return $x == 1 ?? 0 !! factor-integer($x)».tail.sum;
 }
 
 #==========================================================
@@ -557,7 +557,7 @@ multi sub prime-nu(@x) {
     return @x.map({ prime-nu($_) }).List;
 }
 multi sub prime-nu(Int:D $x) {
-    return factor-integer($x).elems;
+    return $x == 1 ?? 0 !! factor-integer($x).elems;
 }
 
 #==========================================================
