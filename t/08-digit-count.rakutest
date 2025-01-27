@@ -14,4 +14,10 @@ is digit-count(1233, d => 3), 2;
 ## 3
 is-deeply digit-count(1233, d => [1, 3]), %(1 => 1, 3 => 2);
 
+## 4
+is-deeply
+    (1..30).map({ $_ - integer-exponent(factorial($_), 2) }),
+    (1..30).map({ digit-count($_, 2, 1) }),
+    'formula for digit count';
+
 done-testing
