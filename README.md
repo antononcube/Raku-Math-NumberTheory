@@ -217,7 +217,7 @@ in order to get exact integers from phi-digits we have to round using small mult
 - [ ] TODO Documentation
   - [ ] TODO Blog post on first non-zero digit of 10_000!
   - [ ] TODO Videos
-    - [ ] TODO Neat examples 1
+    - [X] DONE [Neat examples 1](https://www.youtube.com/watch?v=wXXWyRAAPvc)
     - [ ] TODO Neat examples 2
     - [ ] TODO Neat examples 3
 
