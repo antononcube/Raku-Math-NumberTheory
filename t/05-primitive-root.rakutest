@@ -7,15 +7,22 @@ use Math::NumberTheory;
 plan *;
 
 ## 1
-is primitive-root(9), 2;
+subtest {
+    is primitive-root(9), 2;
+    is-deeply (1 .. 10).map({ power-mod(2, $_, 9) }).unique.sort.List, (1, 2, 4, 5, 7, 8);
+    is primitive-root(10) ∈ [3, 7], True;
+}, 'primitive-root';
 
 ## 2
-is-deeply (1..10).map({ power-mod(2, $_, 9) }).unique.sort.List, (1, 2, 4, 5, 7, 8);
+subtest {
+    is primitive-root-list(9), [2, 5];
+}, 'primitive-root-list';
 
 ## 3
-is primitive-root(10) ∈ [3, 7], True;
-
-## 4
-is primitive-root-list(9), [2, 5];
+subtest {
+    is multiplicative-order(5 ,7), 6, 'standard';
+    is multiplicative-order(-5 ,7), 3, 'negative first argument';
+    is multiplicative-order(-5 ,7, [3, 11]), 2, 'generalized';
+}, 'multiplicative-order';
 
 done-testing;

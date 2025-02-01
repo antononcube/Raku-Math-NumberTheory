@@ -398,11 +398,16 @@ sub primitive-root(Int:D $n, :$method = Whatever) is export {
     return Nil;
 }
 
+# &primitive-root should be refactored to use a version of &primitive-root-list's code.
+
 # http://reference.wolfram.com/language/ref/PrimitiveRootList.html
 #| Give a list of primitive roots of the argument.
 sub primitive-root-list(Int:D $n, :$method = Whatever) is export {
     my $phi = euler-phi($n);
     my @factors = factor-integer($phi, :$method)».head;
+
+    # Make a faster no-primitive root check based on:
+    # A primitive root exists if and only if $n is 1, 2, 4, p^k or 2*p^k, where p is an odd prime and k > 0.
 
     my @res;
     for 2 .. $n - 1 -> $g {
@@ -412,6 +417,30 @@ sub primitive-root-list(Int:D $n, :$method = Whatever) is export {
         }
     }
     return @res;
+}
+
+#==========================================================
+# Multiplicative order
+#==========================================================
+sub gcd0(Int $a, Int $b) {
+    ($b == 0) ?? $a !! $b gcd $a % $b;
+}
+
+# Is this supposed to work with Gaussian primes?
+#| Give the multiplicative order of $^a ($k) modulo $^b ($n).
+sub multiplicative-order(Int:D $k, Int:D $n, *@r) is export {
+    die 'The first and second argumens must be coprime.' unless gcd0($k, $n) == 1;
+    my $m = 1;
+    loop {
+        last if $m > 16;
+        my $power = expmod($k, $m, $n);
+        if @r.elems {
+            return $m if @r.grep({ $power == $_ mod $n }).elems > 0;
+        } else {
+            return $m if $power == 1;
+        }
+        $m++;
+    }
 }
 
 #==========================================================
