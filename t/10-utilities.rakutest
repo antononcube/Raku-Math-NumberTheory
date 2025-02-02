@@ -14,8 +14,8 @@ subtest {
 ## 2
 subtest {
     ok triangle-matrix-embedding(11);
+    ok triangle-matrix-embedding(12);
     is triangle-matrix-embedding(11, :dataset).all ~~ Map:D, True;
-    dies-ok { triangle-matrix-embedding(12) };
 }, 'triangle matrix embedding';
 
 done-testing;

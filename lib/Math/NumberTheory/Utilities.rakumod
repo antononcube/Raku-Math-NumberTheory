@@ -60,8 +60,8 @@ sub spiral-lattice(UInt:D $n, :l(:end-corner(:$last-at)) is copy = Whatever, Boo
 ##| C<:d(:$dataset)> -- Should a dataset be returned or not.
 sub triangle-matrix-embedding(Int:D $k, :na(:$missing-value) = 0, Bool:D :d(:$dataset) = False) is export {
 
-    die "The first argument is expected to be a positve odd integer."
-    unless $k > 0 && $k mod 2 == 1;
+    die "The first argument is expected to be a positve integer."
+    unless $k > 0;
 
     my $ncols = (2 * $k - 1);
     my @matrix = [$missing-value xx $ncols] xx $k;
