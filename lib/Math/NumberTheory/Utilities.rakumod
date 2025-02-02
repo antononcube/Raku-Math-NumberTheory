@@ -83,3 +83,37 @@ sub triangle-matrix-embedding(Int:D $k, :na(:$missing-value) = 0, Bool:D :d(:$da
         @matrix
     }
 }
+
+constant $golden-ratio = (1 + sqrt(5)) / 2;
+
+constant $sunMsg = "The first argument is expected to be a positve integer or list of integers.";
+
+#| Sunflower embedding of integers from 1 to given upper limit.
+#| C<$n> -- A positive integer or a list of integers.
+#| C<:&with> -- Function to apply to each integer and add the result to the corresponding record.
+#| If C<WhateverCode> then no such application and addition is done.
+proto sub sunflower-embedding($n, :&with = WhateverCode, Bool:D :d(:$dataset) = False) is export {*}
+
+multi sub sunflower-embedding(Int:D $n, :&with = WhateverCode, Bool:D :d(:$dataset) = False) {
+    return sunflower-embedding((1...$n).Array, :&with, :$dataset);
+}
+multi sub sunflower-embedding(@ints, :&with = WhateverCode, Bool:D :d(:$dataset) = False) {
+    die $sunMsg unless @ints.all ~~ Int:D;
+
+    my @sunflower = @ints.map({
+        my $a = $_;
+        my $angle = $a * 2 * π / $golden-ratio ** 2;
+        my %res = x => sqrt($a) * cos($angle), y => sqrt($a) * sin($angle);
+        if &with ~~ Callable && !&with.isa(WhateverCode) {
+            %res<group> = &with($a)
+        }
+        %res
+    });
+
+    return do if $dataset {
+        @sunflower
+    } else {
+        my @keys = &with ~~ Callable && !&with.isa(WhateverCode) ?? <x y group> !! <x y>;
+        @sunflower.map(*{@keys})
+    }
+}

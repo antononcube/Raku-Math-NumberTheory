@@ -18,4 +18,12 @@ subtest {
     is triangle-matrix-embedding(11, :dataset).all ~~ Map:D, True;
 }, 'triangle matrix embedding';
 
+
+## 3
+subtest {
+    ok sunflower-embedding(11), 'standard';
+    ok sunflower-embedding(11, with => { $_ div 2 });
+    is sunflower-embedding(11, :dataset).all ~~ Map:D, True, 'dataset obtained';
+}, 'sunflower embedding';
+
 done-testing;
