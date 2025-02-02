@@ -86,26 +86,28 @@ sub triangle-matrix-embedding(Int:D $k, :na(:$missing-value) = 0, Bool:D :d(:$da
 
 constant $golden-ratio = (1 + sqrt(5)) / 2;
 
-constant $sunMsg = "The first argument is expected to be a positve integer or list of integers.";
-
 #| Sunflower embedding of integers from 1 to given upper limit.
 #| C<$n> -- A positive integer or a list of integers.
 #| C<:&with> -- Function to apply to each integer and add the result to the corresponding record.
 #| If C<WhateverCode> then no such application and addition is done.
-proto sub sunflower-embedding($n, :&with = WhateverCode, Bool:D :d(:$dataset) = False) is export {*}
+proto sub sunflower-embedding($n, :&with = WhateverCode, Bool:D :d(:$dataset) = False, :a(:$angle) = Whatever) is export {*}
 
-multi sub sunflower-embedding(Int:D $n, :&with = WhateverCode, Bool:D :d(:$dataset) = False) {
+multi sub sunflower-embedding(Int:D $n, :&with = WhateverCode, Bool:D :d(:$dataset) = False, :a(:$angle) = Whatever) {
     return sunflower-embedding((1...$n).Array, :&with, :$dataset);
 }
-multi sub sunflower-embedding(@ints, :&with = WhateverCode, Bool:D :d(:$dataset) = False) {
-    die $sunMsg unless @ints.all ~~ Int:D;
+multi sub sunflower-embedding(@ints, :&with = WhateverCode, Bool:D :d(:$dataset) = False, :a(:$angle) is copy = Whatever) {
+    die "The first argument is expected to be a positve integer or list of integers."
+    unless @ints.all ~~ Int:D;
+
+    if $angle.isa(Whatever) { $angle = 2 * π / $golden-ratio ** 2 }
+    die 'The value of the argument $angle is expected to be a number or Whatever.'
+    unless $angle ~~ Numeric:D;
 
     my @sunflower = @ints.map({
-        my $a = $_;
-        my $angle = $a * 2 * π / $golden-ratio ** 2;
-        my %res = x => sqrt($a) * cos($angle), y => sqrt($a) * sin($angle);
+        my $angle2 = $_ * $angle;
+        my %res = x => sqrt($_) * cos($angle2), y => sqrt($_) * sin($angle2);
         if &with ~~ Callable && !&with.isa(WhateverCode) {
-            %res<group> = &with($a)
+            %res<group> = &with($_)
         }
         %res
     });
