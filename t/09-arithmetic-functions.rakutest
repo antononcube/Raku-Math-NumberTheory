@@ -49,6 +49,7 @@ subtest {
 
     is liouville-lambda(356), (-1) ** prime-omega(356);
 
+    # MoebiusM is 0 for non-square-free integers.
     is
             (1 .. 100).map({ moebius-mu($_) != 0 }),
             (1 .. 100).map({ is-square-free($_) }),
@@ -61,8 +62,8 @@ subtest {
     };
 
     is
-            (1 .. 10).map({ moebius-mu($_) }),
-            (1 .. 10).map({ µ($_) }),
+            (1 .. 100).map({ moebius-mu($_) }),
+            (1 .. 100).map({ µ($_) }),
             're-implementation of µ(n) using 𝞭( 𝜂(n), Ω(n) * 𝛌(n))';
 
 }, 'relationships';
