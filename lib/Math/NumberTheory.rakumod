@@ -594,7 +594,7 @@ multi sub prime-nu(Int:D $x) {
 #==========================================================
 # http://reference.wolfram.com/language/ref/MoebiusMu.html
 
-# Gives the Möbius function µ(n).
+# Give the Möbius function µ(n).
 proto sub moebius-mu($n, Bool:D :gaussian(:$gaussian-integers) = False) is export {*}
 
 multi sub moebius-mu(@n, Bool:D :gaussian(:$gaussian-integers) = False) {
@@ -610,6 +610,66 @@ multi sub moebius-mu(Int:D $n, Bool:D :gaussian(:$gaussian-integers) = False) {
 
 multi sub moebius-mu(Complex:D $n, Bool:D :gaussian(:$gaussian-integers) = False) {
     die '&factor-integer is not implemented for Gaussian integers yet.';
+}
+
+#==========================================================
+# SquareFreeQ function
+#==========================================================
+# http://reference.wolfram.com/language/ref/SquareFreeQ.html
+
+# Give True if the first argument is a square-free number, and False otherwise.
+proto sub is-square-free($n, Bool:D :gaussian(:$gaussian-integers) = False) is export {*}
+
+multi sub is-square-free(@n, Bool:D :gaussian(:$gaussian-integers) = False) {
+    return @n.map({ is-square-free($_, :$gaussian-integers) }).List;
+}
+
+multi sub is-square-free(Int:D $n, Bool:D :gaussian(:$gaussian-integers) = False) {
+    return moebius-mu($n, :$gaussian-integers) != 0 ?? True !! False;
+}
+
+multi sub is-square-free(Complex:D $n, Bool:D :gaussian(:$gaussian-integers) = False) {
+    die '&factor-integer is not implemented for Gaussian integers yet.';
+}
+
+#==========================================================
+# LiouvilleLambda function
+#==========================================================
+# http://reference.wolfram.com/language/ref/LiouvilleLambda.html
+
+# Gives the Liouville lambda function λ(n).
+proto sub liouville-lambda($n, Bool:D :gaussian(:$gaussian-integers) = False) is export {*}
+
+multi sub liouville-lambda(@n, Bool:D :gaussian(:$gaussian-integers) = False) {
+    return @n.map({ liouville-lambda($_, :$gaussian-integers) }).List;
+}
+
+multi sub liouville-lambda(Int:D $n, Bool:D :gaussian(:$gaussian-integers) = False) {
+    return liouville-lambda($n + 0i) if $gaussian-integers;
+    return (-1) ** prime-omega($n);
+}
+
+multi sub liouville-lambda(Complex:D $n, Bool:D :gaussian(:$gaussian-integers) = False) {
+    die '&factor-integer is not implemented for Gaussian integers yet.';
+}
+
+#==========================================================
+#Kronecker delta
+#==========================================================
+#| Gives the Kronecker delta value, which is equal to 1 if all the arguments are equal, and 0 otherwise.
+proto sub kronecker-delta(**@n) is export {*}
+
+multi sub kronecker-delta() {
+    return 1;
+}
+multi sub kronecker-delta(Numeric:D $n) {
+    return $n == 0 ?? 1 !! 0;
+}
+
+multi sub kronecker-delta(+@n) {
+    return kronecker-delta() if @n.elems == 0;
+    return kronecker-delta(@n.head) if @n.elems == 1;
+    return ([&&] @n.tail(*-1).map({ $_ == @n.head })) ?? 1 !! 0;
 }
 
 #==========================================================
