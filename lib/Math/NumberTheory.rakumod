@@ -590,6 +590,29 @@ multi sub prime-nu(Int:D $x) {
 }
 
 #==========================================================
+# MoebiusMu function
+#==========================================================
+# http://reference.wolfram.com/language/ref/MoebiusMu.html
+
+# Gives the Möbius function µ(n).
+proto sub moebius-mu($n, Bool:D :gaussian(:$gaussian-integers) = False) is export {*}
+
+multi sub moebius-mu(@n, Bool:D :gaussian(:$gaussian-integers) = False) {
+    return @n.map({ moebius-mu($_, :$gaussian-integers) }).List;
+}
+
+multi sub moebius-mu(Int:D $n, Bool:D :gaussian(:$gaussian-integers) = False) {
+    return moebius-mu($n + 0i) if $gaussian-integers;
+    return 1 if $n == 1;
+    my @exps = factor-integer($n)».tail;
+    return @exps.max == 1 ?? (-1) ** @exps.elems !! 0;
+}
+
+multi sub moebius-mu(Complex:D $n, Bool:D :gaussian(:$gaussian-integers) = False) {
+    die '&factor-integer is not implemented for Gaussian integers yet.';
+}
+
+#==========================================================
 # Random prime
 #==========================================================
 # http://reference.wolfram.com/language/ref/RandomPrime.html
