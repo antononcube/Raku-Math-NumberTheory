@@ -1,0 +1,58 @@
+use v6.d;
+use Test;
+
+use lib <. lib>;
+use Math::NumberTheory;
+
+plan *;
+
+## 1
+subtest {
+    is moebius-mu(5), -1, 'standard';
+    # Not working because implemented &factor-integer is not implemented for Gaussian integers yet.
+    dies-ok {moebius-mu(5 + 6i)}, 'gaussian integer';
+    is moebius-mu(-13), -1, 'negative first argument';
+    is moebius-mu([3, 11, 8, 678]), (-1, -1, 0, -1), 'generalized';
+
+    # Relationships
+    is moebius-mu(11 * 23), moebius-mu(11) * moebius-mu(23), 'completely multiplicative function';
+}, 'moebius-mu';
+
+## 2
+subtest {
+    is liouville-lambda(5), -1, 'standard';
+    # Not working because implemented &factor-integer is not implemented for Gaussian integers yet.
+    dies-ok {liouville-lambda(5 + 6i)}, 'gaussian integer';
+    is liouville-lambda(-13), -1, 'negative first argument';
+    is liouville-lambda([3, 11, 8, 678]), (-1, -1, -1, -1), 'generalized';
+
+    # Relationships
+    is liouville-lambda(6 * 27), liouville-lambda(6) * liouville-lambda(27), 'completely multiplicative function';
+}, 'liouville-lambda';
+
+## 3
+subtest {
+    is kronecker-delta(0), 1, 'Special value for 0';
+    is kronecker-delta(122), 0, '0 for any number ≠ 0 (1)';
+    is kronecker-delta(232.33), 0, '0 for any number ≠ 0 (2)';
+
+    is kronecker-delta(232.33, 332.54), 0, 'different real values, args';
+    is kronecker-delta([232.33, 332.54, 894.03]), 0, 'different real values, array';
+
+    is kronecker-delta(10, 10, 10), 1, 'same integer values, array';
+    is kronecker-delta([10, 10, 10]), 1, 'same integer values, args';
+
+}, 'kronecker-delta';
+
+## 4
+subtest {
+
+    is liouville-lambda(356), (-1) ** prime-omega(356);
+
+    is
+            (1..100).map({ moebius-mu($_) != 0 }),
+            (1..100).map({ is-square-free($_) }),
+        'µ(n) ≠ 0 means square-free';
+}, 'relationships';
+
+done-testing;
