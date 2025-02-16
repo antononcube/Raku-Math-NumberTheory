@@ -1,7 +1,7 @@
 use v6.d;
 use Test;
 
-#use lib <. lib>;
+use lib <. lib>;
 use Math::NumberTheory;
 
 plan *;
@@ -24,5 +24,14 @@ subtest {
     is multiplicative-order(-5 ,7), 3, 'negative first argument';
     is multiplicative-order(-5 ,7, [3, 11]), 2, 'generalized';
 }, 'multiplicative-order';
+
+## 4
+subtest {
+    is moebius-mu(5), -1, 'standard';
+    # Not working because implemented &factor-integer is not implemented for Gaussian integers yet.
+    dies-ok {moebius-mu(5 + 6i)}, 'gaussian integer';
+    is moebius-mu(-13), -1, 'negative first argument';
+    is moebius-mu([3, 11, 8, 678]), (-1, -1, 0, -1), 'generalized';
+}, 'meobius-mu';
 
 done-testing;
