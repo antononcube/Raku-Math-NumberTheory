@@ -157,8 +157,13 @@ in order to get exact integers from phi-digits we have to round using small mult
 
 - [ ] TODO Implementation
   - [ ] TODO Gaussian integers factorization
+  - [ ] TODO Moebius Mu function, Liouville lambda function 
+    - [X] DONE Integers
+    - [ ] TODO Gaussian integers
+  - [ ] DONE Square-free test
+    - [X] DONE Integers
+    - [ ] TODO Gaussian integers
   - [ ] TODO Integer partitions
-  - [ ] TODO Square-free
   - [ ] TODO Sum of squares representation
   - [ ] TODO CLI
 - [ ] TODO Documentation
@@ -172,8 +177,12 @@ in order to get exact integers from phi-digits we have to round using small mult
 
 ## References
 
+### Articles, blog posts, wiki-pages
+
 [RC1] Rosetta Code, [Prime decomposition](https://rosettacode.org/wiki/Prime_decomposition),
 [Section "Pure Raku"](https://rosettacode.org/wiki/Prime_decomposition#Pure_Raku).
+
+### Packages 
 
 [RCp1] Raku Community,
 [Math::Sequences Raku package](https://github.com/raku-community-modules/Math-Sequences),
@@ -184,3 +193,15 @@ in order to get exact integers from phi-digits we have to round using small mult
 [Prime::Factor Raku package](https://github.com/thundergnat/Prime-Factor),
 (2016-2023),
 [GitHub/thundergnat](https://github.com/thundergnat).
+
+### Videos
+
+[AAv1] Anton Antonov,
+["Number theory neat examples in Raku (Set 1)"](https://www.youtube.com/watch?v=wXXWyRAAPvc),
+(2025),
+[YouTube/@AAA4prediction](https://www.youtube.com/@AAA4prediction).
+
+[AAv2] Anton Antonov,
+["Number theory neat examples in Raku (Set 2)"](),
+(2025),
+[YouTube/@AAA4prediction](https://www.youtube.com/@AAA4prediction).
