@@ -3,6 +3,64 @@ use v6.d;
 unit module Math::NumberTheory;
 
 #==========================================================
+# GCD
+#==========================================================
+# It is a good idea to make GCD work for Gaussian integers and rationals.
+# For example:
+#
+
+proto sub gcd-gaussian($a, $b) is export {*}
+
+multi sub gcd-gaussian(Int:D $a, Complex:D $b) {
+    return gcd-gaussian($a + 0i, $b);
+}
+multi sub gcd-gaussian(Complex:D $a, Int:D $b) {
+    return gcd-gaussian($a, $b + 0i);
+}
+
+multi sub gcd-gaussian(Complex:D $a is copy, Complex:D $b is copy) is export {
+    sub norm(Complex:D $z) {
+        return $z.re ** 2 + $z.im ** 2;
+    }
+
+    sub round-to-nearest-int($x) {
+        return $x.round;
+    }
+
+    sub divide-gaussian(Complex:D $a, Complex:D $b) {
+        my $denom = norm($b);
+        my $real-part = ($a.re * $b.re + $a.im * $b.im) / $denom;
+        my $imag-part = ($a.im * $b.re - $a.re * $b.im) / $denom;
+        my $q-re = round-to-nearest-int($real-part);
+        my $q-im = round-to-nearest-int($imag-part);
+        return Complex.new($q-re, $q-im);
+    }
+
+    while $b != 0 {
+        my $q = divide-gaussian($a, $b);
+        my $r = $a - $b * $q;
+        $a = $b;
+        $b = $r;
+    }
+
+    return $a;
+}
+
+#----------------------------------------------------------
+# Redefine gcd
+
+multi infix:<gcd>(Int:D $a, Complex:D $b --> Complex:D) is export {
+    return gcd-gaussian($a, $b);
+}
+
+multi infix:<gcd>(Complex:D $a, Int:D $b --> Complex:D) is export {
+    return gcd-gaussian($a, $b);
+}
+multi infix:<gcd>(Complex:D $a, Complex:D $b --> Complex:D) is export {
+    return gcd-gaussian($a, $b);
+}
+
+#==========================================================
 # PrimeQ
 #==========================================================
 # Extending is-prime to deal with Gaussian Integers.
@@ -91,7 +149,13 @@ multi sub digit-count(Int:D $n, Int:D $base = 10, $digits = Whatever) {
 # Integer factors
 #==========================================================
 
-sub factor-integer(Int:D $n is copy, $k is copy = Whatever, :$method is copy = Whatever) is export {
+proto sub factor-integer($n, $k = Whatever, :$method = Whatever, Bool:D :gaussian(:$gaussian-integers) = False) is export {*}
+multi sub factor-integer(
+        Int:D $n is copy,
+        $k is copy = Whatever,
+        :$method is copy = Whatever,
+        Bool:D :gaussian(:$gaussian-integers) = False) {
+    return factor-gaussian-integer($n + 0i, $k) if $gaussian-integers;
     if $n < 0 {
         return [|(-1, 1), |factor-integer(abs($n), $k, :$method)].List;
     }
@@ -239,6 +303,11 @@ sub find-factor (Int $n, $constant = 1) {
     }
     $factor = find-factor($n, $constant + 1) if $n == $factor;
     $factor;
+}
+
+#----------------------------------------------------------
+sub factor-gaussian-integer(Complex:D $n) {
+
 }
 
 #==========================================================

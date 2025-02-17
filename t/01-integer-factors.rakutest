@@ -3,7 +3,7 @@ use v6.d;
 
 use Test;
 
-#use lib <. lib>;
+use lib <. lib>;
 use Math::NumberTheory;
 
 plan *;
@@ -29,5 +29,18 @@ subtest {
     is factor-integer(20 ** 4, 5).elems ≤ 5, True;
     is factor-integer(20 ** 4, 5, method => 'trial').elems ≤ 5, True;
 }, "max number of factors";
+
+## 6
+subtest {
+    is gcd-gaussian(10 + 15i, -3 + 2i) ∈ (2 + 3i, -3 + 2i), True;
+    is (10 + 15i) gcd (-3 + 2i) ∈ (2 + 3i, -3 + 2i), True;
+    is (10 + 15i) gcd 25, 5 + 0i;
+    is 105 gcd (7 + 49i), 7 + 14i;
+}, 'GCD for Gaussian integers';
+
+### 7
+#is-deeply
+#        factor-integer(120, :gaussian-integers).Array,
+#        [(1 + i, 6), (1 + 2i, 1), (2 + i, 1), (3, 1)];
 
 done-testing;
