@@ -36,6 +36,11 @@ multi sub gcd-gaussian(Complex:D $a is copy, Complex:D $b is copy) is export {
         return Complex.new($q-re, $q-im);
     }
 
+    # Is this needed?
+    if norm($b) > norm($a) {
+        ($a, $b) = $b, $a;
+    }
+
     while $b != 0 {
         my $q = divide-gaussian($a, $b);
         my $r = $a - $b * $q;
@@ -151,14 +156,12 @@ multi sub digit-count(Int:D $n, Int:D $base = 10, $digits = Whatever) {
 
 proto sub factor-integer($n, $k = Whatever, :$method = Whatever, Bool:D :gaussian(:$gaussian-integers) = False) is export {*}
 multi sub factor-integer(
-        Int:D $n is copy,
+        $n is copy,
         $k is copy = Whatever,
         :$method is copy = Whatever,
         Bool:D :gaussian(:$gaussian-integers) = False) {
-    return factor-gaussian-integer($n + 0i, $k) if $gaussian-integers;
-    if $n < 0 {
-        return [|(-1, 1), |factor-integer(abs($n), $k, :$method)].List;
-    }
+    die 'The first argument is expected to be an integer or a complex number with integer real and imaginary parts.'
+    unless $n ~~ Int:D || ($n ~~ Complex:D && $n.re ~~ Int:D && $n.im ~~ Int:D);
 
     if $k.isa(Whatever) { $k = Inf }
     die 'The second argument is expected to be a positive integer or Whatever.'
@@ -168,18 +171,27 @@ multi sub factor-integer(
     die 'The argument $methos is expected to be Whatever or one of "pollard-rho" or "trial-division".'
     unless $method ∈ <rho pollard pollard-rho trial trial-division>;
 
-    return trial-factor-integer($n, $k) if $k < Inf;
-
-    return do given $method {
-        when $_.lc ∈ <rho pollard pollard-rho> {
-            my @res = rho-prime-factors($n);
-            if $k ≤ @res.elems {
-                @res.head($k)
-            } else {
-                $k < Inf ?? @res.head($k) !! @res
-            }
+    if $gaussian-integers || $n ~~ Complex:D {
+        if $n ~~ Int:D { $n = $n + 0i}
+        return factor-gaussian-integer($n);
+    } else {
+        if $n < 0 {
+            return [|(-1, 1), |factor-integer(abs($n), $k, :$method, :!gaussian-integers)].List;
         }
-        when $_.lc ∈ <trial trial-division> { trial-factor-integer($n, $k) }
+
+        return trial-factor-integer($n, $k) if $k < Inf;
+
+        return do given $method {
+            when $_.lc ∈ <rho pollard pollard-rho> {
+                my @res = rho-prime-factors($n);
+                if $k ≤ @res.elems {
+                    @res.head($k)
+                } else {
+                    $k < Inf ?? @res.head($k) !! @res
+                }
+            }
+            when $_.lc ∈ <trial trial-division> { trial-factor-integer($n, $k) }
+        }
     }
 }
 
@@ -306,8 +318,74 @@ sub find-factor (Int $n, $constant = 1) {
 }
 
 #----------------------------------------------------------
+# First implementation, kept for reference.
+#`[
 sub factor-gaussian-integer(Complex:D $n) {
+    # See https://codegolf.stackexchange.com/a/185311
+    my @res;
+    sub f2($_){{$!=0+|sqrt .abs²-$^a²;{($!=$_/my \w=$^b+$a*i)==$!.floor&&.abs>w.abs>1>return f2 w&$!}for -$!..$!}for ^.abs;@res.push($_)};
+    f2($n);
+    @res = @res.classify(*).map({ ($_.key, $_.value.elems) }).sort(*.head.abs);
+    return @res;
+}
+]
 
+#----------------------------------------------------------
+# Re-programming of the Python implementation given here:
+# https://github.com/johnhw/GaussianFactorisation/blob/master/gaussian_factorise.py
+
+sub factor-gaussian-integer(Complex:D $a is copy) {
+    sub norm(Complex:D $z) {
+        return $z.re ** 2 + $z.im ** 2;
+    }
+
+    my $n = norm($a);
+    my @factors = |factor-integer($n.Int).map({ $_.head xx $_.tail }).flat;
+
+    my @z-factors;
+
+    while @factors.elems > 0 {
+        my $factor = @factors.shift;
+
+        my $u;
+        if $factor == 2 {
+            # either 1+1j or 1-1j; 1+1j chosen here
+            $u = 1 + 1i;
+        } elsif $factor mod 4 == 3 {
+            # x = 3 mod 4, remove two copies of this factor
+            $u = $factor;
+            # remove repeated factor (note assumes factors are in order)!
+            @factors.shift;
+        } else {
+            # x = 1 mod 4
+            # find k, such that k^2 = -1 mod factor = (factor-1) mod factor
+            my $n = (2 .. ($factor - 1)).pick;
+            while power-mod($n, ($factor - 1) div 2, $factor) != $factor - 1 {
+                $n = (2 .. ($factor - 1)).pick;
+            }
+            my $k = power-mod($n, ($factor - 1) div 4, $factor);
+
+            # try dividing in k+1j
+            my $trial-factor = gcd-gaussian($factor, $k + 1i);
+            my $q = ($a / $trial-factor).round;
+
+            # if exact, we have a factor
+            if norm($a - $q * $trial-factor) < 1e-12 {
+                $u = $trial-factor;
+            } else {
+                # otherwise it is the conjugate
+                $u = $trial-factor.conj;
+            }
+        }
+
+        $a = $a / $u;
+        @z-factors.push( $u.round );
+    }
+
+    my @res = @z-factors.push( $a.round );
+
+    @res = @res.classify(*).map({ ($_.key, $_.value.elems) }).sort(*.head.abs);
+    return @res;
 }
 
 #==========================================================
