@@ -12,8 +12,9 @@ plan *;
 subtest {
     is gcd-gaussian(10 + 15i, -3 + 2i) ∈ (2 + 3i, -3 + 2i), True;
     is (10 + 15i) gcd (-3 + 2i) ∈ (2 + 3i, -3 + 2i), True;
-    is (10 + 15i) gcd 25, 5 + 0i;
+    is (10 + 15i) gcd 25, 0 - 5i;
     is 105 gcd (7 + 49i), 7 + 14i;
+    is (10 + 15i) gcd 25, 25 gcd (10 + 15i);
 }, 'GCD for Gaussian integers';
 
 ## 2
