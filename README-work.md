@@ -5,7 +5,7 @@ Raku package with Number theory functions.
 The function names and features follow the 
 [Number theory functions of Wolfram Language](http://reference.wolfram.com/language/guide/NumberTheory.html).
 
-**Remark:**  Raku has some nice built-in Number theory functions, like, `base`, `mod`, `polymod`, `expmod`, `is-prime`. 
+**Remark:**  Raku has some nice built-in Number theory functions, like, `base`, `gcd`, `mod`, `polymod`, `expmod`, `is-prime`. 
 They somewhat lack generality, hence their functionalities are extended with this package. 
 For example, `is-prime` works with lists and [Gaussian integers](https://en.wikipedia.org/wiki/Gaussian_integer).
 
@@ -29,12 +29,32 @@ zef install https://github.com/antononcube/Raku-Math-NumberTheory
 
 ## Usage examples
 
+## GCD
+
+The infix operator `gcd` for calculating the Greatest Common Divisor (GCD) 
+is extended to work with [Gaussian integers](https://en.wikipedia.org/wiki/Gaussian_integer):
+
+```perl6
+use Math::NumberTheory;
+(10 + 15i) gcd (-3 + 2i)
+```
+
+```perl6
+105 gcd (7 + 49i)
+```
+
+Here is verification of the latter:
+
+```perl6
+say 105 / (7 + 14i);
+say (7 + 49i) / (7 + 14i);
+```
+
 ### Prime number testing
 
 The built-in sub `is-prime` is extended to work with [Gaussian integers](https://en.wikipedia.org/wiki/Gaussian_integer):
 
 ```perl6
-use Math::NumberTheory;
 say is-prime(2 + 1i);
 say is-prime(5, :gaussian-integers);
 ```
@@ -156,6 +176,7 @@ in order to get exact integers from phi-digits we have to round using small mult
 ## TODO
 
 - [ ] TODO Implementation
+  - [X] DONE Gaussian integers GCD
   - [ ] TODO Gaussian integers factorization
   - [ ] TODO Moebius Mu function, Liouville lambda function 
     - [X] DONE Integers
