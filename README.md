@@ -253,8 +253,3 @@ in order to get exact integers from phi-digits we have to round using small mult
 ["Number theory neat examples in Raku (Set 1)"](https://www.youtube.com/watch?v=wXXWyRAAPvc),
 (2025),
 [YouTube/@AAA4prediction](https://www.youtube.com/@AAA4prediction).
-
-[AAv2] Anton Antonov,
-["Number theory neat examples in Raku (Set 2)"](),
-(2025),
-[YouTube/@AAA4prediction](https://www.youtube.com/@AAA4prediction).
