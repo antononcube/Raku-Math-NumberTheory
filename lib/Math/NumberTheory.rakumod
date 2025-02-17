@@ -6,8 +6,6 @@ unit module Math::NumberTheory;
 # GCD
 #==========================================================
 # It is a good idea to make GCD work for Gaussian integers and rationals.
-# For example:
-#
 
 proto sub gcd-gaussian($a, $b) is export {*}
 
@@ -332,7 +330,9 @@ sub factor-gaussian-integer(Complex:D $n) {
 
 #----------------------------------------------------------
 # Re-programming of the Python implementation given here:
-# https://github.com/johnhw/GaussianFactorisation/blob/master/gaussian_factorise.py
+#   https://github.com/johnhw/GaussianFactorisation/blob/master/gaussian_factorise.py
+# Seems the to follow the description here:
+#   https://stackoverflow.com/a/2271645
 
 sub factor-gaussian-integer(Complex:D $a is copy) {
     sub norm(Complex:D $z) {
