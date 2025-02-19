@@ -177,13 +177,13 @@ in order to get exact integers from phi-digits we have to round using small mult
 
 - [ ] TODO Implementation
   - [X] DONE Gaussian integers GCD
-  - [ ] TODO Gaussian integers factorization
-  - [ ] TODO Moebius Mu function, Liouville lambda function 
+  - [X] DONE Gaussian integers factorization
+  - [X] DONE Moebius Mu function, Liouville lambda function 
     - [X] DONE Integers
-    - [ ] TODO Gaussian integers
-  - [ ] DONE Square-free test
+    - [X] DONE Gaussian integers
+  - [X] DONE Square-free test
     - [X] DONE Integers
-    - [ ] TODO Gaussian integers
+    - [X] DONE Gaussian integers
   - [ ] TODO Integer partitions
   - [ ] TODO Sum of squares representation
   - [ ] TODO CLI
