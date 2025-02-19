@@ -1,6 +1,9 @@
 use v6.d;
 use Test::Coverage;
 
+# Run with:
+#   raku -I. xt/coverage.rakutest
+
 plan 2;
 
 coverage-at-least 70; # percent
