@@ -159,7 +159,7 @@ multi sub factor-integer(
         :$method is copy = Whatever,
         Bool:D :gaussian(:$gaussian-integers) = False) {
     die 'The first argument is expected to be an integer or a complex number with integer real and imaginary parts.'
-    unless $n ~~ Int:D || ($n ~~ Complex:D && $n.re ~~ Int:D && $n.im ~~ Int:D);
+    unless $n ~~ Int:D || ($n ~~ Complex:D && $n.re.floor == $n.re && $n.im.floor == $n.im);
 
     if $k.isa(Whatever) { $k = Inf }
     die 'The second argument is expected to be a positive integer or Whatever.'
@@ -334,7 +334,7 @@ sub factor-gaussian-integer(Complex:D $n) {
 # Seems the to follow the description here:
 #   https://stackoverflow.com/a/2271645
 
-sub factor-gaussian-integer(Complex:D $a is copy) {
+sub factor-gaussian-integer(Complex:D $a is copy, Bool:D :$include-unit = True) {
     sub norm(Complex:D $z) {
         return $z.re ** 2 + $z.im ** 2;
     }
@@ -354,35 +354,37 @@ sub factor-gaussian-integer(Complex:D $a is copy) {
         } elsif $factor mod 4 == 3 {
             # x = 3 mod 4, remove two copies of this factor
             $u = $factor;
-            # remove repeated factor (note assumes factors are in order)!
+            # Remove repeated factor (note assumes factors are in order)!
             @factors.shift;
         } else {
             # x = 1 mod 4
-            # find k, such that k^2 = -1 mod factor = (factor-1) mod factor
+            # Find k, such that k^2 = -1 mod factor = (factor-1) mod factor
             my $n = (2 .. ($factor - 1)).pick;
             while power-mod($n, ($factor - 1) div 2, $factor) != $factor - 1 {
                 $n = (2 .. ($factor - 1)).pick;
             }
             my $k = power-mod($n, ($factor - 1) div 4, $factor);
 
-            # try dividing in k+1j
+            # Try dividing in k+1j
             my $trial-factor = gcd-gaussian($factor, $k + 1i);
             my $q = ($a / $trial-factor).round;
 
-            # if exact, we have a factor
+            # If exact, we have a factor
             if norm($a - $q * $trial-factor) < 1e-12 {
                 $u = $trial-factor;
             } else {
-                # otherwise it is the conjugate
+                # Otherwise it is the conjugate
                 $u = $trial-factor.conj;
             }
         }
 
+        # Track the remaining number so we have the final unit factor
         $a = $a / $u;
         @z-factors.push( $u.round );
     }
 
-    my @res = @z-factors.push( $a.round );
+    # We might have a factor of -1, 1j, or -1j -- append it if requested
+    my @res = $include-unit ?? @z-factors.push( $a.round ) !! @z-factors;
 
     @res = @res.classify(*).map({ ($_.key, $_.value.elems) }).sort(*.head.abs);
     return @res;
@@ -724,6 +726,10 @@ multi sub prime-omega(Int:D $x) {
     return $x == 1 ?? 0 !! factor-integer($x)».tail.sum;
 }
 
+multi sub prime-omega(Complex:D $x) {
+    return $x == 1 ?? 0 !! factor-gaussian-integer($x, :!include-unit)».tail.sum;
+}
+
 #==========================================================
 # Prime nu
 #==========================================================
@@ -734,6 +740,10 @@ multi sub prime-nu(@x) {
 }
 multi sub prime-nu(Int:D $x) {
     return $x == 1 ?? 0 !! factor-integer($x).elems;
+}
+
+multi sub prime-nu(Complex:D $x) {
+    return $x == 1 ?? 0 !! factor-gaussian-integer($x, :!include-unit).elems;
 }
 
 #==========================================================
@@ -756,7 +766,8 @@ multi sub moebius-mu(Int:D $n, Bool:D :gaussian(:$gaussian-integers) = False) {
 }
 
 multi sub moebius-mu(Complex:D $n, Bool:D :gaussian(:$gaussian-integers) = False) {
-    die '&factor-integer is not implemented for Gaussian integers yet.';
+    my @exps =  factor-gaussian-integer($n, :!include-unit)».tail;
+    return @exps.max == 1 ?? (-1) ** @exps.elems !! 0;
 }
 
 #==========================================================
@@ -776,7 +787,7 @@ multi sub is-square-free(Int:D $n, Bool:D :gaussian(:$gaussian-integers) = False
 }
 
 multi sub is-square-free(Complex:D $n, Bool:D :gaussian(:$gaussian-integers) = False) {
-    die '&factor-integer is not implemented for Gaussian integers yet.';
+    return moebius-mu($n) != 0 ?? True !! False;
 }
 
 #==========================================================
@@ -797,7 +808,7 @@ multi sub liouville-lambda(Int:D $n, Bool:D :gaussian(:$gaussian-integers) = Fal
 }
 
 multi sub liouville-lambda(Complex:D $n, Bool:D :gaussian(:$gaussian-integers) = False) {
-    die '&factor-integer is not implemented for Gaussian integers yet.';
+    return (-1) ** prime-omega($n);
 }
 
 #==========================================================
