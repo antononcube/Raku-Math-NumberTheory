@@ -3,7 +3,7 @@ use v6.d;
 
 use Test;
 
-#use lib <. lib>;
+use lib <. lib>;
 use Math::NumberTheory;
 
 plan *;
@@ -18,19 +18,29 @@ subtest {
 }, 'GCD for Gaussian integers';
 
 ## 2
-is-deeply factor-integer(11).Array, [(11, 1),];
+subtest {
+    is gcd-rational(1/3, 1/5), 1/15;
+    is gcd-rational(1/3, 2/5), 1/15;
+    is gcd-rational(1/546, 2/980), 1/19110;
+    is gcd-rational(1/3, 2/5, 1/7), 1/105;
+    is 1/3 gcd 2/5, 1/15;
+    is 1/3 gcd 2/5 gcd 1/7, 1/105;
+}, 'GCD for Rationals';
 
 ## 3
-is-deeply factor-integer(1).Array, [(1, 1),];
+is-deeply factor-integer(11).Array, [(11, 1),];
 
 ## 4
+is-deeply factor-integer(1).Array, [(1, 1),];
+
+## 5
 my $n3 = 30;
 is ([*] factor-integer($n3).map({ $_.head ** $_.tail })), $n3;
 
-## 5
+## 6
 is-deeply factor-integer(120).Array, [(2, 3), (3, 1), (5, 1)];
 
-## 6
+## 7
 subtest {
     my $n = factorial(20);
     is factor-integer($n, 3).elems, 3;

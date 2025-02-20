@@ -7,8 +7,11 @@ unit module Math::NumberTheory;
 #==========================================================
 # It is a good idea to make GCD work for Gaussian integers and rationals.
 
-proto sub gcd-gaussian($a, $b) is export {*}
+proto sub gcd-gaussian(|) is export {*}
 
+multi sub gcd-gaussian(*@n) {
+    return reduce(&gcd-gaussian, @n);
+}
 multi sub gcd-gaussian(Int:D $a, Complex:D $b) {
     return gcd-gaussian($a + 0i, $b);
 }
@@ -50,6 +53,19 @@ multi sub gcd-gaussian(Complex:D $a is copy, Complex:D $b is copy) is export {
 }
 
 #----------------------------------------------------------
+proto sub gcd-rational(|) is export {*}
+
+multi sub gcd-rational(*@r) {
+    return reduce(&gcd-rational, @r);
+}
+
+multi sub gcd-rational(Rat $r1, Rat $r2) {
+    my $num-gcd = $r1.numerator gcd $r2.numerator;
+    my $den-lcm = $r1.denominator lcm $r2.denominator;
+    return $num-gcd / $den-lcm;
+}
+
+#----------------------------------------------------------
 # Redefine gcd
 
 multi infix:<gcd>(Int:D $a, Complex:D $b --> Complex:D) is export {
@@ -59,8 +75,21 @@ multi infix:<gcd>(Int:D $a, Complex:D $b --> Complex:D) is export {
 multi infix:<gcd>(Complex:D $a, Int:D $b --> Complex:D) is export {
     return gcd-gaussian($a, $b);
 }
+
 multi infix:<gcd>(Complex:D $a, Complex:D $b --> Complex:D) is export {
     return gcd-gaussian($a, $b);
+}
+
+multi infix:<gcd>(Rat:D $a, Rat:D $b --> Rat:D) is export {
+    return gcd-rational($a, $b);
+}
+
+multi infix:<gcd>(Int:D $a, Rat:D $b --> Rat:D) is export {
+    return gcd-rational($a.Rat, $b);
+}
+
+multi infix:<gcd>(Rat:D $a, Int:D $b --> Rat:D) is export {
+    return gcd-rational($a, $b.Rat);
 }
 
 #==========================================================
