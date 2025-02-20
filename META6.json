@@ -13,7 +13,12 @@
   },
   "license": "Artistic-2.0",
   "tags": [
+    "chinese reminder",
+    "divisor sigma",
+    "euler phi",
     "gaussian integers",
+    "kronecker delta",
+    "liouville lambda",
     "math",
     "moebius mu",
     "number theory",
@@ -21,8 +26,12 @@
     "phi number system",
     "power mod",
     "prime omega",
+    "prime number",
+    "prime",
     "primes",
-    "primitive root"
+    "primitive root",
+    "real digits",
+    "totient"
   ],
   "api": "0",
   "source-url": "https://github.com/antononcube/Raku-Math-NumberTheory.git",
