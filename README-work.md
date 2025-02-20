@@ -32,10 +32,23 @@ zef install https://github.com/antononcube/Raku-Math-NumberTheory
 ## GCD
 
 The infix operator `gcd` for calculating the Greatest Common Divisor (GCD) 
-is extended to work with [Gaussian integers](https://en.wikipedia.org/wiki/Gaussian_integer):
+is extended to work with rational numbers and [Gaussian integers](https://en.wikipedia.org/wiki/Gaussian_integer):
+
+### Rationals
+
+For rational numbers `r1` and `r2`, `r1 gcd r2` gives the greatest rational number `r` for which `r1/r` and `r2/r` are integers.
 
 ```perl6
 use Math::NumberTheory;
+<1/3> gcd <2/5> gcd <1/7>
+==> {.raku}()
+```
+
+### Gaussian integers
+
+GCD for two Gaussian integers (complex numbers with integer real and imaginary parts):
+
+```perl6
 (10 + 15i) gcd (-3 + 2i)
 ```
 
@@ -184,6 +197,7 @@ in order to get exact integers from phi-digits we have to round using small mult
   - [X] DONE Square-free test
     - [X] DONE Integers
     - [X] DONE Gaussian integers
+  - [X] DONE Rational numbers GCD
   - [ ] TODO Integer partitions
   - [ ] TODO Sum of squares representation
   - [ ] TODO CLI
