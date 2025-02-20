@@ -1,6 +1,6 @@
 {
   "name": "Math::NumberTheory",
-  "description": "Raku package number theory functions.",
+  "description": "Raku package for number theory functions.",
   "version": "0.0.12",
   "authors": [
     "Anton Antonov"
@@ -13,10 +13,16 @@
   },
   "license": "Artistic-2.0",
   "tags": [
+    "gaussian integers",
     "math",
-    "number",
+    "moebius mu",
     "number theory",
-    "power mod"
+    "number",
+    "phi number system",
+    "power mod",
+    "prime omega",
+    "primes",
+    "primitive root"
   ],
   "api": "0",
   "source-url": "https://github.com/antononcube/Raku-Math-NumberTheory.git",
