@@ -860,6 +860,29 @@ multi sub kronecker-delta(+@n) {
 }
 
 #==========================================================
+# Twin, cousin, and sexy primes
+#=========================================================
+
+sub related-primes(UInt:D $n, UInt:D :$step = 2) is export {
+    my @ps = (1..(2 * $n * log($n)).floor)».&prime;
+    my @res = (@ps (&) (@ps >>+>> $step)).keys.sort;
+    @res = @res[^(min($n, @res.elems))];
+    return @res.map({ ($_ - $step, $_) }).List;
+}
+
+sub twin-primes(UInt:D $n) is export {
+    related-primes($n, :2step);
+}
+
+sub cousin-primes(UInt:D $n) is export {
+    related-primes($n, :4step);
+}
+
+sub sexy-primes(UInt:D $n) is export {
+    related-primes($n, :6step);
+}
+
+#==========================================================
 # Random prime
 #==========================================================
 # http://reference.wolfram.com/language/ref/RandomPrime.html
