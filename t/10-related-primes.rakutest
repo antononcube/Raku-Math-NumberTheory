@@ -1,0 +1,32 @@
+use v6.d;
+use Test;
+
+#use lib <. lib>;
+use Math::NumberTheory;
+
+plan *;
+
+## 1
+subtest {
+    is-deeply
+            related-primes(10, :2step),
+            ((3, 5), (5, 7), (11, 13), (17, 19), (29, 31), (41, 43), (59, 61), (71, 73), (101, 103), (107, 109)),
+        'first 10 pairs of twin primes';
+
+    is-deeply
+            related-primes(12),
+            related-primes(12, :2step),
+            'default step';
+
+}, 'related-primes';
+
+## 2
+is-deeply twin-primes(12), related-primes(12, :2step);
+
+## 3
+is-deeply cousin-primes(12), related-primes(12, :4step);
+
+## 4
+is-deeply sexy-primes(12), related-primes(12, :6step);
+
+done-testing;
