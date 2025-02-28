@@ -99,7 +99,7 @@ multi infix:<gcd>(Rat:D $a, Int:D $b --> Rat:D) is export {
 proto sub lcm-gaussian(|) is export {*}
 
 multi sub lcm-gaussian(*@n) {
-    return reduce(&gcd-gaussian, @n);
+    return reduce(&lcm-gaussian, @n);
 }
 multi sub lcm-gaussian(Int:D $a, Complex:D $b) {
     return lcm-gaussian($a + 0i, $b);
@@ -112,6 +112,19 @@ multi sub lcm-gaussian(Complex:D $a is copy, Complex:D $b is copy) {
     return $a * $b / gcd-gaussian($a, $b);
 }
 
+#----------------------------------------------------------
+
+proto sub lcm-rational(|) is export {*}
+
+multi sub lcm-rational(*@r) {
+    return reduce(&lcm-rational, @r);
+}
+
+multi sub lcm-rational(Rat $r1, Rat $r2)  {
+    my $numerator-lcm = $r1.numerator lcm $r2.numerator;
+    my $denominator-gcd = $r1.denominator gcd $r2.denominator;
+    return $numerator-lcm / $denominator-gcd;
+}
 
 #----------------------------------------------------------
 # Redefine lcm
@@ -126,6 +139,18 @@ multi infix:<lcm>(Complex:D $a, Int:D $b --> Complex:D) is export {
 
 multi infix:<lcm>(Complex:D $a, Complex:D $b --> Complex:D) is export {
     return lcm-gaussian($a, $b);
+}
+
+multi infix:<lcm>(Rat:D $a, Rat:D $b --> Rat:D) is export {
+    return lcm-rational($a, $b);
+}
+
+multi infix:<lcm>(Int:D $a, Rat:D $b --> Rat:D) is export {
+    return lcm-rational($a.Rat, $b);
+}
+
+multi infix:<lcm>(Rat:D $a, Int:D $b --> Rat:D) is export {
+    return lcm-rational($a, $b.Rat);
 }
 
 #==========================================================
