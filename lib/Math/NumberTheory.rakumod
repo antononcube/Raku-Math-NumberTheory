@@ -640,6 +640,17 @@ sub prime(Int:D $n) is export {
     return $candidate;
 }
 
+sub primes-up-to(UInt:D $n) {
+    my @res;
+    my $i = 0;
+    my $candidate = 0;
+    while $i < $n {
+        $candidate++;
+        if $candidate.is-prime { $i++; @res.push($candidate) }
+    }
+    return @res;
+}
+
 #==========================================================
 # Next prime
 #==========================================================
@@ -864,7 +875,10 @@ multi sub kronecker-delta(+@n) {
 #=========================================================
 
 sub related-primes(UInt:D $n, UInt:D :$step = 2) is export {
-    my @ps = (1..(2 * $n * log($n)).floor)».&prime;
+    # This is slow, but it would be nice if it is made to run faster.
+    #my @ps = (1..(2 * $n * log($n)).floor)».&prime;
+
+    my @ps = primes-up-to(floor(2 * $n * log($n)));
     my @res = (@ps (&) (@ps >>+>> $step)).keys.sort;
     @res = @res[^(min($n, @res.elems))];
     return @res.map({ ($_ - $step, $_) }).List;
