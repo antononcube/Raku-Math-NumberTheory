@@ -264,8 +264,8 @@ in order to get exact integers from phi-digits we have to round using small mult
     - [X] DONE Integers
     - [X] DONE Gaussian integers
   - [X] DONE Rational numbers GCD
-  - [ ] Multiplicative Order
-  - [ ] Carmichael lambda
+  - [X] DONE Multiplicative Order
+  - [ ] TODO Carmichael lambda
   - [ ] TODO Integer partitions
   - [ ] TODO Sum of squares representation
   - [ ] TODO CLI
