@@ -870,14 +870,17 @@ sub related-primes(UInt:D $n, UInt:D :$step = 2) is export {
     return @res.map({ ($_ - $step, $_) }).List;
 }
 
+#| Get the first n-pairs of primes that differ by 2.
 sub twin-primes(UInt:D $n) is export {
     related-primes($n, :2step);
 }
 
+#| Get the first n-pairs of primes that differ by 4.
 sub cousin-primes(UInt:D $n) is export {
     related-primes($n, :4step);
 }
 
+#| Get the first n-pairs of primes that differ by 6.
 sub sexy-primes(UInt:D $n) is export {
     related-primes($n, :6step);
 }
