@@ -1,5 +1,7 @@
 # Math::NumberTheory
 
+![Sparky](https://sparky.sparrowhub.io/badge/antononcube-Raku-Math-NumberTheory?foo=bar)
+
 Raku package with Number theory functions.
 
 The function names and features follow the 
