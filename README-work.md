@@ -200,7 +200,7 @@ in order to get exact integers from phi-digits we have to round using small mult
   - [X] DONE Rational numbers GCD
   - [X] DONE Multiplicative Order
   - [X] DONE Gaussian integers LCM 
-  - [ ] TODO Rational numbers LCM
+  - [X] DONE Rational numbers LCM
   - [ ] TODO Carmichael lambda
   - [ ] TODO Integer partitions
   - [ ] TODO Sum of squares representation
