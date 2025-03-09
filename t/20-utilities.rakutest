@@ -1,7 +1,9 @@
 use v6.d;
 use Test;
 
+use lib <. lib>;
 use Math::NumberTheory::Utilities;
+use Math::NumberTheory;
 
 ## 1
 subtest {
@@ -26,5 +28,14 @@ subtest {
     ok sunflower-embedding(11, with => { $_ div 2 }, :120angle);
     is sunflower-embedding(11, :dataset).all ~~ Map:D, True, 'dataset obtained';
 }, 'sunflower embedding';
+
+## 4
+subtest {
+    ok circular-chords-representation(11), 'standard';
+    dies-ok { circular-chords-representation(11, with => { $_ div 2 }) };
+    ok circular-chords-representation(11, with => { modular-inverse($_, 11) ?? ($_ => modular-inverse($_, 11)) !! Empty } );
+    is circular-chords-representation(11, :dataset).all ~~ Map:D, True;
+    is circular-chords-representation(11, :dataset)».keys.flat.unique.sort, <group index x y>;
+}, 'circular chords representation';
 
 done-testing;

@@ -1,5 +1,9 @@
 use v6.d;
 
+#====================================================================
+# Spiral lattice embedding
+#====================================================================
+
 #| Spiral square lattice
 #| C<$n> -- Square side size.
 #| C<:l(:end-corner(:$last-at))> -- Corner to finish the spiral at.
@@ -54,6 +58,10 @@ sub spiral-lattice(UInt:D $n, :l(:end-corner(:$last-at)) is copy = Whatever, Boo
     }
 }
 
+#====================================================================
+# Triangle matrix embedding
+#====================================================================
+
 #| Gives a triangle within a matrix.
 ##| C<$k> -- Number of rows of the embedding matrix. (Odd numbers only.)
 ##| C<:na(:$missing-value))> -- Missing value.
@@ -84,6 +92,9 @@ sub triangle-matrix-embedding(Int:D $k, :na(:$missing-value) = 0, Bool:D :d(:$da
     }
 }
 
+#====================================================================
+# Sunflower embedding
+#====================================================================
 constant $golden-ratio = (1 + sqrt(5)) / 2;
 
 #| Sunflower embedding of integers from 1 to given upper limit.
@@ -117,5 +128,35 @@ multi sub sunflower-embedding(@ints, :&with = WhateverCode, Bool:D :d(:$dataset)
     } else {
         my @keys = &with ~~ Callable && !&with.isa(WhateverCode) ?? <x y group> !! <x y>;
         @sunflower.map(*{@keys})
+    }
+}
+
+#====================================================================
+# Circular chords
+#====================================================================
+
+sub circular-chords-representation(UInt:D $n, :&with is copy = WhateverCode, Bool:D :d(:$dataset) = False) is export {
+
+    if &with.isa(WhateverCode) {
+        &with = { my $inv = try expmod($_, -1, $n); $! ?? Empty !! ($_ => $inv) }
+    }
+
+    my %vertex-coordinates = (1..$n).kv.map( -> $i, $v { $v => [cos(π/2 + $i * 2 * π / 5), sin(π/2 + $i * 2 * π / 5)] });
+    my @chords = (1..$n).map({ &with($_) });
+
+    die 'The result of :&with is expected to give a Pair object of two integers.'
+    unless @chords.all ~~ Pair:D && @chords».kv.flat.all ~~ Int:D;
+
+    return do if $dataset {
+        @chords.kv.map( -> $i, $p {
+            my @res =
+                    (<x y>.Array Z=> %vertex-coordinates{$p.key mod $n}.Array),
+                    (<x y>.Array Z=> %vertex-coordinates{$p.value mod $n}.Array);
+            @res.kv.map( -> $j, @v { [|@v, group => $i, index => $j].Hash })
+        }).map(*.Slip)
+    } else {
+        @chords.map({
+            [%vertex-coordinates{$_.key mod $n}, %vertex-coordinates{$_.value mod $n}]
+        }).List
     }
 }
