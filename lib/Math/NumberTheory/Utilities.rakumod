@@ -138,10 +138,10 @@ multi sub sunflower-embedding(@ints, :&with = WhateverCode, Bool:D :d(:$dataset)
 sub circular-chords-representation(UInt:D $n, :&with is copy = WhateverCode, Bool:D :d(:$dataset) = False) is export {
 
     if &with.isa(WhateverCode) {
-        &with = { my $inv = try expmod($_, -1, $n); $! ?? Empty !! ($_ => $inv) }
+        &with = -> $x { my $inv = try expmod($x, -1, $n); $! ?? Empty !! ($x => $inv) }
     }
 
-    my %vertex-coordinates = (1..$n).kv.map( -> $i, $v { $v => [cos(π/2 + $i * 2 * π / 5), sin(π/2 + $i * 2 * π / 5)] });
+    my %vertex-coordinates = (1..$n).kv.map( -> $i, $v { $v => [cos(π/2 + $i * 2 * π / $n), sin(π/2 + $i * 2 * π / $n)] });
     my @chords = (1..$n).map({ &with($_) });
 
     die 'The result of :&with is expected to give a Pair object of two integers.'
