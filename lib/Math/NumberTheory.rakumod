@@ -687,8 +687,16 @@ sub multiplicative-order(Int:D $k, Int:D $n, *@r) is export {
 #==========================================================
 # http://reference.wolfram.com/language/ref/Prime.html
 #| Give the n-th prime number.
-#| C<$n> -- Prime number index.
-sub prime(Int:D $n) is export {
+#| C<$n> -- Prime number index or a list of indexes.
+proto sub prime($n) is export {*}
+
+multi sub prime(@n) {
+    die 'All elements of a positional argument are expected to be integers.'
+    unless @n.all ~~ Int:D;
+    return @n».&prime;
+}
+
+multi sub prime(Int:D $n) {
     die "The argument is expected to be a positive integer."
     unless $n > 0;
 
@@ -717,17 +725,28 @@ sub primes-up-to(UInt:D $n) {
 #==========================================================
 # http://reference.wolfram.com/language/ref/NextPrime.html
 #| Give the smallest prime number above the argument.
-#| C<:$x> -- Number.
-proto sub next-prime(Numeric:D $x, |) is export {*}
-multi sub next-prime(Numeric:D $x, Int:D $k) {
-    next-prime($x, :$k)
+#| C<:$x> -- A number or a list of numbers.
+#| C<:$k> -- An integer or a list of integers.
+proto sub next-prime($x, |) is export {*}
+
+multi sub next-prime(@xs, $k) {
+    next-prime(@xs, :$k)
 }
 
-multi sub next-prime(@xs, Int:D :$k = 1) {
+multi sub next-prime(@xs, :offset(:$k) = 1) {
     @xs.map({ next-prime($_, :$k) }).List
 }
 
-multi sub next-prime(Numeric:D $x, Int:D :$k = 1) {
+multi sub next-prime(Numeric:D $x, $k) {
+    next-prime($x, :$k)
+}
+
+multi sub next-prime(Numeric:D $x, :offset(:@k)!) {
+    return Nil unless @k.all ~~ Int:D;
+    @k.map({ next-prime($x, k => $_)}).List
+}
+
+multi sub next-prime(Numeric:D $x, Int:D :offset(:$k) = 1) {
     given $x {
         when $_ !~~ Int:D { next-prime($x.floor, $k) }
         when $_ ~~ Int:D && $k == 1 {
