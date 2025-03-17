@@ -135,7 +135,7 @@ multi sub sunflower-embedding(@ints, :&with = WhateverCode, Bool:D :d(:$dataset)
 # Circular chords
 #====================================================================
 
-sub circular-chords-representation(UInt:D $n, :&with is copy = WhateverCode, Bool:D :d(:$dataset) = False) is export {
+sub circular-chords-tracing(UInt:D $n, :&with is copy = WhateverCode, Bool:D :d(:$dataset) = False) is export {
 
     if &with.isa(WhateverCode) {
         &with = -> $x { my $inv = try expmod($x, -1, $n); $! ?? Empty !! ($x => $inv) }
