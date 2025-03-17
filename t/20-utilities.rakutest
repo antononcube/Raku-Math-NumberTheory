@@ -31,11 +31,11 @@ subtest {
 
 ## 4
 subtest {
-    ok circular-chords-representation(11), 'standard';
-    dies-ok { circular-chords-representation(11, with => { $_ div 2 }) };
-    ok circular-chords-representation(11, with => { modular-inverse($_, 11) ?? ($_ => modular-inverse($_, 11)) !! Empty } );
-    is circular-chords-representation(11, :dataset).all ~~ Map:D, True;
-    is circular-chords-representation(11, :dataset)».keys.flat.unique.sort, <group index x y>;
+    ok circular-chords-tracing(11), 'standard';
+    dies-ok { circular-chords-tracing(11, with => { $_ div 2 }) };
+    ok circular-chords-tracing(11, with => { modular-inverse($_, 11) ?? ($_ => modular-inverse($_, 11)) !! Empty } );
+    is circular-chords-tracing(11, :dataset).all ~~ Map:D, True;
+    is circular-chords-tracing(11, :dataset)».keys.flat.unique.sort, <group index x y>;
 }, 'circular chords representation';
 
 done-testing;
