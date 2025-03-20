@@ -104,7 +104,7 @@ constant $golden-ratio = (1 + sqrt(5)) / 2;
 proto sub sunflower-embedding($n, :&with = WhateverCode, Bool:D :d(:$dataset) = False, :a(:$angle) = Whatever) is export {*}
 
 multi sub sunflower-embedding(Int:D $n, :&with = WhateverCode, Bool:D :d(:$dataset) = False, :a(:$angle) = Whatever) {
-    return sunflower-embedding((1...$n).Array, :&with, :$dataset);
+    return sunflower-embedding((1...$n).Array, :&with, :$dataset, :$angle);
 }
 multi sub sunflower-embedding(@ints, :&with = WhateverCode, Bool:D :d(:$dataset) = False, :a(:$angle) is copy = Whatever) {
     die "The first argument is expected to be a positve integer or list of integers."
