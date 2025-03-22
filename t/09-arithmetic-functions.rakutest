@@ -1,7 +1,7 @@
 use v6.d;
 use Test;
 
-#use lib <. lib>;
+use lib <. lib>;
 use Math::NumberTheory;
 
 plan *;
@@ -43,7 +43,9 @@ subtest {
 }, 'kronecker-delta';
 
 ## 4
-subtest {
+#subtest {
+    is carmichael-lambda(8), 2, 'simple call for 2^3';
+    is carmichael-lambda(24), 2, 'simple call with 3^1 * 2^3';
     is carmichael-lambda(10), 4, 'simple call';
     is carmichael-lambda(-10), 4, 'simple call with negative argument';
     is-deeply carmichael-lambda([2, 4, 7]), (1, 2, 6), 'simple call with list argument';
@@ -59,7 +61,7 @@ subtest {
             ([lcm] |carmichael-lambda([3, 8])),
             carmichael-lambda(3 lcm 8),
             'LCM of CarmichaelLambda';
-}, 'carmichael-lambda';
+#}, 'carmichael-lambda';
 
 ## 5
 subtest {

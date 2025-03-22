@@ -940,11 +940,22 @@ proto sub carmichael-lambda($n) is export {*}
 multi sub carmichael-lambda(@n) {
     return @n.map({ carmichael-lambda($_) }).List;
 }
-multi sub carmichael-lambda(Int:D $n) {
+multi sub carmichael-lambda(Int:D $n is copy) {
+    return 0 if $n == 0;
+
+    $n = abs($n);
+
+    return 1 if $n == 1;
+
     my @factors = factor-integer(abs($n));
+
     my @lambdas = do for @factors -> $p {
-        ($p.head - 1) * $p.head ** ($p.tail - 1)
-    };
+        my $r = ($p.head - 1) * $p.head ** ($p.tail - 1);
+        if $p.head == 2 && $p.tail ≥ 3 {
+           $r /= 2
+        }
+        $r
+    }
     return [lcm] @lambdas;
 }
 
