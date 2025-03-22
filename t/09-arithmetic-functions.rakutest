@@ -44,6 +44,25 @@ subtest {
 
 ## 4
 subtest {
+    is carmichael-lambda(10), 4, 'simple call';
+    is carmichael-lambda(-10), 4, 'simple call with negative argument';
+    is-deeply carmichael-lambda([2, 4, 7]), (1, 2, 6), 'simple call with list argument';
+
+    # CarmichaelLambda preserves divisibility
+    is
+            carmichael-lambda(24) mod carmichael-lambda(8),
+            24 mod 8,
+            'divisibility preserved';
+
+    # LCM of CarmichaelLambda equals CarmichaelLambda of LCM
+    is
+            ([lcm] |carmichael-lambda([3, 8])),
+            carmichael-lambda(3 lcm 8),
+            'LCM of CarmichaelLambda';
+}, 'carmichael-lambda';
+
+## 5
+subtest {
 
     is liouville-lambda(356), (-1) ** prime-omega(356);
 
@@ -65,12 +84,5 @@ subtest {
             're-implementation of µ(n) using 𝞭( 𝜂(n), Ω(n) * 𝛌(n))';
 
 }, 'relationships';
-
-## 5
-subtest {
-    is carmichael-lambda(10), 4, 'simple call';
-    is carmichael-lambda(-10), 4, 'simple call with negative argument';
-    is-deeply carmichael-lambda([2, 4, 7]), (1, 2, 6), 'simple call with list argument';
-}
 
 done-testing;
