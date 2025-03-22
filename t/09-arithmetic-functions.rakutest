@@ -66,4 +66,11 @@ subtest {
 
 }, 'relationships';
 
+## 5
+subtest {
+    is carmichael-lambda(10), 4, 'simple call';
+    is carmichael-lambda(-10), 4, 'simple call with negative argument';
+    is-deeply carmichael-lambda([2, 4, 7]), (1, 2, 6), 'simple call with list argument';
+}
+
 done-testing;

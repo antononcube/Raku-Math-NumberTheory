@@ -932,7 +932,24 @@ multi sub liouville-lambda(Complex:D $n, Bool:D :gaussian(:$gaussian-integers) =
 }
 
 #==========================================================
-#Kronecker delta
+# CarmichaelLambda function
+#==========================================================
+# http://reference.wolfram.com/language/ref/CarmichaelLambda.html
+proto sub carmichael-lambda($n) is export {*}
+
+multi sub carmichael-lambda(@n) {
+    return @n.map({ carmichael-lambda($_) }).List;
+}
+multi sub carmichael-lambda(Int:D $n) {
+    my @factors = factor-integer(abs($n));
+    my @lambdas = do for @factors -> $p {
+        ($p.head - 1) * $p.head ** ($p.tail - 1)
+    };
+    return [lcm] @lambdas;
+}
+
+#==========================================================
+# Kronecker delta
 #==========================================================
 #| Gives the Kronecker delta value, which is equal to 1 if all the arguments are equal, and 0 otherwise.
 proto sub kronecker-delta(**@n) is export {*}
