@@ -1125,6 +1125,9 @@ constant $fibonacci400 = 1760236806450139664682269453924112507703843833044921918
 our constant \phi is export = $fibonacci401 / $fibonacci400;
 our constant \ϕ is export = $fibonacci401 / $fibonacci400;
 #our constant \ϕ is export = (1.FatRat + $sqrt5) / 2.FatRat;
+sub golden-ratio(Bool:D :pre(:$pre-computed) = True) is export {
+    return $pre-computed ?? \phi !! (1 + sqrt(5)) / 2;
+}
 
 #| Phi number system.
 #| C<$n> -- An integer number to convert.
