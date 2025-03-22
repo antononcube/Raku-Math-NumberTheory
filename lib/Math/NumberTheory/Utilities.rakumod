@@ -100,6 +100,8 @@ constant $golden-ratio = (1 + sqrt(5)) / 2;
 #| Sunflower embedding of integers from 1 to given upper limit.
 #| C<$n> -- A positive integer or a list of integers.
 #| C<:&with> -- Function to apply to each integer and add the result to the corresponding record.
+#| C<:d(:$dataset)> -- Should a dataset be returned or not?
+#| C<:a(:$angle)> -- Angle between successive points.
 #| If C<WhateverCode> then no such application and addition is done.
 proto sub sunflower-embedding($n, :&with = WhateverCode, Bool:D :d(:$dataset) = False, :a(:$angle) = Whatever) is export {*}
 
