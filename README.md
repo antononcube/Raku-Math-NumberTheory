@@ -1,7 +1,5 @@
 # Math::NumberTheory
 
-![Sparky](https://sparky.sparrowhub.io/badge/antononcube-Raku-Math-NumberTheory?foo=bar)
-
 Raku package with Number theory functions.
 
 The function names and features follow the 
@@ -269,7 +267,7 @@ in order to get exact integers from phi-digits we have to round using small mult
   - [X] DONE Multiplicative Order
   - [X] DONE Gaussian integers LCM 
   - [X] DONE Rational numbers LCM
-  - [ ] TODO Carmichael lambda
+  - [X] DONE Carmichael lambda
   - [ ] TODO Integer partitions
   - [ ] TODO Sum of squares representation
   - [ ] TODO CLI
