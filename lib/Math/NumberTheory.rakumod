@@ -935,6 +935,10 @@ multi sub liouville-lambda(Complex:D $n, Bool:D :gaussian(:$gaussian-integers) =
 # CarmichaelLambda function
 #==========================================================
 # http://reference.wolfram.com/language/ref/CarmichaelLambda.html
+# https://en.wikipedia.org/wiki/Carmichael_function#Recurrence_for_λ(n)
+
+#| Give the Carmichael function λ(n).
+#| C($n) -- An integer.
 proto sub carmichael-lambda($n) is export {*}
 
 multi sub carmichael-lambda(@n) {
