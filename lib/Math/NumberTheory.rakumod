@@ -206,6 +206,26 @@ multi sub factorial(Int:D $n) is export {
 }
 
 #==========================================================
+# Fibonacci
+#==========================================================
+# This can be cached either by using "Memoize" or by
+#  use experimental :cached
+# and declaration as
+#  sub fibonacci(UInt $n) is cached {...}
+#| Give the n-th Fibonacci number.
+#| C<$n> --  Non-negative integer.
+sub fibonacci(UInt $n) is export {
+    return 0 if $n == 0;
+    return 1 if $n ≤ 2;
+    my $k = $n div 2;
+    if $n %% 2 {
+        my $a = fibonacci($k);
+        return $a * (2 * fibonacci($k + 1) - $a);
+    }
+    return fibonacci($k + 1) ** 2 + fibonacci($k) ** 2;
+}
+
+#==========================================================
 # Digit count
 #==========================================================
 # http://reference.wolfram.com/language/ref/DigitCount.html
