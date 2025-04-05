@@ -603,7 +603,13 @@ multi sub power-mod(Complex:D $b is copy, Int:D $e is copy, Int:D $m) is export 
 #==========================================================
 # https://reference.wolfram.com/language/ref/ModularInverse.html
 # Find k^-1 such that k * k^-1 mod n = 1.
-sub modular-inverse(Int:D $k, Int:D $n) is export {
+proto sub modular-inverse($k, Int:D $n) is export {*}
+
+multi sub modular-inverse(@k, Int:D $n) {
+    @k.map({ modular-inverse($_, $n) }).List
+}
+
+multi sub modular-inverse(Int:D $k, Int:D $n) {
     return do if $n < 0 {
         die "Negative modulus is not implemented (yet.)"
     } elsif $k < 0 {
