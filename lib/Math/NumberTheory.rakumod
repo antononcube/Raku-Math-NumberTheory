@@ -581,7 +581,7 @@ sub complex-mod(Complex:D $a, Int:D $m) {
     return ($a.re mod $m) + ($a.im mod $m) * i;
 }
 
-multi sub power-mod(Complex:D $b is copy, Int:D $e is copy, Int:D $m) is export {
+multi sub power-mod(Complex:D $b is copy, Int:D $e is copy, Int:D $m) {
     die 'If the first argument is a complex number, then it is expected to be a Gaussian integer.'
     unless ($b.re == $b.re.floor) && ($b.im == $b.im.floor);
 
@@ -596,6 +596,10 @@ multi sub power-mod(Complex:D $b is copy, Int:D $e is copy, Int:D $m) is export 
         $e = floor($e / 2);
     }
     return $r;
+}
+
+multi sub power-mod(@b, Int:D $e is copy, Int:D $m) {
+    @b.map({ power-mod($_, $e, $m) }).List
 }
 
 #==========================================================
