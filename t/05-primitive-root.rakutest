@@ -11,11 +11,13 @@ subtest {
     is primitive-root(9), 2;
     is-deeply (1 .. 10).map({ power-mod(2, $_, 9) }).unique.sort.List, (1, 2, 4, 5, 7, 8);
     is primitive-root(10) ∈ [3, 7], True;
+    is-deeply primitive-root([9, 23]), (2, 5);
 }, 'primitive-root';
 
 ## 2
 subtest {
     is primitive-root-list(9), [2, 5];
+    is-deeply primitive-root-list([9, 23]), ([2, 5], [5, 7, 10, 11, 14, 15, 17, 19, 20, 21]);
 }, 'primitive-root-list';
 
 ## 3
