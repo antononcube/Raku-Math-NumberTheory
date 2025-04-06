@@ -40,5 +40,11 @@ subtest {
     dies-ok { modular-inverse(81, -2) }, -1;
 }, "modular-inverse with negative mod";
 
+## 5
+subtest {
+    is power-mod([5, 6], -1, 7), (3, 6);
+    is modular-inverse([5, 6], 7), (3, 6);
+}, 'power-mod and modular-inverse are "listable"';
+
 
 done-testing;
