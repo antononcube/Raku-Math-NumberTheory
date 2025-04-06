@@ -654,7 +654,9 @@ sub chinese-reminder(@r, @m, $d = 0) is export {
 #==========================================================
 # http://reference.wolfram.com/language/ref/PrimitiveRoot.html
 #| Give primitive root of the argument.
-sub primitive-root(Int:D $n, :$method = Whatever) is export {
+proto sub primitive-root($n, :$method = Whatever) is export {*}
+
+multi sub primitive-root(Int:D $n, :$method = Whatever) {
     my $phi = euler-phi($n);
     my @factors = factor-integer($phi, :$method)».head;
 
@@ -667,11 +669,20 @@ sub primitive-root(Int:D $n, :$method = Whatever) is export {
     return Nil;
 }
 
+multi sub primitive-root(@n, :$method = Whatever) {
+    die 'If the first argument is a list then all ellements are expected to be integers.'
+    unless @n.all ~~ Int:D;
+
+    @n.map({ primitive-root($_, :$method) }).List
+}
+
 # &primitive-root should be refactored to use a version of &primitive-root-list's code.
 
 # http://reference.wolfram.com/language/ref/PrimitiveRootList.html
 #| Give a list of primitive roots of the argument.
-sub primitive-root-list(Int:D $n, :$method = Whatever) is export {
+proto sub primitive-root-list($n, :$method = Whatever) is export {*}
+
+multi sub primitive-root-list(Int:D $n, :$method = Whatever) {
     my $phi = euler-phi($n);
     my @factors = factor-integer($phi, :$method)».head;
 
@@ -686,6 +697,13 @@ sub primitive-root-list(Int:D $n, :$method = Whatever) is export {
         }
     }
     return @res;
+}
+
+multi sub primitive-root-list(@n, :$method = Whatever) {
+    die 'If the first argument is a list then all ellements are expected to be integers.'
+    unless @n.all ~~ Int:D;
+
+    @n.map({ primitive-root-list($_, :$method) }).List
 }
 
 #==========================================================
