@@ -22,9 +22,12 @@ subtest {
 
 ## 3
 subtest {
-    is multiplicative-order(5 ,7), 6, 'standard';
+    is multiplicative-order(5 ,7), 6, 'standard 1';
+    is multiplicative-order(20, 257), 256, 'standard 2';
+    is multiplicative-order(10 ** 10000, 7919), 3959, 'standard large';
     is multiplicative-order(-5 ,7), 3, 'negative first argument';
-    is multiplicative-order(-5 ,7, [3, 11]), 2, 'generalized';
+    is multiplicative-order(-5 ,7, [3, 11]), 2, 'generalized 1';
+    is multiplicative-order(15, 37, [31, 7, 11]), 8, 'generalized 2';
 }, 'multiplicative-order';
 
 done-testing;
