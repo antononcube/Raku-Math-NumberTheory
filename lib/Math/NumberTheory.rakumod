@@ -717,7 +717,6 @@ proto sub multiplicative-order(Int:D $k is copy, Int:D $n where * > 0, | --> Int
 multi sub multiplicative-order(Int:D $k is copy, Int:D $n where * > 0 --> Int) {
     # Handle edge cases
     return 1 if $n == 1;
-    #die "The first argument must be between 0 and n-1" if $k < 0 || $k >= $n;
 
     # Ensure k and n are coprime (gcd = 1)
     my $gcd = $k gcd $n;
@@ -750,10 +749,16 @@ multi sub multiplicative-order(Int:D $k is copy, Int:D $n where * > 0 --> Int) {
 
 # General case: find smallest m where k^m ≡ r_i (mod n)
 multi sub multiplicative-order(Int:D $k, Int:D $n where * > 0, *@r --> Int) {
+    # Handle edge cases
+    return 1 if $n == 1;
+
+    # Ensure k and n are coprime (gcd = 1)
+    my $gcd = $k gcd $n;
+    die 'The first and second arguments must be coprime.' if $gcd != 1;
 
     # Normalize remainders and ensure they're valid
     my @remainders = @r.map({ $_ % $n }).unique;
-    die "If a third argument is given then it expected to be a list of integers."
+    die 'The third argument, if given, is expected to be a list of integers.'
     unless @remainders.all ~~ Int:D;
 
     # Corner case to delegate
