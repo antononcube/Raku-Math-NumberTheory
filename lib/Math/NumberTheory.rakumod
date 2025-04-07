@@ -709,24 +709,80 @@ multi sub primitive-root-list(@n, :$method = Whatever) {
 #==========================================================
 # Multiplicative order
 #==========================================================
-sub gcd0(Int $a, Int $b) {
-    ($b == 0) ?? $a !! $b gcd $a % $b;
-}
-
 # Is this supposed to work with Gaussian primes?
 #| Give the multiplicative order of $^a ($k) modulo $^b ($n).
-sub multiplicative-order(Int:D $k, Int:D $n, *@r) is export {
-    die 'The first and second argumens must be coprime.' unless gcd0($k, $n) == 1;
-    my $m = 1;
-    loop {
-        last if $m > 16;
-        my $power = expmod($k, $m, $n);
-        if @r.elems {
-            return $m if @r.grep({ $power == $_ mod $n }).elems > 0;
-        } else {
-            return $m if $power == 1;
+#|
+proto sub multiplicative-order(Int:D $k is copy, Int:D $n where * > 0, | --> Int) is export {*}
+
+multi sub multiplicative-order(Int:D $k is copy, Int:D $n where * > 0 --> Int) {
+    # Handle edge cases
+    return 1 if $n == 1;
+    #die "The first argument must be between 0 and n-1" if $k < 0 || $k >= $n;
+
+    # Ensure k and n are coprime (gcd = 1)
+    my $gcd = $k gcd $n;
+    die 'The first and second arguments must be coprime.' if $gcd != 1;
+
+    # Get the number of coprimes
+    my $phi = euler-phi($n);
+
+    # Get prime factorization of φ(n)
+    my @phi-factors = factor-integer($phi);
+
+    # Start with maximum possible order
+    my $order = $phi;
+
+    # For each prime factor of φ(n), find the smallest exponent needed
+    for @phi-factors -> [$p, $e] {
+        # Try removing each power of p from the order
+        for 1..$e {
+            my $test-order = $order div $p;
+            if expmod($k, $test-order, $n) == 1 {
+                $order = $test-order;
+            } else {
+                last;
+            }
         }
+    }
+
+    return $order;
+}
+
+# General case: find smallest m where k^m ≡ r_i (mod n)
+multi sub multiplicative-order(Int:D $k, Int:D $n where * > 0, *@r --> Int) {
+
+    # Normalize remainders and ensure they're valid
+    my @remainders = @r.map({ $_ % $n }).unique;
+    die "If a third argument is given then it expected to be a list of integers."
+    unless @remainders.all ~~ Int:D;
+
+    # Corner case to delegate
+    if @remainders.elems == 1 && @remainders[0] == 1 {
+        return multiplicative-order($k, $n);
+    }
+
+    my $m = 0;
+    my $value = 1;
+    my %seen = 1 => True;  # Track values to detect cycles
+
+    loop {
+        if @remainders.any == $value {
+            return $m;
+        }
+
         $m++;
+        $value = ($value * $k) mod $n;
+
+        # If we've seen this value before, we're in a cycle
+        if %seen{$value}:exists {
+            die "No solution exists for given remainders.";
+        }
+        %seen{$value} = True;
+
+        # Safety limit (should be less than n)
+        if $m >= $n {
+            die "No solution exists for given remainders.";
+        }
     }
 }
 
