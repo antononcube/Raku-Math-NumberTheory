@@ -631,7 +631,7 @@ multi sub modular-inverse(Int:D $k, Int:D $n) {
 #| C<:@r> -- List of reminders.
 #| C<:@m> -- List of modules
 #| C<:$d> -- Number, lower limit of the result.
-sub chinese-reminder(@r, @m, $d = 0) is export {
+sub chinese-remainder(@r, @m, $d = 0) is export {
     my $n = @r.elems;
     my $M = [*] @m;
     my $x = 0;

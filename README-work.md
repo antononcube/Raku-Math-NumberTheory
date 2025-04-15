@@ -97,7 +97,7 @@ factor-integer(factorial(20), 3, method => 'trial')
 ```
 
 
-### Chinese reminders
+### Chinese remainders
 
 Data:
 
@@ -118,7 +118,7 @@ my @keys = 274199185649, 786765306443, 970592805341, 293623796783, 238475031661;
 Encrypted data:
 
 ```perl6
-my $encrypted = chinese-reminder(@data, @keys);
+my $encrypted = chinese-remainder(@data, @keys);
 ```
 
 Decrypted:

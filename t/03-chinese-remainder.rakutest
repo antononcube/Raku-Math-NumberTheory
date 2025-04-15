@@ -8,8 +8,8 @@ plan *;
 
 ## 1
 subtest {
-    is chinese-reminder([3, 4], [4, 5]), 19;
-    is chinese-reminder([2, 3, 5], [3, 5, 7]), 68;
+    is chinese-remainder([3, 4], [4, 5]), 19;
+    is chinese-remainder([2, 3, 5], [3, 5, 7]), 68;
 }, "basic";
 
 ## 2
@@ -20,14 +20,14 @@ subtest {
 
     # Small value keys
     #my @keys = 8147, 6073, 7919, 5431, 7549;
-    #my $encrypted = chinese-reminder(@data, @keys);
+    #my $encrypted = chinese-remainder(@data, @keys);
     #is $encrypted, 9881138511053968140;
 
     # Using these larger keys is also a performance check
     my @keys = 274199185649, 786765306443, 970592805341, 293623796783, 238475031661;
 
     # Encrypted data
-    my $encrypted = chinese-reminder(@data, @keys);
+    my $encrypted = chinese-remainder(@data, @keys);
 
     is $encrypted, 6681669841357504673192908619871066558177944924838942629020;
 
@@ -38,7 +38,7 @@ subtest {
 }, "database encryption and decryption";
 
 subtest {
-    nok chinese-reminder([1, 2], [2 * 3, 2 * 5]);
+    nok chinese-remainder([1, 2], [2 * 3, 2 * 5]);
 }, "no solutions";
 
 done-testing;
