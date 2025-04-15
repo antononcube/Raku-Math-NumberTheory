@@ -624,11 +624,11 @@ multi sub modular-inverse(Int:D $k, Int:D $n) {
 }
 
 #==========================================================
-# Chinese reminder
+# Chinese remainder
 #==========================================================
 # http://reference.wolfram.com/language/ref/ChineseRemainder.html
 #| Give the smallest x with x>=0 that satisfies all the integer congruences x mod m_i == r_i mod m_i.
-#| C<:@r> -- List of reminders.
+#| C<:@r> -- List of remainders.
 #| C<:@m> -- List of modules
 #| C<:$d> -- Number, lower limit of the result.
 sub chinese-remainder(@r, @m, $d = 0) is export {

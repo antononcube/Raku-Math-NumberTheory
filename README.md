@@ -123,7 +123,7 @@ factor-integer(factorial(20), 3, method => 'trial')
 ```
 
 
-### Chinese reminders
+### Chinese remainders
 
 Data:
 
