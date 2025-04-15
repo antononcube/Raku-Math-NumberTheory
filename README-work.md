@@ -221,8 +221,38 @@ in order to get exact integers from phi-digits we have to round using small mult
 
 ### Articles, blog posts, wiki-pages
 
+[AA1] Anton Antonov, 
+["Primitive roots generation trails"](https://mathematicaforprediction.wordpress.com/2025/04/08/primitive-roots-generation-trails/),
+(2025),
+[MathematicaForPrediction at WordPress](https://mathematicaforprediction.wordpress.com).
+
 [RC1] Rosetta Code, [Prime decomposition](https://rosettacode.org/wiki/Prime_decomposition),
 [Section "Pure Raku"](https://rosettacode.org/wiki/Prime_decomposition#Pure_Raku).
+
+### Notebooks
+
+[AAn1] Anton Antonov,
+[Number theory neat examples Set 1](https://github.com/antononcube/RakuForPrediction-blog/blob/main/Presentations/Notebooks/Number-theory-neat-examples-Set-1.ipynb),
+[*presentation notebook*](https://www.youtube.com/watch?v=wXXWyRAAPvc),
+(2025),
+[RakuForPrediction-blog at GitHub](https://github.com/antononcube/RakuForPrediction-blog).
+
+[AAn2] Anton Antonov,
+[Number theory neat examples Set 2](https://github.com/antononcube/RakuForPrediction-blog/blob/main/Presentations/Notebooks/Number-theory-neat-examples-Set-2.ipynb),
+[*presentation notebook*](https://www.youtube.com/watch?v=sMwuGVvkLkU),
+(2025),
+[RakuForPrediction-blog at GitHub](https://github.com/antononcube/RakuForPrediction-blog).
+
+[AAn3] Anton Antonov,
+[Number theory neat examples Set 3](https://github.com/antononcube/RakuForPrediction-blog/blob/main/Presentations/Notebooks/Number-theory-neat-examples-Set-3.ipynb),
+[*presentation notebook*](https://www.youtube.com/watch?v=6uCIoonlybk),
+(2025),
+[RakuForPrediction-blog at GitHub](https://github.com/antononcube/RakuForPrediction-blog).
+
+[AAn4] Anton Antonov,
+["Primitive roots generation trails"](https://community.wolfram.com/groups/-/m/t/3442027),
+(2025),
+[Wolfram Community](https://community.wolfram.com).
 
 ### Packages 
 
@@ -240,5 +270,15 @@ in order to get exact integers from phi-digits we have to round using small mult
 
 [AAv1] Anton Antonov,
 ["Number theory neat examples in Raku (Set 1)"](https://www.youtube.com/watch?v=wXXWyRAAPvc),
+(2025),
+[YouTube/@AAA4prediction](https://www.youtube.com/@AAA4prediction).
+
+[AAv2] Anton Antonov,
+["Number theory neat examples in Raku (Set 2)"](https://www.youtube.com/watch?v=sMwuGVvkLkU),
+(2025),
+[YouTube/@AAA4prediction](https://www.youtube.com/@AAA4prediction).
+
+[AAv3] Anton Antonov,
+["Number theory neat examples in Raku (Set 3)"](https://www.youtube.com/watch?v=6uCIoonlybk),
 (2025),
 [YouTube/@AAA4prediction](https://www.youtube.com/@AAA4prediction).
