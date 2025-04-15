@@ -214,6 +214,7 @@ in order to get exact integers from phi-digits we have to round using small mult
     - [X] DONE [Neat examples 1](https://www.youtube.com/watch?v=wXXWyRAAPvc)
     - [X] DONE [Neat examples 2](https://www.youtube.com/watch?v=6uCIoonlybk)
     - [X] DONE [Neat examples 3](https://www.youtube.com/watch?v=6uCIoonlybk)
+      - See also the related posts [AA1, AAn4]. 
     - [ ] TODO Neat examples 4
     - [ ] TODO Neat examples 5
 
