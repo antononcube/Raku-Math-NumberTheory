@@ -278,8 +278,10 @@ in order to get exact integers from phi-digits we have to round using small mult
   - [ ] TODO Blog post on first non-zero digit of 10_000!
   - [ ] TODO Videos
     - [X] DONE [Neat examples 1](https://www.youtube.com/watch?v=wXXWyRAAPvc)
-    - [ ] TODO Neat examples 2
-    - [ ] TODO Neat examples 3
+    - [X] DONE [Neat examples 2](https://www.youtube.com/watch?v=6uCIoonlybk)
+    - [X] DONE [Neat examples 3](https://www.youtube.com/watch?v=6uCIoonlybk)
+    - [ ] TODO Neat examples 4
+    - [ ] TODO Neat examples 5
 
 -------
 
