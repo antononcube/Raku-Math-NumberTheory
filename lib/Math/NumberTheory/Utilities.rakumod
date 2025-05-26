@@ -63,9 +63,9 @@ sub spiral-lattice(UInt:D $n, :l(:end-corner(:$last-at)) is copy = Whatever, Boo
 #====================================================================
 
 #| Gives a triangle within a matrix.
-##| C<$k> -- Number of rows of the embedding matrix. (Odd numbers only.)
-##| C<:na(:$missing-value))> -- Missing value.
-##| C<:d(:$dataset)> -- Should a dataset be returned or not.
+#| C<$k> -- Number of rows of the embedding matrix. (Odd numbers only.)
+#| C<:na(:$missing-value))> -- Missing value.
+#| C<:d(:$dataset)> -- Should a dataset be returned or not.
 sub triangle-matrix-embedding(Int:D $k, :na(:$missing-value) = 0, Bool:D :d(:$dataset) = False) is export {
 
     die "The first argument is expected to be a positve integer."
