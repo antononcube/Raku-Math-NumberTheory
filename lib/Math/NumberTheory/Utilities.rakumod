@@ -137,6 +137,10 @@ multi sub sunflower-embedding(@ints, :&with = WhateverCode, Bool:D :d(:$dataset)
 # Circular chords
 #====================================================================
 
+#| Circular chords tracing.
+#| C<$n> -- Positive integer.
+#| C<:&with> -- Function to derive the chords with.
+#| C<:d(:$dataset>) -- Should a dataset be returned or not.
 sub circular-chords-tracing(UInt:D $n, :&with is copy = WhateverCode, Bool:D :d(:$dataset) = False) is export {
 
     if &with.isa(WhateverCode) {
