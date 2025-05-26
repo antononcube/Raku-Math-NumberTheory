@@ -109,7 +109,7 @@ multi sub sunflower-embedding(Int:D $n, :&with = WhateverCode, Bool:D :d(:$datas
     return sunflower-embedding((1...$n).Array, :&with, :$dataset, :$angle);
 }
 multi sub sunflower-embedding(@ints, :&with = WhateverCode, Bool:D :d(:$dataset) = False, :a(:$angle) is copy = Whatever) {
-    die "The first argument is expected to be a positve integer or list of integers."
+    die "The first argument is expected to be a positive integer or list of integers."
     unless @ints.all ~~ Int:D;
 
     if $angle.isa(Whatever) { $angle = 2 * π / $golden-ratio ** 2 }
