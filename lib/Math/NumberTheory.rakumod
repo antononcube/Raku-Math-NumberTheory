@@ -504,6 +504,7 @@ sub factor-gaussian-integer(Complex:D $a is copy, Bool:D :$include-unit = True) 
 # Divisors
 #==========================================================
 
+#| Give a list of the integers that divide the argument.
 sub divisors($n) is export {
     gather do {
         take 1;
@@ -516,6 +517,7 @@ sub divisors($n) is export {
     }
 }
 
+#| Give the divisor function σ(exp, n).
 proto divisor-sigma($n, |) is export {*}
 multi sub divisor-sigma($exponent, $n) {
     divisor-sigma($n, :$exponent)
@@ -1089,6 +1091,49 @@ multi sub kronecker-delta(+@n) {
     return kronecker-delta() if @n.elems == 0;
     return kronecker-delta(@n.head) if @n.elems == 1;
     return ([&&] @n.tail(*-1).map({ $_ == @n.head })) ?? 1 !! 0;
+}
+
+#==========================================================
+# Simple extensions
+#==========================================================
+#| Gives true if the number is not prime.
+proto sub is-composite($n) is export {*}
+multi sub is-composite(Complex:D $n) { !is-prime-gaussian($n) }
+multi sub is-composite(Int:D $n) { !is-prime($n) }
+
+#| Gives true the number is a power of a prime.
+sub is-prime-power(Int:D $n) is export {
+    factor-integer($n).elems == 1;
+}
+
+#| Give Mangold lambda for an integer
+sub mangold-lambda(Int:D $n) is export {
+    my @res = factor-integer($n);
+    return @res.elems == 1 ?? @res.head.head.log !! 0;
+}
+
+#==========================================================
+# Coprime numbers
+#==========================================================
+#| Give true if the arguments are coprime.
+proto sub are-coprime(|) is export {*}
+
+multi sub are-coprime($n1, $n2) {
+    ($n1 gcd $n2) == 1
+}
+
+multi sub are-coprime(*@ns) {
+    die 'All elements are expected to be numbers.'
+    unless @ns.all ~~ Numeric:D;
+
+    for @ns.kv -> $i, $n1 {
+        for @ns.kv -> $j, $n2 {
+            if $i != $j {
+                return False if $n1 gcd $n2 > 1
+            }
+        }
+    }
+    return True;
 }
 
 #==========================================================

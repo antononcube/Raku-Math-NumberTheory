@@ -73,4 +73,23 @@ subtest {
 #        factor-integer(120, :gaussian-integers).Array,
 #        [(1 + i, 6), (1 + 2i, 1), (2 + i, 1), (3, 1)];
 
+## 10
+subtest {
+
+    is is-composite(17), False, '17 is not composite';
+    is is-composite(125), True, '125 is composite';
+    is is-prime-power(125), True, '125 is prime power';
+    is is-prime-power(147), False, '147 is not prime power';
+    is mangold-lambda(25), 5.log, 'Mangold lambda of 25';
+}, '&factor-integer related';
+
+## 11
+subtest {
+    is are-coprime(8, 11), True, '8 and 11 are coprime';
+    is are-coprime(8, 16), False, '8 and 16 are not coprime';
+    is are-coprime([8, 16, 12]), False, '8, 16, 12 are not coprime';
+    is are-coprime([4, 5, 3]), True, '4, 5, 3 are coprime';
+    is are-coprime([3, 5, 3]), False, '3, 5, 3 are not coprime';
+}, 'coprimes';
+
 done-testing;
