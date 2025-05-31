@@ -202,7 +202,7 @@ in order to get exact integers from phi-digits we have to round using small mult
   - [X] DONE Gaussian integers LCM 
   - [X] DONE Rational numbers LCM
   - [X] DONE Carmichael lambda
-  - [ ] TODO Integer partitions
+  - [X] DONE Integer partitions
   - [ ] TODO Sum of squares representation
   - [ ] TODO Figure out which memoization approach to use:
     - [ ] Via the package ["Memoize"](https://raku.land/zef:lizmat/Memoize)
