@@ -1166,6 +1166,58 @@ sub sexy-primes(UInt:D $n) is export {
 }
 
 #==========================================================
+# Integer partitions
+#==========================================================
+sub accel-asc(Int:D $n) {
+    my @a = 0 xx ($n + 1);
+    my $k = 1;
+    my $y = $n - 1;
+
+    gather {
+        while $k != 0 {
+            my $x = @a[$k - 1] + 1;
+            $k--;
+
+            while 2 * $x <= $y {
+                @a[$k] = $x;
+                $y -= $x;
+                $k++;
+            }
+
+            my $l = $k + 1;
+            while $x <= $y {
+                @a[$k] = $x;
+                @a[$l] = $y;
+                take @a[0..($k + 1)];
+                $x++;
+                $y--;
+            }
+
+            @a[$k] = $x + $y;
+            $y = $x + $y - 1;
+            take @a[0..$k];
+        }
+    }
+}
+
+#| Give a list of all possible ways to partition the integer argument into smaller integers.
+proto sub integer-paritions(Int:D $n, |) is export {*}
+
+multi sub integer-paritions(Int:D $n, UInt:D $k) {
+    integer-paritions($n, k-max => $k);
+}
+
+multi sub integer-paritions(Int:D $n, (Numeric:D $k-min, Numeric:D $k-max)) {
+    integer-paritions($n, :$k-min, :$k-max);
+}
+
+multi sub integer-paritions(Int:D $n, UInt:D :$k-min = 1, Numeric:D :$k-max = Inf) {
+    my @res = accel-asc($n);
+    @res .= grep({ $k-min ≤ $_.elems ≤ $k-max });
+    return @res».reverse».List.reverse.List;
+}
+
+#==========================================================
 # Random prime
 #==========================================================
 # http://reference.wolfram.com/language/ref/RandomPrime.html
