@@ -1,0 +1,13 @@
+Changes of the Raku package "Math::NumberTheory".
+
+2025-12-17 0.0.21
+    - Implemented &integer-partitions.
+        - It slow for larger numbers, ≥ 1000.
+    - Implemented &integer-digits and &is-happy-number.
+
+2025-05-28 0.0.20
+    - Added &is-composite, &is-prime-power, &mangold-lambda, and &are-coprime and related tests.
+
+2025-04-07 0.0.19
+    - Faster and more robust &multiplicative-root.
+    - Made &power-mod and &primitive-root* to work with a first argument being a list.
