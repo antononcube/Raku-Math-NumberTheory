@@ -1248,17 +1248,17 @@ sub accel-asc(Int:D $n) {
 }
 
 #| Give a list of all possible ways to partition the integer argument into smaller integers.
-proto sub integer-paritions(Int:D $n, |) is export {*}
+proto sub integer-partitions(Int:D $n, |) is export {*}
 
-multi sub integer-paritions(Int:D $n, UInt:D $k) {
-    integer-paritions($n, k-max => $k);
+multi sub integer-partitions(Int:D $n, UInt:D $k) {
+    integer-partitions($n, k-max => $k);
 }
 
-multi sub integer-paritions(Int:D $n, (Numeric:D $k-min, Numeric:D $k-max)) {
-    integer-paritions($n, :$k-min, :$k-max);
+multi sub integer-partitions(Int:D $n, (Numeric:D $k-min, Numeric:D $k-max)) {
+    integer-partitions($n, :$k-min, :$k-max);
 }
 
-multi sub integer-paritions(Int:D $n, UInt:D :$k-min = 1, Numeric:D :$k-max = Inf) {
+multi sub integer-partitions(Int:D $n, UInt:D :$k-min = 1, Numeric:D :$k-max = Inf) {
     my @res = accel-asc($n);
     @res .= grep({ $k-min ≤ $_.elems ≤ $k-max });
     return @res».reverse».List.reverse.List;

@@ -9,12 +9,12 @@ plan *;
 ## 1
 subtest {
 
-    isa-ok integer-paritions(12), List:D, 'expected result type';
-    is integer-paritions(12).elems, 77, 'expected number of partitions of 12';
-    is integer-paritions(12).head, 12, 'expected firs partition of 12';
-    is integer-paritions(12, 5).elems, 47, 'expected number of partitions of 12 of length at most 5';
-    is integer-paritions(12, (2, 7)).elems, 64, 'expected number of partitions of 12 of length between 2 and 7';
-    is integer-paritions(12, :2k-min, :7k-max).elems, 64, 'expected number of partitions of 12 of length between 2 and 7 (opts)';
+    isa-ok integer-partitions(12), List:D, 'expected result type';
+    is integer-partitions(12).elems, 77, 'expected number of partitions of 12';
+    is integer-partitions(12).head, 12, 'expected firs partition of 12';
+    is integer-partitions(12, 5).elems, 47, 'expected number of partitions of 12 of length at most 5';
+    is integer-partitions(12, (2, 7)).elems, 64, 'expected number of partitions of 12 of length between 2 and 7';
+    is integer-partitions(12, :2k-min, :7k-max).elems, 64, 'expected number of partitions of 12 of length between 2 and 7 (opts)';
 
 }, 'integer partitions';
 
