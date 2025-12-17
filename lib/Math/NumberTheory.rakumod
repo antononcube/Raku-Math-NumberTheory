@@ -3,6 +3,23 @@ use v6.d;
 unit module Math::NumberTheory;
 
 #==========================================================
+# Integer digits
+#==========================================================
+#| Gives a list of the base $b digits of the integer $n.
+proto sub integer-digits(
+        $n,                           #| An integer or list of integers to find the digits of.
+        Int:D $base where 2..36 = 10, #| Base of the digits.
+                   ) is export {*}
+
+multi sub integer-digits(Int:D $n, Int:D $base = 10) {
+    return $n.base($base).comb.map({ $_.Str.parse-base($base) }).List;
+}
+
+multi sub integer-digits(@n, Int:D $base = 10) {
+    return @n.map({ integer-digits($_, $base) }).List;
+}
+
+#==========================================================
 # GCD
 #==========================================================
 # It is a good idea to make GCD work for Gaussian integers and rationals.
@@ -1163,6 +1180,32 @@ sub cousin-primes(UInt:D $n) is export {
 #| Get the first n-pairs of primes that differ by 6.
 sub sexy-primes(UInt:D $n) is export {
     related-primes($n, :6step);
+}
+
+#==========================================================
+# Happy numbers
+#==========================================================
+#| Test whether an integer is a happy number.
+proto sub is-happy-number(
+        $n,                           #= An integer or a list of integers to check.
+        Int:D $base where 2..36 = 10, #= Base to the digits.
+        Int:D $p where $p > 0 = 2,    #= Power to raise the digits with.
+                    ) is export {*}
+
+multi sub is-happy-number(
+        Int:D $n,
+        Int:D $base where 2..36 = 10,
+        Int:D $p where $p > 0 = 2) {
+    my @out = [$n, ];
+    repeat {
+        @out.push( integer-digits(@out.tail, $base).map({ $_ ** $p }).sum );
+    } while @out.tail ∉ @out.head(*-1);
+
+    return @out.tail == 1;
+}
+
+multi sub is-happy-number(@n, Int:D $base = 10, Int:D $p = 2) {
+    return @n.map({ is-happy-number($_, $base, $p) }).List;
 }
 
 #==========================================================
