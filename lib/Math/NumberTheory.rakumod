@@ -1197,9 +1197,13 @@ multi sub is-happy-number(
         Int:D $base where 2..36 = 10,
         Int:D $p where $p > 0 = 2) {
     my @out = [$n, ];
+    my %seen;
+    my $a;
     repeat {
-        @out.push( integer-digits(@out.tail, $base).map({ $_ ** $p }).sum );
-    } while @out.tail ∉ @out.head(*-1);
+        $a = integer-digits(@out.tail, $base).map({ $_ ** $p }).sum;
+        @out.push($a);
+        %seen{$a}++;
+    } while %seen{$a} ≤ 1;
 
     return @out.tail == 1;
 }
