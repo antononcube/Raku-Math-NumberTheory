@@ -1190,12 +1190,14 @@ proto sub is-happy-number(
         $n,                           #= An integer or a list of integers to check.
         Int:D $base where 2..36 = 10, #= Base to the digits.
         Int:D $p where $p > 0 = 2,    #= Power to raise the digits with.
+        Bool:D :t(:$trail) = False,   #= Should the digit replacement trail be added or not?
                     ) is export {*}
 
 multi sub is-happy-number(
         Int:D $n,
         Int:D $base where 2..36 = 10,
-        Int:D $p where $p > 0 = 2) {
+        Int:D $p where $p > 0 = 2,
+        Bool:D :t(:$trail) = False) {
     my @out = [$n, ];
     my %seen;
     my $a;
@@ -1205,11 +1207,11 @@ multi sub is-happy-number(
         %seen{$a}++;
     } while %seen{$a} ≤ 1;
 
-    return @out.tail == 1;
+    return $trail ?? (@out.tail == 1, @out) !! @out.tail == 1;
 }
 
-multi sub is-happy-number(@n, Int:D $base = 10, Int:D $p = 2) {
-    return @n.map({ is-happy-number($_, $base, $p) }).List;
+multi sub is-happy-number(@n, Int:D $base = 10, Int:D $p = 2, Bool:D :t(:$trail) = False) {
+    return @n.map({ is-happy-number($_, $base, $p, :$trail) }).List;
 }
 
 #==========================================================
