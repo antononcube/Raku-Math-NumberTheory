@@ -1,0 +1,36 @@
+use v6.d;
+use Test;
+
+#use lib <. lib>;
+use Math::NumberTheory;
+
+plan *;
+
+## 1
+subtest {
+
+    isa-ok is-happy-number(12), Bool:D;
+    isa-ok is-happy-number(2026, 16), Bool:D;
+    isa-ok is-happy-number(2026, 16):trail, List:D;
+
+    is is-happy-number(12), False, '12 is sad';
+    is is-happy-number(2026), True, '2026 is happy';
+
+}, 'happy and sad numbers';
+
+## 2
+subtest {
+
+    isa-ok polygonal-number(12), Rat:D;
+    isa-ok polygonal-number(12, :5sides), Rat:D;
+
+    isa-ok polygonal-number([12, 23], :5sides), Positional:D;
+    isa-ok polygonal-number(12, sides => [3, 4, 5]), Positional:D;
+    isa-ok polygonal-number([4, 6, 12], sides => [3, 4, 5]), Positional:D;
+
+    is polygonal-number(5, :5sides), 35;
+    is polygonal-number(5, :5sides), 35;
+
+}, 'polygonal numbers';
+
+done-testing;

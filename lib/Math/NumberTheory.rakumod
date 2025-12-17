@@ -1215,6 +1215,34 @@ multi sub is-happy-number(@n, Int:D $base = 10, Int:D $p = 2, Bool:D :t(:$trail)
 }
 
 #==========================================================
+# Polygonal number
+#==========================================================
+#| Give the $n-th $s-gonal number.
+proto sub polygonal-number($n, :s(:$sides) = 3) is export {*}
+
+multi sub polygonal-number(UInt:D $n, :s(:$sides) is copy = 3) {
+    if $sides.isa(Whatever) { $sides = 3 }
+    return do given $sides {
+        when $_ ~~ Int:D && $_ ≥ 0 {
+            ($n * (4 + $n *(-2 + $sides) - $sides) ) / 2
+        }
+        when $_ ~ (Array:D | List:D | Seq:D) && $_.all ~~ UInt:D {
+            $_.map({ $n, sides => $_ }).List
+        }
+        default {
+            die 'The argument $sides is expected to be a non-negative integer or a list of non-negative integers.'
+        }
+    }
+}
+
+multi sub polygonal-number(@n, :s(:$sides) = 3) {
+    die 'The first argument is expected to be a non-negative integer or a list of non-negative integers.'
+    unless @n.all ~~ UInt:D;
+
+    return @n.map({ polygonal-number($_, :$sides) }).List;
+}
+
+#==========================================================
 # Integer partitions
 #==========================================================
 sub accel-asc(Int:D $n) {
