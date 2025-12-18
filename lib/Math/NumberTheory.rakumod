@@ -1224,7 +1224,9 @@ multi sub polygonal-number(UInt:D $n, :s(:$sides) is copy = 3) {
     if $sides.isa(Whatever) { $sides = 3 }
     return do given $sides {
         when $_ ~~ Int:D && $_ ≥ 0 {
-            ($n * (4 + $n *(-2 + $sides) - $sides) ) / 2
+            # Coercing to Int otherwise we get Rat and
+            # that "confuses" other subs that expect Int.
+            (($n * (4 + $n *(-2 + $sides) - $sides) ) / 2).Int
         }
         when $_ ~~ (Array:D | List:D | Seq:D) && $_.all ~~ UInt:D {
             $_.map({ $n, sides => $_ }).List

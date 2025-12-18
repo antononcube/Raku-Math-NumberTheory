@@ -21,8 +21,9 @@ subtest {
 ## 2
 subtest {
 
-    isa-ok polygonal-number(12), Rat:D;
-    isa-ok polygonal-number(12, :5sides), Rat:D;
+    ok polygonal-number(3);
+    isa-ok polygonal-number(12), Int:D;
+    isa-ok polygonal-number(12, :5sides), Int:D;
 
     isa-ok polygonal-number([12, 23], :5sides), Positional:D;
     isa-ok polygonal-number(12, sides => [3, 4, 5]), Positional:D;
