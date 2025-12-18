@@ -1215,6 +1215,26 @@ multi sub is-happy-number(@n, Int:D $base = 10, Int:D $p = 2, Bool:D :t(:$trail)
 }
 
 #==========================================================
+# Harshad numbers
+#==========================================================
+#| Test whether an integer is a harshad ("joyful") number.
+proto sub is-harshad-number(
+        $n,                           #= An integer or a list of integers to check.
+        Int:D $base where 2..36 = 10, #= Base to the digits.
+                          ) is export {*}
+
+multi sub is-harshad-number(
+        Int:D $n,
+        Int:D $base where 2..36 = 10) {
+    my $a = integer-digits($n, $base).sum;
+    return $n mod $a == 0;
+}
+
+multi sub is-harshad-number(@n, Int:D $base = 10) {
+    return @n.map({ is-harshad-number($_, $base) }).List;
+}
+
+#==========================================================
 # Polygonal number
 #==========================================================
 #| Give the $n-th $s-gonal number.
