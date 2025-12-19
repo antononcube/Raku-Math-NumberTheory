@@ -1221,16 +1221,17 @@ multi sub is-happy-number(@n, Int:D $base = 10, Int:D $p = 2, Bool:D :t(:$trail)
 proto sub is-harshad-number(
         $n,                           #= An integer or a list of integers to check.
         Int:D $base where 2..36 = 10, #= Base to the digits.
-                          ) is export {*}
+                          --> Bool:D) is export {*}
 
 multi sub is-harshad-number(
         Int:D $n,
-        Int:D $base where 2..36 = 10) {
+        Int:D $base where 2..36 = 10
+        --> Bool:D) {
     my $a = integer-digits($n, $base).sum;
     return $n mod $a == 0;
 }
 
-multi sub is-harshad-number(@n, Int:D $base = 10) {
+multi sub is-harshad-number(@n, Int:D $base = 10 --> Bool:D) {
     return @n.map({ is-harshad-number($_, $base) }).List;
 }
 
