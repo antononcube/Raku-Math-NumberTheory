@@ -1,7 +1,8 @@
 Changes of the Raku package "Math::NumberTheory".
 
-2025-12-18 0.0.22
+2025-12-19 0.0.22
     - Implemented &is-harshad-number.
+    - Fix: proper respect of the option :gaussian-integers by &is-prime.
 
 2025-12-17 0.0.21
     - Implemented &integer-partitions.
