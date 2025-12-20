@@ -1,5 +1,9 @@
 Changes of the Raku package "Math::NumberTheory".
 
+2025-12-20 0.0.23
+    - Implemented &is-abundant-number, &is-deficient-number, &is-perfect-number, &abundant-number, &deficient-number, &perfect-number.
+    - First version of the CLI script number-theory.
+
 2025-12-19 0.0.22
     - Implemented &is-harshad-number.
     - Fix: proper respect of the option :gaussian-integers by &is-prime.
