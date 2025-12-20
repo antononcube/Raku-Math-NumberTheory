@@ -1,0 +1,135 @@
+#!/usr/bin/env raku
+use v6.d;
+
+my %*SUB-MAIN-OPTS = :named-anywhere;
+
+use Math::NumberTheory :ALL;
+
+# The exported subs provided by Math::NumberTheory (as given by the user)
+my constant @exports = <
+  integer-digits gcd-gaussian gcd-rational infix:<=> lcm-gaussian lcm-rational
+  is-prime-gaussian is-prime factorial fibonacci digit-count factor-integer trial-factor-integer
+  factor-gaussian-integer divisors divisor-sigma euler-phi integer-exponent power-mod modular-inverse
+  chinese-remainder primitive-root-list multiplicative-order prime next-prime kronecker-delta
+  is-composite is-prime-power mangold-lambda are-coprime is-abundant-number is-deficient-number
+  is-perfect-number abundant-number deficient-number perfect-number related-primes twin-primes
+  cousin-primes sexy-primes is-happy-number is-harshad-number polygonal-number integer-partitions
+  random-prime real-digits phi-number-system
+>.sort;
+
+sub USAGE() {
+    my $prog = $*PROGRAM-NAME;
+    print qq:to/END/;
+    Usage:
+      $prog <function words...> [args...]
+      $prog <function-words...> WHY
+
+    Examples:
+      $prog is harshad number 23        # calls is-harshad-number(23)
+      $prog is-happy-number 2026        # calls is-happy-number(2026)
+      $prog divisor sigma 3 500         # calls divisor-sigma(3, 500)
+      $prog divisor-sigma WHY           # prints &divisor-sigma.WHY
+
+    Known functions (from Math::NumberTheory):
+      {@exports.sort.join(", ")}
+
+    END
+}
+
+sub normalize-name(Str $s --> Str) {
+    # Preserve infix:<...> tokens as-is; normalize other tokens.
+    return $s if $s.starts-with('infix:<') && $s.ends-with('>');
+
+    # Normalize common CLI variants:
+    # - underscores to hyphens
+    # - collapse multiple hyphens
+    # - lowercase
+    my $t = $s.trans('_' => '-').lc;
+    $t ~~ s:g/ '-' ** 2..* /-/;
+    $t
+}
+
+sub coerce-arg(Str $s --> Mu) {
+    # Int
+    return $s.Int if $s ~~ /^ <[+\-]>? \d+ $/;
+
+    # Rational like 3/7
+    return $s.Rat if $s ~~ /^ <[+\-]>? \d+ '/' \d+ $/;
+
+    # Leave everything else as Str (lets the called routine decide)
+    $s
+}
+
+sub find-routine(@args --> List) {
+    # Try the longest prefix of @args as the function name (joined by '-'),
+    # normalized, and check against the known export list.
+    for @args.elems ... 1 -> $n {
+        my @name-words = @args[^$n].map(&normalize-name);
+        my $candidate  = @name-words.join('-');
+
+        if @exports.grep(* eq $candidate) {
+            return ($candidate, @args[$n .. *]);   # (name, remaining args)
+        }
+
+        # Also accept if user already typed the exact routine name as one token
+        # (after normalization).
+        if $n == 1 {
+            my $single = normalize-name(@args[0]);
+            if @exports.grep(* eq $single) {
+                return ($single, @args[1 .. *]);
+            }
+        }
+    }
+
+    return (Nil, @args);
+}
+
+sub MAIN(*@ARGS) {
+    if @ARGS.elems == 0 || @ARGS[0] ∈ <-h --help help> {
+        say USAGE();
+        exit 0;
+    }
+
+    my ($name, @rest) = find-routine(@ARGS);
+    @rest .= flat(:hammer);
+
+    without $name {
+        note "Could not match a Math::NumberTheory export from: {@ARGS.join(' ')}";
+        note "";
+        say USAGE();
+        exit 2;
+    }
+
+    # Grab the routine by name from the current scope (imported via :ALL).
+    my &f = try { &::($name) };
+    without &f {
+        note "Matched name '$name' but could not resolve a callable routine.";
+        exit 3;
+    }
+
+    # Special case: show documentation for the routine.
+    if @rest.elems == 1 && @rest[0] eq 'WHY' {
+        say &f.WHY;
+        exit 0;
+    }
+
+    my @params = @rest.map({ coerce-arg($_) });
+
+    # Call and print result
+    my $result = try { &f(|@params) };
+    if $! {
+        note "Error calling $name({@params.map(*.raku).join(', ')}):";
+        note $!.message;
+        exit 4;
+    }
+
+    # Pretty output: print lists/seqs line by line; everything else via .say
+    given $result {
+        when Iterable & !.isa(Str) {
+            .list».say;
+        }
+        default {
+            .say;
+        }
+    }
+}
