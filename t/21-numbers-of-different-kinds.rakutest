@@ -34,4 +34,77 @@ subtest {
 
 }, 'polygonal numbers';
 
+## 3
+subtest {
+
+    ok is-abundant-number(12);
+    is is-abundant-number(12), True;
+    is is-abundant-number(5), False;
+    is is-abundant-number('a'), False;
+    is is-abundant-number(23.312), False;
+
+    # Prime numbers are never abundant
+    is-deeply (1..12)».&prime».&is-abundant-number, (False xx 12), 'primes are not abudant';
+}, 'abundant numbers';
+
+
+## 4
+subtest {
+    isa-ok is-deficient-number(12), Bool:D;
+    is is-deficient-number(12), False;
+    is is-deficient-number(5), True;
+    is is-deficient-number('a'), False;
+    is is-deficient-number(23.312), False;
+
+    # All prime numbers are deficient
+    is-deeply (1..12)».&prime».&is-deficient-number, (True xx 12), 'primes are deficient';
+}, 'deficient numbers';
+
+## 5
+subtest {
+    isa-ok is-perfect-number(12), Bool:D;
+    is is-perfect-number(6), True;
+    is is-perfect-number(5), False;
+    is is-perfect-number('a'), False;
+    is is-perfect-number(23.312), False;
+
+}, 'perfect numbers';
+
+# 6
+subtest {
+    is abundant-number(1), 12, '1st abundant number';
+    is abundant-number(2), 18, '2nd abundant number';
+    is abundant-number(3), 20, '3rd abundant number';
+    is abundant-number(4), 24, '4th abundant number';
+    is abundant-number(5), 30, '5th abundant number';
+    is abundant-number(6), 36, '6th abundant number';
+    is abundant-number(7), 40, '7th abundant number';
+    is abundant-number(8), 42, '8th abundant number';
+    is abundant-number(9), 48, '9th abundant number';
+    is abundant-number(10), 54, '10th abundant number';
+}, 'first 10 abundant numbers';
+
+# 7
+subtest {
+    is deficient-number(1), 2, '1st deficient number';
+    is deficient-number(2), 3, '2nd deficient number';
+    is deficient-number(3), 4, '3rd deficient number';
+    is deficient-number(4), 5, '4th deficient number';
+    is deficient-number(5), 7, '5th deficient number';
+    is deficient-number(6), 8, '6th deficient number';
+    is deficient-number(7), 9, '7th deficient number';
+    is deficient-number(8), 10, '8th deficient number';
+    is deficient-number(9), 11, '9th deficient number';
+    is deficient-number(10), 13, '10th deficient number';
+}, 'first 10 deficient numbers';
+
+## 8
+subtest {
+    plan 4;
+    is perfect-number(1), 6, '1st perfect number';
+    is perfect-number(2), 28, '2nd perfect number';
+    is perfect-number(3), 496, '3rd perfect number';
+    is perfect-number(4), 8128, '4th perfect number';
+}, 'first 4 perfect numbers';
+
 done-testing;

@@ -1154,8 +1154,66 @@ multi sub are-coprime(*@ns) {
 }
 
 #==========================================================
+# Abundant, deficient, and perfect numbers verifications
+#==========================================================
+proto sub is-abundant-number($n --> Bool:D) is export {*}
+
+multi sub is-abundant-number(Int:D $n --> Bool:D) {
+    return False if $n <= 1;
+    (divisor-sigma($n) - $n) > $n
+}
+multi sub is-abundant-number($n --> Bool:D) { False }
+
+
+proto sub is-deficient-number($n --> Bool:D) is export {*}
+
+multi sub is-deficient-number(Int:D $n --> Bool:D) {
+    return False if $n <= 1;
+    (divisor-sigma($n) - $n) < $n
+}
+
+multi sub is-deficient-number($n --> Bool:D) { False }
+
+
+proto sub is-perfect-number($n --> Bool:D) is export {*}
+
+multi sub is-perfect-number(Int:D $n --> Bool:D) {
+    return False if $n <= 1;
+    divisor-sigma($n) == 2 * $n
+}
+
+multi sub is-perfect-number($n --> Bool:D) { False }
+
+#==========================================================
+# Abundant, deficient, and perfect numbers
+#==========================================================
+sub iterate-number-class(Int:D $n, &test, Int:D :$start = 1 --> Int:D) {
+    die "The first argument must be a positive integer." if $n <= 0;
+    my Int $count = 0;
+    my Int $k = $start;
+    loop {
+        $k++;
+        next unless test($k);
+        $count++;
+        return $k if $count == $n;
+    }
+}
+
+sub abundant-number(Int:D $n --> Int:D) is export {
+    iterate-number-class($n, &is-abundant-number, :start(11))
+}
+
+sub deficient-number(Int:D $n --> Int:D) is export {
+    iterate-number-class($n, &is-deficient-number, :start(1))
+}
+
+sub perfect-number(Int:D $n --> Int:D) is export {
+    iterate-number-class($n, &is-perfect-number, :start(1))
+}
+
+#==========================================================
 # Twin, cousin, and sexy primes
-#=========================================================
+#==========================================================
 
 sub related-primes(UInt:D $n, UInt:D :$step = 2) is export {
     # This is slow, but it would be nice if it is made to run faster.
