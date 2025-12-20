@@ -1,7 +1,7 @@
 {
   "name": "Math::NumberTheory",
   "description": "Raku package for number theory functions.",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "authors": [
     "Anton Antonov"
   ],
