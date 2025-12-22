@@ -18,7 +18,8 @@ my constant @exports = <
 >.sort;
 
 sub USAGE() {
-    my $prog = $*PROGRAM-NAME;
+    #my $prog = $*PROGRAM-NAME;
+    my $prog = 'number-theory';
     print qq:to/END/;
     Usage:
       $prog <function words...> [args...]
