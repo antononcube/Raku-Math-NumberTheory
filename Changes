@@ -1,5 +1,8 @@
 Changes of the Raku package "Math::NumberTheory".
 
+2025-12-22 0.0.24
+    - Documentation update: README and sub WHY notes.
+
 2025-12-21 0.0.23
     - Implemented &is-abundant-number, &is-deficient-number, &is-perfect-number, &abundant-number, &deficient-number, &perfect-number.
     - First version of the CLI script number-theory.
