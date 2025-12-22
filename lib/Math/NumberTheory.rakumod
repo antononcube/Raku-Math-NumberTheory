@@ -24,6 +24,7 @@ multi sub integer-digits(@n, Int:D $base = 10) {
 #==========================================================
 # It is a good idea to make GCD work for Gaussian integers and rationals.
 
+#| GCD for Gaussian integers.
 proto sub gcd-gaussian(|) is export {*}
 
 multi sub gcd-gaussian(*@n) {
@@ -70,6 +71,8 @@ multi sub gcd-gaussian(Complex:D $a is copy, Complex:D $b is copy) {
 }
 
 #----------------------------------------------------------
+
+#| GCD for rationals.
 proto sub gcd-rational(|) is export {*}
 
 multi sub gcd-rational(*@r) {
@@ -113,6 +116,7 @@ multi infix:<gcd>(Rat:D $a, Int:D $b --> Rat:D) is export {
 # LCM
 #==========================================================
 
+#| LCM for Gaussian integers.
 proto sub lcm-gaussian(|) is export {*}
 
 multi sub lcm-gaussian(*@n) {
@@ -131,6 +135,7 @@ multi sub lcm-gaussian(Complex:D $a is copy, Complex:D $b is copy) {
 
 #----------------------------------------------------------
 
+#| LCM for rationals.
 proto sub lcm-rational(|) is export {*}
 
 multi sub lcm-rational(*@r) {
@@ -199,7 +204,7 @@ multi sub is-prime-gaussian(@p --> List) {
 }
 
 #----------------------------------------------------------
-# Redefine is-prime
+# Redefine is-prime to work with Gaussian integers.
 multi sub is-prime(Complex:D $p) is export {
     return is-prime-gaussian($p);
 }
@@ -279,7 +284,15 @@ multi sub digit-count(Int:D $n, Int:D $base = 10, $digits = Whatever) {
 # Integer factors
 #==========================================================
 
-proto sub factor-integer($n, $k = Whatever, :$method = Whatever, Bool:D :gaussian(:$gaussian-integers) = False) is export {*}
+#| Give a list of the prime factors of the integer $n, together with their exponents.
+proto sub factor-integer(
+        $n,                                                 #= Number to find factors of.
+        $k = Whatever,                                      #= Max number of distinct factors.
+        :$method = Whatever,                                #= Name of factorization method to use; one of "pollard-rho" or "trial-division".
+        Bool:D :gaussian(:$gaussian-integers) = False,      #= Should to factor over Gaussian integers or not?
+                         ) is export {*}
+#= If the second argument $k is number then th sub does partial factorization, pulling out at most $k distinct factors.
+
 multi sub factor-integer(
         $n is copy,
         $k is copy = Whatever,
@@ -585,7 +598,10 @@ sub integer-exponent(Int:D $n is copy, UInt:D $b= 10) is export {
 #==========================================================
 # http://reference.wolfram.com/language/ref/PowerMod.html
 # $b ^ e mod m
+
+#| Give $b^$e mod $m.
 proto sub power-mod(Int:D $b, $e, Int:D $m) is export {*}
+#= If $m is -1 the sub finds the modular inverse of a modulo $m.
 
 multi sub power-mod(Int:D $b is copy, @e is copy, Int:D $m) {
     return @e.map({ power-mod($b, $_, $m) }).List;
@@ -626,6 +642,8 @@ multi sub power-mod(@b, Int:D $e is copy, Int:D $m) {
 #==========================================================
 # https://reference.wolfram.com/language/ref/ModularInverse.html
 # Find k^-1 such that k * k^-1 mod n = 1.
+
+#| Give the modular inverse of $k modulo $n.
 proto sub modular-inverse($k, Int:D $n) is export {*}
 
 multi sub modular-inverse(@k, Int:D $n) {
@@ -729,9 +747,9 @@ multi sub primitive-root-list(@n, :$method = Whatever) {
 # Multiplicative order
 #==========================================================
 # Is this supposed to work with Gaussian primes?
-#| Give the multiplicative order of $^a ($k) modulo $^b ($n).
-#|
+#| Give the multiplicative order of $k modulo $n.
 proto sub multiplicative-order(Int:D $k is copy, Int:D $n where * > 0, | --> Int) is export {*}
+#= Defined as the smallest integer $m such that $k^$m = 1 mod $n.
 
 multi sub multiplicative-order(Int:D $k is copy, Int:D $n where * > 0 --> Int) {
     # Handle edge cases
@@ -1156,7 +1174,10 @@ multi sub are-coprime(*@ns) {
 #==========================================================
 # Abundant, deficient, and perfect numbers verifications
 #==========================================================
+#| Check whether an input is an abundant number.
 proto sub is-abundant-number($n --> Bool:D) is export {*}
+#= An abundant number is a number whose sum of proper divisors is greater than the number itself.
+#= The proper divisors of an integer n are the positive integers less than n that divide n.
 
 multi sub is-abundant-number(Int:D $n --> Bool:D) {
     return False if $n <= 1;
@@ -1164,8 +1185,10 @@ multi sub is-abundant-number(Int:D $n --> Bool:D) {
 }
 multi sub is-abundant-number($n --> Bool:D) { False }
 
-
+#| Check whether an input is a deficient number.
 proto sub is-deficient-number($n --> Bool:D) is export {*}
+#= A deficient number is a number whose sum of proper divisors is less than the number itself.
+#= The proper divisors of an integer n are the positive integers less than n that divide n.
 
 multi sub is-deficient-number(Int:D $n --> Bool:D) {
     return False if $n <= 1;
@@ -1174,7 +1197,7 @@ multi sub is-deficient-number(Int:D $n --> Bool:D) {
 
 multi sub is-deficient-number($n --> Bool:D) { False }
 
-
+#| Check whether an input is a perfect number.
 proto sub is-perfect-number($n --> Bool:D) is export {*}
 
 multi sub is-perfect-number(Int:D $n --> Bool:D) {
@@ -1199,14 +1222,17 @@ sub iterate-number-class(Int:D $n, &test, Int:D :$start = 1 --> Int:D) {
     }
 }
 
+#| Compute the nth abundant number
 sub abundant-number(Int:D $n --> Int:D) is export {
     iterate-number-class($n, &is-abundant-number, :start(11))
 }
 
+#| Compute the nth deficient number.
 sub deficient-number(Int:D $n --> Int:D) is export {
     iterate-number-class($n, &is-deficient-number, :start(1))
 }
 
+#| Compute the nth perfect number.
 sub perfect-number(Int:D $n --> Int:D) is export {
     iterate-number-class($n, &is-perfect-number, :start(1))
 }
