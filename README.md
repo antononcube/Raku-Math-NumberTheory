@@ -252,6 +252,46 @@ in order to get exact integers from phi-digits we have to round using small mult
 
 -------
 
+## CLI
+
+The package provides the Command Line Interface (CLI) script `number-theory`. Here is its usage note:
+
+```shell
+number-theory --help
+```
+```
+# Usage:
+#   number-theory <function words...> [args...]
+#   number-theory <function-words...> WHY
+# 
+# Examples:
+#   number-theory is harshad number 23        # calls is-harshad-number(23)
+#   number-theory is-happy-number 2026        # calls is-happy-number(2026)
+#   number-theory divisor sigma 3 500         # calls divisor-sigma(3, 500)
+#   number-theory divisor-sigma WHY           # prints &divisor-sigma.WHY
+# 
+# Known functions (from Math::NumberTheory):
+#   abundant-number, are-coprime, chinese-remainder, cousin-primes, deficient-number, digit-count, divisor-sigma, divisors, euler-phi, factor-gaussian-integer, factor-integer, factorial, fibonacci, gcd-gaussian, gcd-rational, infix:<=>, integer-digits, integer-exponent, integer-partitions, is-abundant-number, is-composite, is-deficient-number, is-happy-number, is-harshad-number, is-perfect-number, is-prime, is-prime-gaussian, is-prime-power, kronecker-delta, lcm-gaussian, lcm-rational, mangold-lambda, modular-inverse, multiplicative-order, next-prime, perfect-number, phi-number-system, polygonal-number, power-mod, prime, primitive-root-list, random-prime, real-digits, related-primes, sexy-primes, trial-factor-integer, twin-primes
+```
+
+The script takes proper sub names as a first argument or their "conversational" form. For example, these two commands invoke the same sub:
+
+```shell
+number-theory is-happy-number 2026
+```
+```
+# True
+```
+
+```shell
+number-theory is happy number 2026
+```
+```
+# True
+```
+
+-------
+
 ## TODO
 
 - [ ] TODO Implementation
@@ -269,12 +309,19 @@ in order to get exact integers from phi-digits we have to round using small mult
   - [X] DONE Rational numbers LCM
   - [X] DONE Carmichael lambda
   - [X] DONE Integer partitions
+  - [X] DONE Number classes tests and retrievers
+    - [X] DONE Abundant number
+    - [X] DONE Deficient number
+    - [X] DONE Perfect number
+    - [X] DONE Happy number
+    - [X] DONE Harshad number
   - [ ] TODO Sum of squares representation
   - [ ] TODO Figure out which memoization approach to use:
     - [ ] Via the package ["Memoize"](https://raku.land/zef:lizmat/Memoize)
     - [ ] Via `use experimental :cached` and `sub blah(...) is cached {...}` 
-  - [ ] TODO CLI
+  - [X] DONE CLI 
 - [ ] TODO Documentation
+  - [X] DONE [Blog post about Number theory properties of 2026](https://raku-advent.blog/2025/12/22/day-22-numerically-2026-is-unremarkable-yet-happy/). 
   - [ ] TODO Blog post on first non-zero digit of 10_000!
   - [ ] TODO Videos
     - [X] DONE [Neat examples 1](https://www.youtube.com/watch?v=wXXWyRAAPvc)

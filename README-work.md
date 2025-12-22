@@ -186,6 +186,26 @@ in order to get exact integers from phi-digits we have to round using small mult
 
 -------
 
+## CLI
+
+The package provides the Command Line Interface (CLI) script `number-theory`. Here is its usage note:
+
+```shell
+number-theory --help
+```
+
+The script takes proper sub names as a first argument or their "conversational" form. For example, these two commands invoke the same sub:
+
+```shell
+number-theory is-happy-number 2026
+```
+
+```shell
+number-theory is happy number 2026
+```
+
+-------
+
 ## TODO
 
 - [ ] TODO Implementation
@@ -203,12 +223,19 @@ in order to get exact integers from phi-digits we have to round using small mult
   - [X] DONE Rational numbers LCM
   - [X] DONE Carmichael lambda
   - [X] DONE Integer partitions
+  - [X] DONE Number classes tests and retrievers
+    - [X] DONE Abundant number
+    - [X] DONE Deficient number
+    - [X] DONE Perfect number
+    - [X] DONE Happy number
+    - [X] DONE Harshad number
   - [ ] TODO Sum of squares representation
   - [ ] TODO Figure out which memoization approach to use:
     - [ ] Via the package ["Memoize"](https://raku.land/zef:lizmat/Memoize)
     - [ ] Via `use experimental :cached` and `sub blah(...) is cached {...}` 
-  - [ ] TODO CLI
+  - [X] DONE CLI 
 - [ ] TODO Documentation
+  - [X] DONE [Blog post about Number theory properties of 2026](https://raku-advent.blog/2025/12/22/day-22-numerically-2026-is-unremarkable-yet-happy/). 
   - [ ] TODO Blog post on first non-zero digit of 10_000!
   - [ ] TODO Videos
     - [X] DONE [Neat examples 1](https://www.youtube.com/watch?v=wXXWyRAAPvc)
