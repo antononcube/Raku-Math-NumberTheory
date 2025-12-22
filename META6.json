@@ -1,7 +1,7 @@
 {
   "name": "Math::NumberTheory",
   "description": "Raku package for number theory functions.",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "authors": [
     "Anton Antonov"
   ],
@@ -16,8 +16,10 @@
     "chinese remainder",
     "divisor sigma",
     "euler phi",
+    "happy number",
     "gaussian integers",
     "kronecker delta",
+    "integer digits",
     "liouville lambda",
     "math",
     "moebius mu",
