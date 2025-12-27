@@ -188,11 +188,15 @@ proto sub is-prime-gaussian($p --> Bool) is export {*}
 multi sub is-prime-gaussian(Int:D $p --> Bool) {
     return is-prime($p) && $p mod 4 == 3;
 }
+
+# For some reason the built-in &is-prime always gives False on negative integers.
+# E.g. is-prime(-3) gives False.
+# Hence here &abs is applied.
 multi sub is-prime-gaussian(Complex:D $p --> Bool) {
     return do if $p.re == 0 {
-        is-prime($p.im.Int) && $p.im.Int mod 4 == 3
+        is-prime($p.im.abs.Int) && $p.im.abs.Int mod 4 == 3
     } elsif $p.im == 0 {
-        is-prime($p.re.Int) && $p.re.Int mod 4 == 3
+        is-prime($p.re.abs.Int) && $p.re.abs.Int mod 4 == 3
     } else {
         my $a = $p.re.Int ** 2 + $p.im.Int ** 2;
         is-prime($a)
