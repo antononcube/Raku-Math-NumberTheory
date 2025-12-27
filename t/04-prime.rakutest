@@ -79,8 +79,10 @@ subtest {
     is is-prime-gaussian(5), False;
     is is-prime-gaussian(7), True;
     is is-prime-gaussian(35), False;
-    is is-prime-gaussian(1 + 2*i), True;
+    is is-prime-gaussian(1 + 2 * i), True;
     is is-prime-gaussian(1 + i), True;
+    is is-prime-gaussian(-3 + i * 0), True;
+    is is-prime-gaussian( - i * 3), True;
     is-deeply is-prime-gaussian([1 + i, 5 ,7]), (True, False, True);
 
     is is-prime(5, :gaussian-integers), False;
