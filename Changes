@@ -1,5 +1,11 @@
 Changes of the Raku package "Math::NumberTheory".
 
+2025-12-27 0.0.25
+    - Bug fix: Proper &is-gaussian-prime test (for negative components).
+        - One fix is for the application of the built-in &is-prime.
+            - The built-in &is-prime always gives False on negative integers.
+        - The other fix for the mod application (over a negative component.)
+
 2025-12-22 0.0.24
     - Documentation update: README and sub WHY notes.
 
