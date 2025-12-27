@@ -988,7 +988,7 @@ sub legendre-formula(Numeric:D $x) {
 # Prime omega
 #==========================================================
 #| Give the number of prime factors counting multiplicities Ω(n) in the argument.
-multi sub prime-omega($x) is export {*}
+proto sub prime-omega($x) is export {*}
 multi sub prime-omega(@x) {
     return @x.map({ prime-omega($_) }).List;
 }
