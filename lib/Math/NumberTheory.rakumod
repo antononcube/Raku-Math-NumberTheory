@@ -1434,23 +1434,20 @@ multi sub random-prime(Range:D $range, $n is copy = Whatever) {
     die 'The second argument is expected to be a positive integer or Whatever.'
     unless $n ~~ Int:D && $n > 0 || $n.isa(Whatever);
 
-    my $i = 0;
+    # This is inefficient but it is simple and easy to understand.
     my @res;
-    my $n2 = $n.isa(Whatever) ?? 1 !! $n;
     for $min .. $max -> $c {
         if $c.is-prime {
             @res.push($c);
-            $i++
         }
-        last if $i ≥ $n2
     }
 
     return do if $n.isa(Whatever) {
-        @res.head
-    } elsif @res.elems == $n2 {
-        @res.List
+        @res.pick
+    } elsif @res.elems == $n {
+        @res.pick(*).List
     } else {
-        @res.roll($n2).List
+        @res.roll($n).List
     }
 }
 
