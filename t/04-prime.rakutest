@@ -48,8 +48,10 @@ subtest {
 
     my $p3 = random-prime(5 .. 50, 3);
     isa-ok $p3, List:D, "5 .. 50, 3 gives a list";
+    is $p3.elems, 3, "5 .. 50, 3 gives a list";
     is ([&&] $p3».is-prime), True, '5..50, 3 gives all primes';
 
+    is random-prime(5 .. 50, 10) ne random-prime(5 .. 50, 10), True;
     my @ps = random-prime(5 .. 50, 40);
     is @ps.elems, 40, "expected number of primes";
 
