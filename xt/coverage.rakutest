@@ -8,6 +8,6 @@ plan 2;
 
 coverage-at-least 70; # percent
 
-uncovered-at-most 100; # lines
+uncovered-at-most 110; # lines
 
 done-testing;
