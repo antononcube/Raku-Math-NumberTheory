@@ -200,8 +200,10 @@ The script takes proper sub names as a first argument or their "conversational" 
 number-theory is-happy-number 2026
 ```
 
+Using ranges:
+
 ```shell
-number-theory is happy number 2026
+number-theory random-prime 400..440 6
 ```
 
 -------
@@ -255,6 +257,11 @@ number-theory is happy number 2026
 ["Primitive roots generation trails"](https://mathematicaforprediction.wordpress.com/2025/04/08/primitive-roots-generation-trails/),
 (2025),
 [MathematicaForPrediction at WordPress](https://mathematicaforprediction.wordpress.com).
+
+[AA2] Anton Antonov,
+["Day 22 – Numerically 2026 Is Unremarkable Yet Happy"](https://raku-advent.blog/2025/12/22/day-22-numerically-2026-is-unremarkable-yet-happy/),
+(2025),
+[Raku Advent Calendar at WordPress](https://raku-advent.blog).
 
 [RC1] Rosetta Code, [Prime decomposition](https://rosettacode.org/wiki/Prime_decomposition),
 [Section "Pure Raku"](https://rosettacode.org/wiki/Prime_decomposition#Pure_Raku).

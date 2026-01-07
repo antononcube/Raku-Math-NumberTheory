@@ -272,6 +272,8 @@ number-theory --help
 # 
 # Known functions (from Math::NumberTheory):
 #   abundant-number, are-coprime, chinese-remainder, cousin-primes, deficient-number, digit-count, divisor-sigma, divisors, euler-phi, factor-gaussian-integer, factor-integer, factorial, fibonacci, gcd-gaussian, gcd-rational, infix:<=>, integer-digits, integer-exponent, integer-partitions, is-abundant-number, is-composite, is-deficient-number, is-happy-number, is-harshad-number, is-perfect-number, is-prime, is-prime-gaussian, is-prime-power, kronecker-delta, lcm-gaussian, lcm-rational, mangold-lambda, modular-inverse, multiplicative-order, next-prime, perfect-number, phi-number-system, polygonal-number, power-mod, prime, primitive-root-list, random-prime, real-digits, related-primes, sexy-primes, trial-factor-integer, twin-primes
+# 
+# True
 ```
 
 The script takes proper sub names as a first argument or their "conversational" form. For example, these two commands invoke the same sub:
@@ -283,11 +285,18 @@ number-theory is-happy-number 2026
 # True
 ```
 
+Using ranges:
+
 ```shell
-number-theory is happy number 2026
+number-theory random-prime 400..440 6
 ```
 ```
-# True
+# 409
+# 401
+# 401
+# 439
+# 439
+# 431
 ```
 
 -------
@@ -341,6 +350,11 @@ number-theory is happy number 2026
 ["Primitive roots generation trails"](https://mathematicaforprediction.wordpress.com/2025/04/08/primitive-roots-generation-trails/),
 (2025),
 [MathematicaForPrediction at WordPress](https://mathematicaforprediction.wordpress.com).
+
+[AA2] Anton Antonov,
+["Day 22 – Numerically 2026 Is Unremarkable Yet Happy"](https://raku-advent.blog/2025/12/22/day-22-numerically-2026-is-unremarkable-yet-happy/),
+(2025),
+[Raku Advent Calendar at WordPress](https://raku-advent.blog).
 
 [RC1] Rosetta Code, [Prime decomposition](https://rosettacode.org/wiki/Prime_decomposition),
 [Section "Pure Raku"](https://rosettacode.org/wiki/Prime_decomposition#Pure_Raku).
