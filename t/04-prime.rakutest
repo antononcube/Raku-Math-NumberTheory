@@ -55,6 +55,8 @@ subtest {
     my @ps = random-prime(5 .. 50, 40);
     is @ps.elems, 40, "expected number of primes";
 
+    isa-ok random-prime(10, :5min, :100max), List:D;
+
 }, 'random primes, expected to pass';
 
 ## 5
