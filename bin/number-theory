@@ -100,7 +100,6 @@ sub MAIN(*@ARGS, *%OPTS) {
     my ($name, @rest) = find-routine(@ARGS);
     @rest .= flat(:hammer);
 
-    say (:$name, :@rest);
     without $name {
         note "Could not match a Math::NumberTheory export from: {@ARGS.join(' ')}";
         note "";
