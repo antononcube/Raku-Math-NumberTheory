@@ -1419,8 +1419,14 @@ multi sub random-prime(Int:D $max, $n = Whatever) {
     return random-prime(2 .. $max, $n);
 }
 
-multi sub random-prime(Range:D $range, $n is copy = Whatever) {
+multi sub random-prime(Range:D $range, $n = Whatever) {
     my ($min, $max) = $range.head, $range.tail;
+    die 'Correct range argument is expected.'
+    unless $min.defined && $max.defined;
+    return random-prime($n, :$min, :$max);
+}
+
+multi sub random-prime($n is copy = Whatever, UInt:D :$min!, UInt:D :$max!) {
 
     die 'Correct range argument is expected.'
     unless $min.defined && $max.defined;
