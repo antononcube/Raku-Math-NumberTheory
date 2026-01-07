@@ -57,6 +57,12 @@ sub coerce-arg(Str $s --> Mu) {
     # Rational like 3/7
     return $s.Rat if $s ~~ /^ <[+\-]>? \d+ '/' \d+ $/;
 
+    # Range like 3..120
+    if $s ~~ /^ <[+\-]>? \d+ '..' \d+ $/ {
+        my @rn = $s.split('..')».trim».Int;
+        return (@rn.head .. @rn.tail);
+    }
+
     # Leave everything else as Str (lets the called routine decide)
     $s
 }
@@ -85,7 +91,7 @@ sub find-routine(@args --> List) {
     return (Nil, @args);
 }
 
-sub MAIN(*@ARGS) {
+sub MAIN(*@ARGS, *%OPTS) {
     if @ARGS.elems == 0 || @ARGS[0] ∈ <-h --help help> {
         say USAGE();
         exit 0;
@@ -94,6 +100,7 @@ sub MAIN(*@ARGS) {
     my ($name, @rest) = find-routine(@ARGS);
     @rest .= flat(:hammer);
 
+    say (:$name, :@rest);
     without $name {
         note "Could not match a Math::NumberTheory export from: {@ARGS.join(' ')}";
         note "";
@@ -117,7 +124,7 @@ sub MAIN(*@ARGS) {
     my @params = @rest.map({ coerce-arg($_) });
 
     # Call and print result
-    my $result = try { &f(|@params) };
+    my $result = try { &f(|@params, |%OPTS) };
     if $! {
         note "Error calling $name({@params.map(*.raku).join(', ')}):";
         note $!.message;
