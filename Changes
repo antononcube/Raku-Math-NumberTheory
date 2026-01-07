@@ -1,5 +1,10 @@
 Changes of the Raku package "Math::NumberTheory".
 
+2026-01-06 0.0.26
+    - Bug fix: correct &random-prime behaviour.
+    - Extended the signature of &random-prime to take :$min and :$max options.
+    - The CLI can handle ranges now.
+
 2025-12-27 0.0.25
     - Bug fix: Proper &is-gaussian-prime test (for negative components).
         - One fix is for the application of the built-in &is-prime.
