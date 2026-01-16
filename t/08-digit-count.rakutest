@@ -34,6 +34,6 @@ subtest {
               "5" => 218, "6" => 236, "7" => 204, "8" => 241, "9" => 223 },
             'expected digits';
             ;
-}, 'fibonacci number digit';
+}, 'fibonacci number digits';
 
 done-testing
