@@ -1,0 +1,18 @@
+use v6.d;
+use Test;
+
+#use lib <. lib>;
+use Math::NumberTheory;
+
+plan *;
+
+## 1
+subtest {
+
+    isa-ok fibonacci(12), Numeric:D;
+    isa-ok fibonacci([26, 12, 34]), List:D;
+    is-deeply fibonacci([2, 12, 30]), (1, 144, 832040);
+
+}, 'Fibonacci numbers over integers';
+
+done-testing;

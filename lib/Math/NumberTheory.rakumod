@@ -239,8 +239,14 @@ multi sub factorial(Int:D $n) is export {
 # and declaration as
 #  sub fibonacci(UInt $n) is cached {...}
 #| Give the n-th Fibonacci number.
-#| C<$n> --  Non-negative integer.
-sub fibonacci(UInt $n) is export {
+#| C<$n> --  Non-negative integer or a list of non-negative integers.
+proto sub fibonacci($n) is export {*}
+
+multi sub fibonacci(@n) {
+    return @n».&fibonacci.List;
+}
+
+multi sub fibonacci(UInt $n) {
     return 0 if $n == 0;
     return 1 if $n ≤ 2;
     my $k = $n div 2;
