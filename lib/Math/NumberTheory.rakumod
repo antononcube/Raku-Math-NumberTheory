@@ -271,6 +271,37 @@ multi sub fibonacci(Rat:D $n) {
 }
 
 #==========================================================
+# Lucas-L
+#==========================================================
+#| Give the n-th Lucas L number.
+#| C<$n> --  Non-negative integer or a list of non-negative integers.
+proto sub lucas-l($n) is export {*}
+
+multi sub lucas-l(@n) {
+    # Optimization
+    if @n.all ~~ UInt:D {
+        return fibonacci(@n <<->> 1) <<+>> fibonacci(@n <<+>> 1)
+    }
+    return @n».&lucas-l.List;
+}
+
+multi sub lucas-l(UInt:D $n) {
+    return fibonacci($n-1) + fibonacci($n+1)
+}
+
+multi sub lucas-l(Int:D $n where $n < 0) {
+    return lucas-l($n.abs) * ($n mod 2 ?? -1 !! 1);
+}
+multi sub lucas-l(Complex:D $n) {
+    my $fn = golden-ratio() ** $n;
+    return $fn + cos($n * π) / $fn;
+}
+
+multi sub lucas-l(Rat:D $n) {
+    return lucas-l($n + 0i);
+}
+
+#==========================================================
 # Digit count
 #==========================================================
 # http://reference.wolfram.com/language/ref/DigitCount.html

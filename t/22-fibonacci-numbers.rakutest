@@ -41,5 +41,32 @@ subtest {
 
 }, 'Fibonacci numbers over rationals';
 
+## 4
+subtest {
+
+    isa-ok lucas-l(12), Numeric:D;
+    isa-ok lucas-l([26, 12, 34]), List:D;
+    is-deeply lucas-l([2, 12, 30]), (3, 322, 1860498);
+
+}, 'Lucas-L numbers over integers';
+
+## 5
+subtest {
+
+    isa-ok lucas-l(-12), Numeric:D;
+    isa-ok lucas-l([-26, -12, -34]), List:D;
+    is-deeply lucas-l([-2, -11, -30]), (3, -199, 1860498);
+
+}, 'Lucas-L numbers over nagative integers';
+
+## 6
+subtest {
+
+    isa-ok lucas-l(3 + 4i), Numeric:D;
+    # See Wolfram Language LucasL[3 + 4 I] // N
+    is abs(lucas-l(3 + 4i) - (11733.1 + 31751.1i)) ≤ 0.05, True;
+
+}, 'Lucas-L numbers over complex numbers';
+
 
 done-testing;
