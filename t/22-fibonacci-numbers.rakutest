@@ -15,4 +15,31 @@ subtest {
 
 }, 'Fibonacci numbers over integers';
 
+## 2
+subtest {
+
+    isa-ok fibonacci(-12), Numeric:D;
+    isa-ok fibonacci([-26, -12, -34]), List:D;
+    is-deeply fibonacci([-2, -11, -30]), (-1, 89, -832040);
+
+}, 'Fibonacci numbers over nagative integers';
+
+## 3
+subtest {
+
+    isa-ok fibonacci(3 + 4i), Numeric:D;
+    # See Wolfram Language Fibonacci[3 + 4 I] // N
+    is abs(fibonacci(3 + 4i) - (-5248.51 - 14196i)) ≤ 0.05, True;
+
+}, 'Fibonacci numbers over complex numbers';
+
+
+## 3
+subtest {
+
+    isa-ok fibonacci(23/7), Numeric:D;
+
+}, 'Fibonacci numbers over rationals';
+
+
 done-testing;

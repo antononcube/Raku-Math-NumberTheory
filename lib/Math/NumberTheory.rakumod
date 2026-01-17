@@ -246,7 +246,7 @@ multi sub fibonacci(@n) {
     return @n».&fibonacci.List;
 }
 
-multi sub fibonacci(UInt $n) {
+multi sub fibonacci(UInt:D $n) {
     return 0 if $n == 0;
     return 1 if $n ≤ 2;
     my $k = $n div 2;
@@ -255,6 +255,19 @@ multi sub fibonacci(UInt $n) {
         return $a * (2 * fibonacci($k + 1) - $a);
     }
     return fibonacci($k + 1) ** 2 + fibonacci($k) ** 2;
+}
+
+multi sub fibonacci(Int:D $n where $n < 0) {
+    return fibonacci($n.abs) * (($n + 1) mod 2 ?? -1 !! 1);
+}
+
+multi sub fibonacci(Complex:D $n) {
+    my $fn = golden-ratio() ** $n;
+    return ($fn - cos($n * π) / $fn) / sqrt(5);
+}
+
+multi sub fibonacci(Rat:D $n) {
+    return fibonacci($n + 0i);
 }
 
 #==========================================================
@@ -1544,7 +1557,7 @@ our constant \phi is export = $fibonacci401 / $fibonacci400;
 our constant \ϕ is export = $fibonacci401 / $fibonacci400;
 #our constant \ϕ is export = (1.FatRat + $sqrt5) / 2.FatRat;
 sub golden-ratio(Bool:D :pre(:$pre-computed) = True) is export {
-    return $pre-computed ?? \phi !! (1 + sqrt(5)) / 2;
+    return $pre-computed ?? phi !! (1 + sqrt(5)) / 2;
 }
 
 #| Phi number system.
