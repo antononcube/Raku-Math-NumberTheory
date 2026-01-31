@@ -1,5 +1,9 @@
 # Math::NumberTheory
 
+[![](https://raku.land/zef:antononcube/Math::NumberTheory/badges/version)](https://raku.land/zef:antononcube/Math::NumberTheory)
+[![License: Artistic-2.0](https://img.shields.io/badge/License-Artistic%202.0-0298c3.svg)](https://opensource.org/licenses/Artistic-2.0)
+[![AAA4prediction](https://img.shields.io/badge/AAA4prediction-YouTube-red)](https://youtube.com/@AAA4prediction)
+
 Raku package with Number theory functions.
 
 The function names and features follow the 
