@@ -14,6 +14,7 @@ my constant @exports = <
   is-composite is-prime-power mangold-lambda are-coprime is-abundant-number is-deficient-number
   is-perfect-number abundant-number deficient-number perfect-number related-primes twin-primes
   cousin-primes sexy-primes is-happy-number is-harshad-number polygonal-number integer-partitions
+  continued-fraction from-continued-fraction
   random-prime real-digits phi-number-system
 >.sort;
 
@@ -62,6 +63,10 @@ sub coerce-arg(Str $s --> Mu) {
         my @rn = $s.split('..')».trim».Int;
         return (@rn.head .. @rn.tail);
     }
+
+    if $s ∈ <e 𝑒> { return e;}
+    if $s ∈ <pi π> { return pi;}
+    if $s ∈ <phi ϕ> { return phi;}
 
     # Leave everything else as Str (lets the called routine decide)
     $s
