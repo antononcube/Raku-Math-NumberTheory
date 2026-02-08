@@ -59,6 +59,12 @@ subtest {
     isa-ok from-continued-fraction([3, 7, 15, 1, 292, 1, 1, 1, 2, 1]), Numeric:D;
     is from-continued-fraction([3, 7, 15, 1, 292, 1, 1, 1, 2, 1]) - π ≤ 10e-6, True, 'π check';
 
+    # Maybe a good idea, but can be hard to implement
+    #is
+    #        from-continued-fraction(3, 7, 15, 1, 292, 1, 1, 1, 2, 1),
+    #        from-continued-fraction([3, 7, 15, 1, 292, 1, 1, 1, 2, 1]),
+    #        'slurpy argument';
+
 }, 'From continued fractions';
 
 done-testing;
