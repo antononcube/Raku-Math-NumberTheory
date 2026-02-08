@@ -1571,6 +1571,84 @@ multi sub real-digits(Numeric:D $x is copy,
 }
 
 #==========================================================
+# From Continued Fraction
+#==========================================================
+# http://reference.wolfram.com/language/ref/ContinuedFraction.html
+# https://mathworld.wolfram.com/ContinuedFraction.html
+
+#| Reconstruct a number from the list of its continued fraction terms.
+proto sub from-continued-fraction(@a, |) is export {*}
+
+multi sub from-continued-fraction(@a) {
+    die 'The first argument is expected to be sequences of integers.'
+    unless @a.all ~~ Int:D;
+    return from-continued-fraction(@a, (1 xx @a.elems));
+}
+
+multi sub from-continued-fraction(@a, @b)
+{
+    die 'The arguments are expected to have the same length.'
+    unless @a.elems == @b.elems;
+
+    die 'The arguments are expected to be sequences of integers'
+    unless @a.all ~~ Int:D && @b.all ~~ Int:D;
+
+    my $x = @a.tail;
+    $x = @a[$_ - 1] + @b[$_] / $x for reverse 1 ..^ @a.elems;
+    $x;
+}
+
+# Taken from https://rosettacode.org/wiki/Continued_fraction#Raku
+#multi sub from-continued-fraction(@a, @b) {
+#    die 'The arguments are expected to be sequences of integers'
+#    unless @a.all ~~ Int:D && @b.all ~~ Int:D;
+#
+#    return map { .(Inf) }, [\o] map { @a[$_] + @b[$_] / * }, ^Inf;
+#}
+
+#==========================================================
+# To Continued Fraction
+#==========================================================
+#| Generate a list of the first $n terms in the continued fraction representation of $x.
+proto sub continued-fraction($x, | --> List) is export {*}
+
+multi sub continued-fraction($x, $n, :tol(:$tolerance) is copy = Whatever --> List) {
+    return continued-fraction($x, :$n, :$tolerance)
+}
+multi sub continued-fraction(
+        $x,
+        :n(:$number-of-terms) is copy = Whatever,
+        :tol(:$tolerance) is copy = Whatever
+        --> List) {
+    die "The number of terms argument is expected to be a positive integer or Whatever."
+    unless $number-of-terms ~~ Int:D && $number-of-terms > 0 || $number-of-terms.isa(Whatever);
+
+    die "The tolerance argument is expected to be a non-negative number or Whatever."
+    unless $tolerance ~~ Numeric:D && $tolerance ≥ 0 || $tolerance.isa(Whatever);
+
+    if $number-of-terms.isa(Whatever) && $tolerance.isa(Whatever) {
+        $number-of-terms = Inf;
+        $tolerance = 10e-12;
+    } elsif $tolerance.isa(Whatever) {
+        $tolerance = 0;
+    } elsif $number-of-terms.isa(Whatever) {
+        $number-of-terms = Inf
+    }
+
+    my $r = $x;
+    my $k = 0;
+    my @res;
+    loop {
+        my $a = $r.floor;
+        @res.push($a);
+        my $f = $r - $a;
+        last if $f == 0 || $k++ ≥ $number-of-terms - 1 || $tolerance && abs($x - from-continued-fraction(@res)) ≤ $tolerance;
+        $r = 1 / $f;
+    }
+    return @res.List;
+}
+
+#==========================================================
 # Phi number system
 #==========================================================
 # https://resources.wolframcloud.com/FunctionRepository/resources/PhiNumberSystem/

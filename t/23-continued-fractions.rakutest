@@ -1,0 +1,52 @@
+use v6.d;
+use Test;
+
+#use lib <. lib>;
+use Math::NumberTheory;
+
+plan *;
+
+## 1
+subtest {
+
+    isa-ok continued-fraction(12, 10), List:D;
+    is continued-fraction(12, 10), (12,);
+    isa-ok continued-fraction(415/93, 10), List:D;
+    is-deeply continued-fraction(415/93, 10), (4, 2, 6, 7);
+    is-deeply continued-fraction(π, 10), (3, 7, 15, 1, 292, 1, 1, 1, 2, 1);
+
+}, 'Continued fraction with a second, number-of-terms argument';
+
+## 2
+subtest {
+
+    isa-ok continued-fraction(12), List:D;
+    is continued-fraction(12), (12,);
+    isa-ok continued-fraction(415/93), List:D;
+    is-deeply continued-fraction(415/93), (4, 2, 6, 7);
+
+}, 'Continued fraction with one arugment';
+
+## 3
+subtest {
+
+    isa-ok continued-fraction(12, tol => 0.1), List:D;
+    is continued-fraction(12, tol => 0.1), (12,);
+    isa-ok continued-fraction(415/93, tol => 0.1), List:D;
+    is-deeply continued-fraction(415/93, tol => 0.1), (4, 2);
+
+}, 'Continued fraction with tolerance';
+
+#`[
+## 3
+subtest {
+
+    # ContinuedFraction[\[Pi], 14]
+    is continued-fraction(π, 14), (3, 7, 15, 1, 292, 1, 1, 1, 2, 1, 3, 1, 14, 2);
+
+    # ContinuedFraction[E, 14]
+    is-deeply continued-fraction(e, 14), (2, 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, 1, 1);
+
+}, 'Continued fraction vs Wolfram Language';
+]
+done-testing;
