@@ -16,15 +16,24 @@ subtest {
     is quotient(32/3, 8), 1;
     is quotient(32/3, -8), -2;
     is quotient(-32/3, 8), -2;
-    #isa-ok quotient(10.4 + 8i, 4 + 5i), Numeric:D;
-    #is quotient(11 + 3i, 3 - 1i), 3 + 2i;
-    #is quotient(10.4 + 8i, 4 + 5i), 2;
+
+    # Complex numbers
+    isa-ok quotient(10.4 + 8i, 4 + 5i), Numeric:D;
+    is quotient(11 + 3i, 3 - 1i), 3 + 2i;
+    is quotient(10.4 + 8i, 4 + 5i), 2 + 0i;
 }, 'quotient';
 
 ## 2
 subtest {
+    isa-ok quotient-reminder(10.4 + 8i, 4 + 5i), List:D;
     is quotient-reminder(38/3, 11/3), (3, 5/3);
-    #is quotient-reminder(10.4 + 8i, 4 + 5i), (2, 2.4 - 2i);
+
+    # Complex numbers
+    is quotient-reminder(10.4 + 8i, 4 + 5i).head, 2 + 0i;
+    is (quotient-reminder(10.4 + 8i, 4 + 5i).tail - (2.4 - 2i)).abs < 10e-12, True;
+
+    is quotient-reminder(9.4 + 6i, 1 + i).head, 8 - 2i;
+    is (quotient-reminder(9.4 + 6i, 1 + i).tail - (-0.6 + 0i)).abs < 10e-12, True;
 }, 'quotient-reminder';
 
 done-testing;

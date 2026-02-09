@@ -175,6 +175,9 @@ multi infix:<lcm>(Rat:D $a, Int:D $b --> Rat:D) is export {
 #| Give the integer quotient of $m and $n.
 sub quotient(Numeric:D $m, Numeric:D $n) is export {
     # Special care has to be done for complex numbers.
+    if $m ~~ Complex:D || $n ~~ Complex:D {
+        return divide-gaussian($m.Complex, $n.Complex);
+    }
     return floor($m / $n);
 }
 
