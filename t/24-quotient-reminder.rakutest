@@ -1,0 +1,28 @@
+#!/usr/bin/env raku
+use v6.d;
+
+use Test;
+
+#use lib <. lib>;
+use Math::NumberTheory;
+
+plan *;
+
+## 1
+subtest {
+    isa-ok quotient(38, 11), Int:D;
+    isa-ok quotient(38/3, 11/3), Int:D;
+    is quotient(38/3, 11/3), 3;
+    is quotient(32/3, 8), 1;
+    is quotient(32/3, -8), -2;
+    is quotient(-32/3, 8), -2;
+    #is quotient-reminder(10.4 + 8i, 4 + 5i), 2;
+}, 'quotient';
+
+## 2
+subtest {
+    is quotient-reminder(38/3, 11/3), (3, 5/3);
+    #is quotient-reminder(10.4 + 8i, 4 + 5i), (2, 2.4 - 2i);
+}, 'quotient-reminder';
+
+done-testing;
