@@ -1,5 +1,9 @@
 Changes of the Raku package "Math::NumberTheory".
 
+2026-02-09 0.0.29
+    - Made &continued-fraction work over lists.
+    - Implemented &quotient and &quotient-reminder over integers, reals, and complex complex numbers.
+
 2026-02-08 0.0.28
     - Continued fractions functions implementation, &continued-fraction and &from-continued-fraction.
 
