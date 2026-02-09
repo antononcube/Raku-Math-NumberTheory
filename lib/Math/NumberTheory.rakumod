@@ -181,9 +181,8 @@ multi infix:<lcm>(Rat:D $a, Int:D $b --> Rat:D) is export {
 
 #| Give the integer quotient of $m and $n.
 sub quotient(Numeric:D $m, Numeric:D $n) is export {
-    my $r = $m;
-    while $r.abs > $n.abs { $r = floor($r / $n) }
-    return $r
+    # Special care has to be done for complex numbers.
+    return floor($m / $n);
 }
 
 #| Give a list of the quotient and remainder from division of $m by $n.
