@@ -19,15 +19,24 @@ subtest {
 
 ## 2
 subtest {
-
     isa-ok continued-fraction(12), List:D;
     is continued-fraction(12), (12,);
     isa-ok continued-fraction(415/93), List:D;
     is-deeply continued-fraction(415/93), (4, 2, 6, 7);
 
+    # Negative number
+    is-deeply continued-fraction(-415/93), (-4, -2, -6, -7);
+
 }, 'Continued fraction with one arugment';
 
 ## 3
+subtest {
+    isa-ok continued-fraction([415/93, 232/31]), List:D;
+    is continued-fraction([415/93, 232/31]).all ~~ List:D, True;
+    is-deeply continued-fraction([415/93, 232/31]), ((4, 2, 6, 7), (7, 2, 15));
+}, 'Listable';
+
+## 4
 subtest {
 
     isa-ok continued-fraction(12, tol => 0.1), List:D;
@@ -38,7 +47,7 @@ subtest {
 }, 'Continued fraction with tolerance';
 
 
-## 3
+## 5
 subtest {
 
     # ContinuedFraction[\[Pi], 14]
@@ -50,7 +59,7 @@ subtest {
 
 }, 'Continued fraction vs Wolfram Language';
 
-## 4
+## 6
 subtest {
 
     isa-ok from-continued-fraction((1, |(2 xx 9)), (1 xx 10)), Numeric:D;
