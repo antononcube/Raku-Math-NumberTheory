@@ -176,6 +176,23 @@ multi infix:<lcm>(Rat:D $a, Int:D $b --> Rat:D) is export {
 }
 
 #==========================================================
+# Quotient
+#==========================================================
+
+#| Give the integer quotient of $m and $n.
+sub quotient(Numeric:D $m, Numeric:D $n) is export {
+    my $r = $m;
+    while $r.abs > $n.abs { $r = floor($r / $n) }
+    return $r
+}
+
+#| Give a list of the quotient and remainder from division of $m by $n.
+sub quotient-reminder(Numeric:D $m, Numeric:D $n) is export {
+    my $r = quotient($m, $n);
+    return ($r, $m - $n * $r);
+}
+
+#==========================================================
 # PrimeQ
 #==========================================================
 # Extending is-prime to deal with Gaussian Integers.
