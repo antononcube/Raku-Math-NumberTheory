@@ -37,26 +37,19 @@ multi sub gcd-gaussian(Complex:D $a, Int:D $b) {
     return gcd-gaussian($a, $b + 0i);
 }
 
+sub divide-gaussian(Complex:D $a, Complex:D $b) {
+    my $denom = $b.abs ** 2;
+    my $real-part = ($a.re * $b.re + $a.im * $b.im) / $denom;
+    my $imag-part = ($a.im * $b.re - $a.re * $b.im) / $denom;
+    my $q-re = round($real-part);
+    my $q-im = round($imag-part);
+    return Complex.new($q-re, $q-im);
+}
+
 multi sub gcd-gaussian(Complex:D $a is copy, Complex:D $b is copy) {
-    sub norm(Complex:D $z) {
-        return $z.re ** 2 + $z.im ** 2;
-    }
-
-    sub round-to-nearest-int($x) {
-        return $x.round;
-    }
-
-    sub divide-gaussian(Complex:D $a, Complex:D $b) {
-        my $denom = norm($b);
-        my $real-part = ($a.re * $b.re + $a.im * $b.im) / $denom;
-        my $imag-part = ($a.im * $b.re - $a.re * $b.im) / $denom;
-        my $q-re = round-to-nearest-int($real-part);
-        my $q-im = round-to-nearest-int($imag-part);
-        return Complex.new($q-re, $q-im);
-    }
 
     # Is this needed?
-    if norm($b) > norm($a) {
+    if $b.abs > $a.abs {
         ($a, $b) = $b, $a;
     }
 
