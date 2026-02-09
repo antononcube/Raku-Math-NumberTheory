@@ -1615,11 +1615,21 @@ proto sub continued-fraction($x, | --> List) is export {*}
 multi sub continued-fraction($x, $n, :tol(:$tolerance) is copy = Whatever --> List) {
     return continued-fraction($x, :$n, :$tolerance)
 }
+
+multi sub continued-fraction(@x, :$number-of-terms = Whatever, :$tolerance = Whatever) {
+    return @x.map({ continued-fraction($_, :$number-of-terms, :$tolerance) }).List;
+}
+
 multi sub continued-fraction(
-        $x,
+        Numeric:D $x,
         :n(:$number-of-terms) is copy = Whatever,
         :tol(:$tolerance) is copy = Whatever
         --> List) {
+
+    if $x < 0 {
+        return -1 <<*>> continued-fraction(-$x, :$number-of-terms, :$tolerance);
+    }
+
     die "The number of terms argument is expected to be a positive integer or Whatever."
     unless $number-of-terms ~~ Int:D && $number-of-terms > 0 || $number-of-terms.isa(Whatever);
 
