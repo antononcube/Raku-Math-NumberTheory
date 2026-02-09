@@ -16,7 +16,9 @@ subtest {
     is quotient(32/3, 8), 1;
     is quotient(32/3, -8), -2;
     is quotient(-32/3, 8), -2;
-    #is quotient-reminder(10.4 + 8i, 4 + 5i), 2;
+    #isa-ok quotient(10.4 + 8i, 4 + 5i), Numeric:D;
+    #is quotient(11 + 3i, 3 - 1i), 3 + 2i;
+    #is quotient(10.4 + 8i, 4 + 5i), 2;
 }, 'quotient';
 
 ## 2
