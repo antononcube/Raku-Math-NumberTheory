@@ -1,5 +1,8 @@
 Changes of the Raku package "Math::NumberTheory".
 
+2026-02-10 0.0.30
+    - Implemented &convergents for computation of the convergents of continued fraction terms.
+
 2026-02-09 0.0.29
     - Made &continued-fraction work over lists.
     - Implemented &quotient and &quotient-reminder over integers, reals, and complex complex numbers.
