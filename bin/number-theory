@@ -14,7 +14,8 @@ my constant @exports = <
   is-composite is-prime-power mangold-lambda are-coprime is-abundant-number is-deficient-number
   is-perfect-number abundant-number deficient-number perfect-number related-primes twin-primes
   cousin-primes sexy-primes is-happy-number is-harshad-number polygonal-number integer-partitions
-  continued-fraction from-continued-fraction quotient quotient-reminder
+  continued-fraction from-continued-fraction convergents
+  quotient quotient-reminder
   random-prime real-digits phi-number-system
 >.sort;
 
