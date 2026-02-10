@@ -1673,7 +1673,9 @@ multi sub continued-fraction(
 #==========================================================
 # Convergents
 #==========================================================
+# http://reference.wolfram.com/language/ref/Convergents.html
 
+#| Give a list of the convergents corresponding to the given continued fraction terms list or a number.
 proto sub convergents($x, | --> List) is export {*}
 
 multi sub convergents($x, $n, :tol(:$tolerance) is copy = Whatever --> List) {
