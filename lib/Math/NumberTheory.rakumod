@@ -1671,6 +1671,32 @@ multi sub continued-fraction(
 }
 
 #==========================================================
+# Convergents
+#==========================================================
+
+proto sub convergents($x, | --> List) is export {*}
+
+multi sub convergents($x, $n, :tol(:$tolerance) is copy = Whatever --> List) {
+    return convergents($x, :$n, :$tolerance)
+}
+
+multi sub convergents(@x, :$number-of-terms = Whatever, :$tolerance = Whatever --> List) {
+    my @res = do for 1 .. @x.elems -> $i {
+        from-continued-fraction(@x.head($i))
+    }
+    return @res.List;
+}
+
+multi sub convergents(
+        Numeric:D $x,
+        :n(:$number-of-terms) is copy = Whatever,
+        :tol(:$tolerance) is copy = Whatever
+        --> List) {
+    my @terms = continued-fraction($x, :$number-of-terms, :$tolerance);
+    return convergents(@terms);
+}
+
+#==========================================================
 # Phi number system
 #==========================================================
 # https://resources.wolframcloud.com/FunctionRepository/resources/PhiNumberSystem/
