@@ -1684,7 +1684,7 @@ multi sub convergents($x, $n, :tol(:$tolerance) is copy = Whatever --> List) {
 
 multi sub convergents(@x, :$number-of-terms = Whatever, :$tolerance = Whatever --> List) {
 
-    return @x if @x.elems < 2;
+    return @x.List if @x.elems < 2;
 
     my @res = @x[0], (1 + @x[0] * @x[1]) / @x[1];
     @res = @res».Rat;
