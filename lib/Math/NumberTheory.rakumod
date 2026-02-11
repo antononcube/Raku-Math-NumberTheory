@@ -1768,8 +1768,8 @@ sub is-quadratic-irrational(
         UInt:D :$max-coeff = 50,
         Numeric:D :tol(:$tolerance) = 1e-12
                             ) is export {
-    return False unless $x ~~ Numeric;
-    return False if $x ~~ Rational; # includes Int/Rat/FatRat
+    return False unless $x ~~ Numeric:D;
+    return False if $x ~~ Rational:D; # includes Int/Rat/FatRat
 
     if $method.isa(Whatever) { $method = 'continued-fraction'}
     die "The value of \$method is expected to Whatever or a string, one of 'continued-fraction', 'discriminant', or 'both'."
@@ -1799,7 +1799,7 @@ sub is-quadratic-irrational(
             ?? discriminant-heuristic($x, :$max-coeff, :$tolerance)
             !! False;
 
-    $cf-ok || $disc-ok
+    return $cf-ok || $disc-ok;
 }
 
 #==========================================================
