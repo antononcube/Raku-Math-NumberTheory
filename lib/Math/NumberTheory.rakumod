@@ -1771,7 +1771,7 @@ sub is-quadratic-irrational(
     return False unless $x ~~ Numeric;
     return False if $x ~~ Rational; # includes Int/Rat/FatRat
 
-    if $method.isa(Whatever) { $method = 'discriminant'}
+    if $method.isa(Whatever) { $method = 'continued-fraction'}
     die "The value of \$method is expected to Whatever or a string, one of 'continued-fraction', 'discriminant', or 'both'."
     unless $method ~~ Str:D;
 
