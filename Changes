@@ -1,7 +1,9 @@
 Changes of the Raku package "Math::NumberTheory".
 
-2026-02-10 0.0.30
+2026-02-11 0.0.30
     - Implemented &convergents for computation of the convergents of continued fraction terms.
+    - Implemented &is-quadratic-irrational with two methods.
+        - One based on continued fraction periodicity, the other quadratic polynomial discriminant heuristic.
 
 2026-02-09 0.0.29
     - Made &continued-fraction work over lists.
