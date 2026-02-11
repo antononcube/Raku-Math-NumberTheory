@@ -1683,8 +1683,15 @@ multi sub convergents($x, $n, :tol(:$tolerance) is copy = Whatever --> List) {
 }
 
 multi sub convergents(@x, :$number-of-terms = Whatever, :$tolerance = Whatever --> List) {
-    my @res = do for 1 .. @x.elems -> $i {
-        from-continued-fraction(@x.head($i))
+
+    return @x if @x.elems < 2;
+
+    my @res = @x[0], (1 + @x[0] * @x[1]) / @x[1];
+    @res = @res».Rat;
+    for @x[2..^*] -> $d {
+        my $p = $d * @res[*-1].numerator + @res[*-2].numerator;
+        my $q = $d * @res[*-1].denominator + @res[*-2].denominator;
+        @res.push($p / $q);
     }
     return @res.List;
 }
