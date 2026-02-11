@@ -1706,6 +1706,103 @@ multi sub convergents(
 }
 
 #==========================================================
+# Quadratic irrational test
+#==========================================================
+
+sub ultimately-periodic(@seq) {
+    my $n = @seq.elems;
+    return False if $n < 4;
+
+    for 0 ..^ $n - 2 -> $start {
+        my $max-period = ($n - $start) div 2;
+        for 1 .. $max-period -> $p {
+            my $k = 0;
+            while $start + $k + $p < $n {
+                last unless @seq[$start + $k] eqv @seq[$start + $k + $p];
+                $k++;
+            }
+            return True if $k >= $p; # at least two repeats of the period
+        }
+    }
+
+    False
+}
+
+
+sub discriminant-heuristic($x, :$max-coeff = 50, :$tolerance = 1e-12) {
+    sub is-square(Int $n) {
+        return False if $n < 0;
+        my $r = $n.sqrt.floor;
+        return $r * $r == $n
+    }
+
+    # Try to find small integer coefficients A,B,C with A*x^2 + B*x + C ~= 0.
+    my $xx = $x * $x;
+
+    for 1 .. $max-coeff -> $a {
+        for -$max-coeff .. $max-coeff -> $b {
+            for -$max-coeff .. $max-coeff -> $c {
+                my $v = $a * $xx + $b * $x + $c;
+                next unless $v.abs < $tolerance;
+
+                my $d = $b * $b - 4 * $a * $c;
+                next unless $d > 0;
+                next if is-square($d);
+
+                # Keep only discriminants that reduce to square-free.
+                next unless is-square-free($d) || is-square-free($d.abs);
+
+                return True;
+            }
+        }
+    }
+
+    False
+}
+
+#| Give true if the argument is quadratic irrational.
+sub is-quadratic-irrational(
+        $x,
+        UInt:D :$max-terms = 200,
+        :$method is copy = Whatever,
+        UInt:D :$max-coeff = 50,
+        Numeric:D :tol(:$tolerance) = 1e-12
+                            ) is export {
+    return False unless $x ~~ Numeric;
+    return False if $x ~~ Rational; # includes Int/Rat/FatRat
+
+    if $method.isa(Whatever) { $method = 'discriminant'}
+    die "The value of \$method is expected to Whatever or a string, one of 'continued-fraction', 'discriminant', or 'both'."
+    unless $method ~~ Str:D;
+
+    my $m = $method.lc;
+    my $use-cf = $m ∈ <continued-fraction cf both all>;
+    my $use-disc = $m ∈ <discriminant disc both all>;
+    die "If the value of \$method is a string then it is expected to be one of 'continued-fraction', 'discriminant', or 'both'."
+    unless $use-cf || $use-disc;
+
+    my $cf-ok = False;
+    if $use-cf {
+        my $cf = continued-fraction($x);
+        my @cf;
+
+        if $cf ~~ (Array:D | List:D | Seq:D) && $cf.elems <= $max-terms {
+            @cf = $cf.Array;
+        } else {
+            @cf = $cf.head($max-terms).Array;
+        }
+
+        $cf-ok = @cf.elems && ultimately-periodic(@cf);
+    }
+
+    my $disc-ok = $use-disc
+            ?? discriminant-heuristic($x, :$max-coeff, :$tolerance)
+            !! False;
+
+    $cf-ok || $disc-ok
+}
+
+#==========================================================
 # Phi number system
 #==========================================================
 # https://resources.wolframcloud.com/FunctionRepository/resources/PhiNumberSystem/

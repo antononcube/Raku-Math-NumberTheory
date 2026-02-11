@@ -100,4 +100,14 @@ subtest {
 
 }, 'convergents';
 
+subtest {
+    my $method = 'continued-fraction';
+
+    is is-quadratic-irrational( 2.sqrt, :$method), True;                   # True  (sqrt(2))
+    is is-quadratic-irrational( (1 + (5).sqrt) / 2, :$method), True;       # True  (golden ratio)
+    is is-quadratic-irrational( 3/7, :$method), False;                     # False (rational)
+    isa-ok is-quadratic-irrational( pi, :$method), Bool:D;                 # usually False
+
+}, 'quadratic irrational';
+
 done-testing;
