@@ -1583,6 +1583,54 @@ multi sub real-digits(Numeric:D $x is copy,
 }
 
 #==========================================================
+# From Generalized Continued Fraction
+#==========================================================
+
+#| Reconstruct a number from the list of its generalized continued fraction terms.
+proto sub from-generalized-continued-fraction(@a, @b) is export {*}
+multi sub from-generalized-continued-fraction(@a, @b, :$n is copy = Whatever) {
+    die 'The named argument $n is expected to be a non-negative integer or Whatever.'
+    unless $n.isa(Whatever) || $n ~~ Int:D && $n ≥ 0;
+
+    $n = do if @a.is-lazy && @b.is-lazy {
+        die 'When both positional arguments are lazy then the named argument $n is expected to be a non-negative integer.'
+        unless $n ~~ Int:D && $n ≥ 0;
+        $n
+    } elsif !@a.is-lazy && @b.is-lazy {
+        $n.isa(Whatever) ?? @a.elems - 1 !! min(@a.elems - 1, $n)
+    } elsif @a.is-lazy && !@b.is-lazy {
+        $n.isa(Whatever) ?? @b.elems !! min(@b.elems, $n)
+    } else {
+        $n.isa(Whatever) ?? min(@a.elems - 1, @b.elems) !! min(@a.elems - 1, @b.elems, $n)
+    }
+
+    return @a.head if $n == 0;
+
+    die 'The two positional arguments are expected to be non-empty positionals.' if $n < 0;
+
+    note "{$n - @a.elems + 1} tailing elements of the first positional argument are ignored."
+    if !@a.is-lazy && @a.elems - 1 < $n;
+
+    note "{$n - @b.elems} tailing elements of the second positional argument are ignored."
+    if !@b.is-lazy && @b.elems < $n;
+
+    die 'The arguments are expected to be sequences of integers'
+    unless @a.all ~~ Int:D && @b.all ~~ Int:D;
+
+    my $x = @a[$n - 1];
+    $x = @a[$_ - 1] + @b[$_] / $x for reverse 1 ..^ $n;
+    return $x;
+}
+
+# Taken from https://rosettacode.org/wiki/Continued_fraction#Raku
+#multi sub from-continued-fraction(@a, @b) {
+#    die 'The arguments are expected to be sequences of integers'
+#    unless @a.all ~~ Int:D && @b.all ~~ Int:D;
+#
+#    return map { .(Inf) }, [\o] map { @a[$_] + @b[$_] / * }, ^Inf;
+#}
+
+#==========================================================
 # From Continued Fraction
 #==========================================================
 # http://reference.wolfram.com/language/ref/ContinuedFraction.html
@@ -1594,29 +1642,8 @@ proto sub from-continued-fraction(@a, |) is export {*}
 multi sub from-continued-fraction(@a) {
     die 'The first argument is expected to be sequences of integers.'
     unless @a.all ~~ Int:D;
-    return from-continued-fraction(@a, (1 xx @a.elems));
+    return from-generalized-continued-fraction(@a, (1 xx (@a.elems - 1)));
 }
-
-multi sub from-continued-fraction(@a, @b)
-{
-    die 'The arguments are expected to have the same length.'
-    unless @a.elems == @b.elems;
-
-    die 'The arguments are expected to be sequences of integers'
-    unless @a.all ~~ Int:D && @b.all ~~ Int:D;
-
-    my $x = @a.tail;
-    $x = @a[$_ - 1] + @b[$_] / $x for reverse 1 ..^ @a.elems;
-    $x;
-}
-
-# Taken from https://rosettacode.org/wiki/Continued_fraction#Raku
-#multi sub from-continued-fraction(@a, @b) {
-#    die 'The arguments are expected to be sequences of integers'
-#    unless @a.all ~~ Int:D && @b.all ~~ Int:D;
-#
-#    return map { .(Inf) }, [\o] map { @a[$_] + @b[$_] / * }, ^Inf;
-#}
 
 #==========================================================
 # To Continued Fraction
@@ -1657,6 +1684,8 @@ multi sub continued-fraction(
         $number-of-terms = Inf
     }
 
+    # This uses the wrong "Cauchy sequence" tolerance check.
+    # Has to be replaced with convergents denominators based check.
     my $r = $x;
     my $k = 0;
     my @res;
