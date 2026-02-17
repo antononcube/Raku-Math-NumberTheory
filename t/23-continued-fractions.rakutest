@@ -42,7 +42,7 @@ subtest {
     isa-ok continued-fraction(12, tol => 0.1), List:D;
     is continued-fraction(12, tol => 0.1), (12,);
     isa-ok continued-fraction(415/93, tol => 0.1), List:D;
-    is-deeply continued-fraction(415/93, tol => 0.1), (4, 2);
+    is-deeply continued-fraction(415/93, tol => 0.1), (4, 2, 6);
 
 }, 'Continued fraction with tolerance';
 
@@ -62,9 +62,12 @@ subtest {
 ## 6
 subtest {
 
-    isa-ok from-continued-fraction((1, |(2 xx 9)), (1 xx 10)), Numeric:D;
-    is from-continued-fraction((1, |(2 xx 9)), (1 xx 10)) - sqrt(2) ≤ 10e-6, True, 'sqrt(2) check';
+    isa-ok from-generalized-continued-fraction((1, |(2 xx 9)), (1 xx 10)), Numeric:D;
+    is from-generalized-continued-fraction((1, |(2 xx 9)), (1 xx 10)) - sqrt(2) ≤ 10e-6, True, 'sqrt(2) check';
+}, 'From generalized continued fractions';
 
+## 7
+subtest {
     isa-ok from-continued-fraction([3, 7, 15, 1, 292, 1, 1, 1, 2, 1]), Numeric:D;
     is from-continued-fraction([3, 7, 15, 1, 292, 1, 1, 1, 2, 1]) - π ≤ 10e-6, True, 'π check';
 
@@ -76,7 +79,7 @@ subtest {
 
 }, 'From continued fractions';
 
-## 6
+## 8
 subtest {
     is-deeply convergents([3]), (3,);
 
@@ -100,6 +103,7 @@ subtest {
 
 }, 'convergents';
 
+## 9
 subtest {
     my $method = 'continued-fraction';
 
