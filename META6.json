@@ -9,6 +9,7 @@
   "build-depends": [],
   "provides": {
     "Math::NumberTheory": "lib/Math/NumberTheory.rakumod",
+    "Math::NumberTheory::Expansions": "lib/Math/NumberTheory/Expansions.rakumod",
     "Math::NumberTheory::Utilities": "lib/Math/NumberTheory/Utilities.rakumod"
   },
   "license": "Artistic-2.0",
