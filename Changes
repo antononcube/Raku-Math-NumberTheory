@@ -1,5 +1,13 @@
 Changes of the Raku package "Math::NumberTheory".
 
+2026-02-22 0.0.31
+    - Refactored &from-continued-fraction to use &from-generalized-continued-fraction.
+        - &from-generalized-continued-fraction was previously a multi-sub of &from-continued-fraction.
+        - &from-generalized-continued-fraction allows both lazy and non-lazy arguments.
+    - Implemented &number-expansion and &from-number-expansion in "Math::NumberTheory::Expansions".
+        - That module has to be explicitly loaded in order to use its subs.
+        - The number expansions have a specification document: "docs/number-expansion-spec.md".
+
 2026-02-11 0.0.30
     - Implemented &convergents for computation of the convergents of continued fraction terms.
     - Implemented &is-quadratic-irrational with two methods.
