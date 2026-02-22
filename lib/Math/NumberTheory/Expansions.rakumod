@@ -5,7 +5,7 @@ use Math::NumberTheory;
 =begin pod
 =head1 NAME
 
-Math::NumberTheory::Expansion
+Math::NumberTheory::Expansions
 
 =head1 SYNOPSIS
 
@@ -26,7 +26,9 @@ Math::NumberTheory::Expansion
 # Public API
 # -------------------------
 
+#| Expresses a number as an expansion using any of several methods.
 proto sub number-expansion($x, | --> List) is export {*}
+
 multi sub number-expansion($x, Str:D $type, $n = Whatever --> List) {
     return do given $n {
         when $_.isa(Whatever) { number-expansion-all($x, $type) }
@@ -39,6 +41,7 @@ multi sub number-expansion($x, Str:D $type, $n = Whatever --> List) {
 multi sub number-expansion($x, Str:D :t(:$type), :n(:$number-of-terms) --> List) { number-expansion-n($x, $type, $number-of-terms) }
 multi sub number-expansion($x, Str:D :t(:$type) --> List) { number-expansion-all($x, $type) }
 
+#| Gives a rational approximation of a real number using different kinds of commonly known series expansions.
 proto sub from-number-expansion(@terms, |) is export {*}
 
 multi sub from-number-expansion(@terms, Str:D $type) {
