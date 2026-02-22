@@ -13,31 +13,13 @@ Math::NumberTheory::Expansion
 
     say number-expansion(pi, t => "Engel", :10n);                        # → [1, 1, 1, 8, ...]
     say number-expansion(3/19, type => "Sylvester");                     # → [7, 67]
-    say number-expansion(384, t => "Cantor");                            # → [0, 0, 0, 1, 3]
+    say number-expansion(384, "Cantor");                                 # → [0, 0, 0, 1, 3]
     say number-expansion(pi, t => "CantorProduct", :5number-of-terms);   # → [1, 2, 22, 600, ...]
-    say number-expansion(5/13, t => "Lueroth");                          # → [3, [3,4,2]]  (periodic)
+    say number-expansion(5/13, "Lueroth");                               # → [3, [3,4,2]]  (periodic)
 
-    say from-number-expansion([1,1,1,8,8], type => "Engel"); # approx reconstructs
-
-=head1 DESCRIPTION
-
-Initial Raku implementation of several "number expansions" described in the attached spec:
-
-- Engel
-- Pierce (alternating Engel; uses floor-based greedy)
-- Sylvester (Egyptian fraction greedy)
-- Cantor (factorial number system digits)
-- CantorProduct (greedy product (1+1/a_i))
-- Lüroth / Lueroth (with periodic detection for exact rationals)
-- Zeckendorf (Fibonacci nonconsecutive representation)
-
-Notes matching the spec:
-
-- For exact rationals, `number-expansion(x, t)` can be used.
-- For irrationals, you must specify a finite length `n` (throws otherwise).
-- For rationals, the returned list can be shorter than `n` because the expansion terminates.
-
-(See spec: usage/details/examples.)
+    say from-number-expansion([2, 7, 3, 2, 2, 2, 2, 2], 'lueroth');      # approx. reconstruction
+    say from-number-expansion([1,1,1,8,8], type => "Engel");             # approx. reconstruction
+    say from-number-expansion((1, 0, 1, 0, 1, 0, 1), 'Zeckendorf');      # exact reconstruction
 =end pod
 
 # -------------------------
