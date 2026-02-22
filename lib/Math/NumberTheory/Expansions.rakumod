@@ -9,7 +9,7 @@ Math::NumberTheory::Expansions
 
 =head1 SYNOPSIS
 
-    use Math::NumberTheory::Expansion :ALL;
+    use Math::NumberTheory::Expansions;
 
     say number-expansion(pi, t => "Engel", :10n);                        # → [1, 1, 1, 8, ...]
     say number-expansion(3/19, type => "Sylvester");                     # → [7, 67]
@@ -19,7 +19,7 @@ Math::NumberTheory::Expansions
 
     say from-number-expansion([2, 7, 3, 2, 2, 2, 2, 2], 'lueroth');      # approx. reconstruction
     say from-number-expansion([1,1,1,8,8], type => "Engel");             # approx. reconstruction
-    say from-number-expansion((1, 0, 1, 0, 1, 0, 1), 'Zeckendorf');      # exact reconstruction
+    say from-number-expansion((1, 0, 1, 0, 1, 0, 1), 'Zeckendorf');      # exact reconstruction (33)
 =end pod
 
 # -------------------------
@@ -38,8 +38,15 @@ multi sub number-expansion($x, Str:D $type, $n = Whatever --> List) {
         }
     }
 }
-multi sub number-expansion($x, Str:D :t(:$type), :n(:$number-of-terms) --> List) { number-expansion-n($x, $type, $number-of-terms) }
-multi sub number-expansion($x, Str:D :t(:$type) --> List) { number-expansion-all($x, $type) }
+multi sub number-expansion($x, Str:D :t(:$type), :n(:$number-of-terms) = Whatever --> List) {
+    return do given $number-of-terms {
+        when $_.isa(Whatever) { number-expansion-all($x, $type) }
+        when $_ ~~ Int:D && $_ ≥ 0 { number-expansion-n($x, $type, $number-of-terms) }
+        default {
+            die 'The value if $number-of-terms is expected to be a non-negative integer or Whatever.'
+        }
+    }
+}
 
 #| Gives a rational approximation of a real number using different kinds of commonly known series expansions.
 proto sub from-number-expansion(@terms, |) is export {*}
@@ -285,7 +292,7 @@ sub lueroth-all-rational(FatRat:D $x --> Mu) {
         if %seen{$r}:exists {
             my $start = %seen{$r};
             my @period = @seq[$start .. *];
-            return [ @period.elems, @period.List ];
+            return (@period.elems, @period.List);
         }
 
         %seen{$r} = @seq.elems;
