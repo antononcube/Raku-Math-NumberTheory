@@ -1,5 +1,7 @@
 unit module Math::NumberTheory::Expansions;
 
+use Math::NumberTheory;
+
 =begin pod
 =head1 NAME
 
@@ -55,7 +57,13 @@ multi sub number-expansion($x, Str:D $type, $n = Whatever --> List) {
 multi sub number-expansion($x, Str:D :t(:$type), :n(:$number-of-terms) --> List) { number-expansion-n($x, $type, $number-of-terms) }
 multi sub number-expansion($x, Str:D :t(:$type) --> List) { number-expansion-all($x, $type) }
 
-our sub from-number-expansion(@terms, Str:D :t(:$type) is copy) is export {
+proto sub from-number-expansion(@terms, |) is export {*}
+
+multi sub from-number-expansion(@terms, Str:D $type) {
+    return from-number-expansion(@terms, :$type);
+}
+
+multi sub from-number-expansion(@terms, Str:D :t(:$type) is copy) {
     $type = normalize-type($type);
     given $type {
         when 'Engel'         { return from-engel(@terms) }
@@ -63,6 +71,7 @@ our sub from-number-expansion(@terms, Str:D :t(:$type) is copy) is export {
         when 'Cantor'        { return from-cantor(@terms) }
         when 'CantorProduct' { return from-cantor-product(@terms) }
         when 'Lueroth'       { return from-lueroth(@terms) }
+        when 'Zeckendorf'    { return from-zeckendorf(@terms) }
     default {
         die "from-number-expansion: unsupported expansion type '$type'.";
     }
@@ -333,7 +342,7 @@ sub zeckendorf($n --> List) {
         }
     }
 
-    @bits.List
+    return @bits.reverse.List;
 }
 
 # -------------------------
@@ -362,7 +371,7 @@ sub from-engel(@a --> Mu) {
         $prod *= $a;
         $sum  += 1 / $prod;
     }
-    $sum
+    return $sum;
 }
 
 # Sylvester:
@@ -374,7 +383,7 @@ sub from-sylvester(@a --> Mu) {
         die "Sylvester terms must be positive integers" if $a <= 0;
         $sum += 1 / $a;
     }
-    $sum
+    return $sum;
 }
 
 # Cantor:
@@ -388,7 +397,7 @@ sub from-cantor(@digits --> Mu) {
         $n += $d.Int * $fact;
         $k++;
     }
-    $n
+    return $n;
 }
 
 # CantorProduct:
@@ -400,7 +409,7 @@ sub from-cantor-product(@a --> Mu) {
         die "CantorProduct terms must be positive integers" if $a <= 0;
         $p *= (1 + 1 / $a);
     }
-    $p
+    return $p;
 }
 
 # Lueroth:
@@ -436,5 +445,10 @@ sub from-lueroth(@terms --> Mu) {
         }
     }
 
-    $sum
+    return $sum;
+}
+
+sub from-zeckendorf(@bits --> Mu) {
+    my @pos = @bits.reverse.grep(1, :k) <<+>> 2;
+    return fibonacci(@pos).sum;
 }
