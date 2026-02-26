@@ -1,5 +1,11 @@
 Changes of the Raku package "Math::NumberTheory".
 
+2026-02-26 0.1.0
+    - Major refactoring of the code into meaningful and convenient module-submodule structure.
+        - For example, the submodule providing &number-expansion and &from-number-expansion can use the submodule providing &fibonacci.
+    - API increment (i.e. ":api<1>".)
+        - This means that I think the current subs name-and-signature design is "good and stable."
+
 2026-02-22 0.0.31
     - Refactored &from-continued-fraction to use &from-generalized-continued-fraction.
         - &from-generalized-continued-fraction was previously a multi-sub of &from-continued-fraction.
