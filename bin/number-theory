@@ -16,6 +16,7 @@ my constant @exports = <
   cousin-primes sexy-primes is-happy-number is-harshad-number polygonal-number integer-partitions
   continued-fraction from-continued-fraction convergents is-quadratic-irrational
   quotient quotient-reminder
+  number-expansion from-number-expansion
   random-prime real-digits phi-number-system
 >.sort;
 
