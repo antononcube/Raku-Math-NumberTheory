@@ -66,6 +66,12 @@ sub coerce-arg(Str $s --> Mu) {
         return (@rn.head .. @rn.tail);
     }
 
+    # List like
+    if $s ~~ /^ [<[+\-]>? \d+]+ %% [ \h* ',' \h* | \h+ ] $/ {
+        my @ns = $s.split(/',' | \h+/)».trim».Numeric;
+        return @ns.List;
+    }
+
     if $s ∈ <e 𝑒> { return e;}
     if $s ∈ <pi π> { return pi;}
     if $s ∈ <phi ϕ> { return phi;}
