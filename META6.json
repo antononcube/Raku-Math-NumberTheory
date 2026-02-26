@@ -1,7 +1,7 @@
 {
   "name": "Math::NumberTheory",
   "description": "Raku package for number theory functions.",
-  "version": "0.0.31",
+  "version": "0.1.0",
   "authors": [
     "Anton Antonov"
   ],
@@ -9,12 +9,16 @@
   "build-depends": [],
   "provides": {
     "Math::NumberTheory": "lib/Math/NumberTheory.rakumod",
+    "Math::NumberTheory::Constants": "lib/Math/NumberTheory/Constants.rakumod",
+    "Math::NumberTheory::ContinuedFraction": "lib/Math/NumberTheory/ContinuedFraction.rakumod",
     "Math::NumberTheory::Expansions": "lib/Math/NumberTheory/Expansions.rakumod",
+    "Math::NumberTheory::Fibonacci": "lib/Math/NumberTheory/Fibonacci.rakumod",
     "Math::NumberTheory::Utilities": "lib/Math/NumberTheory/Utilities.rakumod"
   },
   "license": "Artistic-2.0",
   "tags": [
     "chinese remainder",
+    "continued fraction",
     "divisor sigma",
     "euler phi",
     "happy number",
@@ -25,6 +29,7 @@
     "math",
     "moebius mu",
     "number theory",
+    "number expansion",
     "number",
     "phi number system",
     "power mod",
@@ -36,7 +41,7 @@
     "real digits",
     "totient"
   ],
-  "api": "0",
+  "api": "1",
   "source-url": "https://github.com/antononcube/Raku-Math-NumberTheory.git",
   "raku": "6.d"
 }
