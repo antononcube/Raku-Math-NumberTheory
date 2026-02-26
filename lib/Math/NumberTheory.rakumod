@@ -1,6 +1,4 @@
 use v6.d;
-
-unit module Math::NumberTheory;
 sub EXPORT {
     use Math::NumberTheory::Constants;
     use Math::NumberTheory::Fibonacci;
@@ -19,6 +17,8 @@ sub EXPORT {
             '&from-number-expansion' => &Math::NumberTheory::Expansions::from-number-expansion,
             ;
 }
+
+unit module Math::NumberTheory;
 
 use Math::NumberTheory::Constants;
 use Math::NumberTheory::ContinuedFraction;
