@@ -1,6 +1,34 @@
 use v6.d;
 
 unit module Math::NumberTheory;
+sub EXPORT {
+    use Math::NumberTheory::Constants;
+    use Math::NumberTheory::Fibonacci;
+    use Math::NumberTheory::ContinuedFraction;
+    use Math::NumberTheory::Expansions;
+
+    Map.new:
+            '&golden-ratio' => &Math::NumberTheory::Constants::golden-ratio,
+            '&fibonacci' => &Math::NumberTheory::Fibonacci::fibonacci,
+            '&lucas-l' => &Math::NumberTheory::Fibonacci::lucas-l,
+            '&continued-fraction' => &Math::NumberTheory::ContinuedFraction::continued-fraction,
+            '&from-continued-fraction' => &Math::NumberTheory::ContinuedFraction::from-continued-fraction,
+            '&from-generalized-continued-fraction' => &Math::NumberTheory::ContinuedFraction::from-generalized-continued-fraction,
+            '&convergents' => &Math::NumberTheory::ContinuedFraction::convergents,
+            '&number-expansion' => &Math::NumberTheory::Expansions::number-expansion,
+            '&from-number-expansion' => &Math::NumberTheory::Expansions::from-number-expansion,
+            ;
+}
+
+use Math::NumberTheory::Constants;
+use Math::NumberTheory::ContinuedFraction;
+
+#==========================================================
+# Surfacing constants
+#==========================================================
+
+our constant \phi is export = $Math::NumberTheory::Constants::phi;
+our constant \ϕ is export = $Math::NumberTheory::Constants::phi;
 
 #==========================================================
 # Integer digits
@@ -241,76 +269,6 @@ multi sub is-prime(@p, *%args --> List) {
 #| C<:$n> -- Integer.
 multi sub factorial(Int:D $n) is export {
     ([*] 1 .. $n) or 1
-}
-
-#==========================================================
-# Fibonacci
-#==========================================================
-# This can be cached either by using "Memoize" or by
-#  use experimental :cached
-# and declaration as
-#  sub fibonacci(UInt $n) is cached {...}
-#| Give the n-th Fibonacci number.
-#| C<$n> --  Non-negative integer or a list of non-negative integers.
-proto sub fibonacci($n) is export {*}
-
-multi sub fibonacci(@n) {
-    return @n».&fibonacci.List;
-}
-
-multi sub fibonacci(UInt:D $n) {
-    return 0 if $n == 0;
-    return 1 if $n ≤ 2;
-    my $k = $n div 2;
-    if $n %% 2 {
-        my $a = fibonacci($k);
-        return $a * (2 * fibonacci($k + 1) - $a);
-    }
-    return fibonacci($k + 1) ** 2 + fibonacci($k) ** 2;
-}
-
-multi sub fibonacci(Int:D $n where $n < 0) {
-    return fibonacci($n.abs) * (($n + 1) mod 2 ?? -1 !! 1);
-}
-
-multi sub fibonacci(Complex:D $n) {
-    my $fn = golden-ratio() ** $n;
-    return ($fn - cos($n * π) / $fn) / sqrt(5);
-}
-
-multi sub fibonacci(Rat:D $n) {
-    return fibonacci($n + 0i);
-}
-
-#==========================================================
-# Lucas-L
-#==========================================================
-#| Give the n-th Lucas L number.
-#| C<$n> --  Non-negative integer or a list of non-negative integers.
-proto sub lucas-l($n) is export {*}
-
-multi sub lucas-l(@n) {
-    # Optimization
-    if @n.all ~~ UInt:D {
-        return fibonacci(@n <<->> 1) <<+>> fibonacci(@n <<+>> 1)
-    }
-    return @n».&lucas-l.List;
-}
-
-multi sub lucas-l(UInt:D $n) {
-    return fibonacci($n-1) + fibonacci($n+1)
-}
-
-multi sub lucas-l(Int:D $n where $n < 0) {
-    return lucas-l($n.abs) * ($n mod 2 ?? -1 !! 1);
-}
-multi sub lucas-l(Complex:D $n) {
-    my $fn = golden-ratio() ** $n;
-    return $fn + cos($n * π) / $fn;
-}
-
-multi sub lucas-l(Rat:D $n) {
-    return lucas-l($n + 0i);
 }
 
 #==========================================================
@@ -1583,158 +1541,6 @@ multi sub real-digits(Numeric:D $x is copy,
 }
 
 #==========================================================
-# From Generalized Continued Fraction
-#==========================================================
-
-#| Reconstruct a number from the list of its generalized continued fraction terms.
-proto sub from-generalized-continued-fraction(@a, @b) is export {*}
-multi sub from-generalized-continued-fraction(@a, @b, :$n is copy = Whatever) {
-    die 'The named argument $n is expected to be a non-negative integer or Whatever.'
-    unless $n.isa(Whatever) || $n ~~ Int:D && $n ≥ 0;
-
-    $n = do if @a.is-lazy && @b.is-lazy {
-        die 'When both positional arguments are lazy then the named argument $n is expected to be a non-negative integer.'
-        unless $n ~~ Int:D && $n ≥ 0;
-        $n
-    } elsif !@a.is-lazy && @b.is-lazy {
-        $n.isa(Whatever) ?? @a.elems - 1 !! min(@a.elems - 1, $n)
-    } elsif @a.is-lazy && !@b.is-lazy {
-        $n.isa(Whatever) ?? @b.elems !! min(@b.elems, $n)
-    } else {
-        $n.isa(Whatever) ?? min(@a.elems - 1, @b.elems) !! min(@a.elems - 1, @b.elems, $n)
-    }
-
-    return @a.head if $n == 0;
-
-    die 'The two positional arguments are expected to be non-empty positionals.' if $n < 0;
-
-    note "{$n - @a.elems + 1} tailing elements of the first positional argument are ignored."
-    if !@a.is-lazy && @a.elems - 1 < $n;
-
-    note "{$n - @b.elems} tailing elements of the second positional argument are ignored."
-    if !@b.is-lazy && @b.elems < $n;
-
-    die 'The arguments are expected to be sequences of integers'
-    unless @a.all ~~ Int:D && @b.all ~~ Int:D;
-
-    my $x = @a[$n - 1];
-    $x = @a[$_ - 1] + @b[$_] / $x for reverse 1 ..^ $n;
-    return $x;
-}
-
-# Taken from https://rosettacode.org/wiki/Continued_fraction#Raku
-#multi sub from-continued-fraction(@a, @b) {
-#    die 'The arguments are expected to be sequences of integers'
-#    unless @a.all ~~ Int:D && @b.all ~~ Int:D;
-#
-#    return map { .(Inf) }, [\o] map { @a[$_] + @b[$_] / * }, ^Inf;
-#}
-
-#==========================================================
-# From Continued Fraction
-#==========================================================
-# http://reference.wolfram.com/language/ref/ContinuedFraction.html
-# https://mathworld.wolfram.com/ContinuedFraction.html
-
-#| Reconstruct a number from the list of its continued fraction terms.
-proto sub from-continued-fraction(@a, |) is export {*}
-
-multi sub from-continued-fraction(@a) {
-    die 'The first argument is expected to be sequences of integers.'
-    unless @a.all ~~ Int:D;
-    return from-generalized-continued-fraction(@a, (1 xx (@a.elems - 1)));
-}
-
-#==========================================================
-# To Continued Fraction
-#==========================================================
-#| Generate a list of the first $n terms in the continued fraction representation of $x.
-proto sub continued-fraction($x, | --> List) is export {*}
-
-multi sub continued-fraction($x, $n, :tol(:$tolerance) is copy = Whatever --> List) {
-    return continued-fraction($x, :$n, :$tolerance)
-}
-
-multi sub continued-fraction(@x, :$number-of-terms = Whatever, :$tolerance = Whatever) {
-    return @x.map({ continued-fraction($_, :$number-of-terms, :$tolerance) }).List;
-}
-
-multi sub continued-fraction(
-        Numeric:D $x,
-        :n(:$number-of-terms) is copy = Whatever,
-        :tol(:$tolerance) is copy = Whatever
-        --> List) {
-
-    if $x < 0 {
-        return -1 <<*>> continued-fraction(-$x, :$number-of-terms, :$tolerance);
-    }
-
-    die "The number of terms argument is expected to be a positive integer or Whatever."
-    unless $number-of-terms ~~ Int:D && $number-of-terms > 0 || $number-of-terms.isa(Whatever);
-
-    die "The tolerance argument is expected to be a non-negative number or Whatever."
-    unless $tolerance ~~ Numeric:D && $tolerance ≥ 0 || $tolerance.isa(Whatever);
-
-    if $number-of-terms.isa(Whatever) && $tolerance.isa(Whatever) {
-        $number-of-terms = Inf;
-        $tolerance = 10e-12;
-    } elsif $tolerance.isa(Whatever) {
-        $tolerance = 0;
-    } elsif $number-of-terms.isa(Whatever) {
-        $number-of-terms = Inf
-    }
-
-    # This uses the wrong "Cauchy sequence" tolerance check.
-    # Has to be replaced with convergents denominators based check.
-    my $r = $x;
-    my $k = 0;
-    my @res;
-    loop {
-        my $a = $r.floor;
-        @res.push($a);
-        my $f = $r - $a;
-        last if $f == 0 || $k++ ≥ $number-of-terms - 1 || $tolerance && abs($x - from-continued-fraction(@res)) ≤ $tolerance;
-        $r = 1 / $f;
-    }
-    return @res.List;
-}
-
-#==========================================================
-# Convergents
-#==========================================================
-# http://reference.wolfram.com/language/ref/Convergents.html
-
-#| Give a list of the convergents corresponding to the given continued fraction terms list or a number.
-proto sub convergents($x, | --> List) is export {*}
-
-multi sub convergents($x, $n, :tol(:$tolerance) is copy = Whatever --> List) {
-    return convergents($x, :$n, :$tolerance)
-}
-
-multi sub convergents(@x, :$number-of-terms = Whatever, :$tolerance = Whatever --> List) {
-
-    return @x.List if @x.elems < 2;
-
-    # Rat or FatRat?
-    my @res = @x[0].Rat, (1 + @x[0] * @x[1]) / @x[1];
-    for @x[2..^*] -> $d {
-        my $p = $d * @res[*-1].numerator + @res[*-2].numerator;
-        my $q = $d * @res[*-1].denominator + @res[*-2].denominator;
-        @res.push($p / $q);
-    }
-    return @res.List;
-}
-
-multi sub convergents(
-        Numeric:D $x,
-        :n(:$number-of-terms) is copy = Whatever,
-        :tol(:$tolerance) is copy = Whatever
-        --> List) {
-    my @terms = continued-fraction($x, :$number-of-terms, :$tolerance);
-    return convergents(@terms);
-}
-
-#==========================================================
 # Quadratic irrational test
 #==========================================================
 
@@ -1756,7 +1562,6 @@ sub ultimately-periodic(@seq) {
 
     False
 }
-
 
 sub discriminant-heuristic($x, :$max-coeff = 50, :$tolerance = 1e-12) {
     sub is-square(Int $n) {
@@ -1790,13 +1595,13 @@ sub discriminant-heuristic($x, :$max-coeff = 50, :$tolerance = 1e-12) {
 }
 
 #| Give true if the argument is quadratic irrational.
-sub is-quadratic-irrational(
+our sub is-quadratic-irrational(
         $x,
         UInt:D :$max-terms = 200,
         :$method is copy = Whatever,
         UInt:D :$max-coeff = 50,
         Numeric:D :tol(:$tolerance) = 1e-12
-                            ) is export {
+                                ) is export {
     return False unless $x ~~ Numeric:D;
     return False if $x ~~ Rational:D; # includes Int/Rat/FatRat
 
@@ -1837,26 +1642,12 @@ sub is-quadratic-irrational(
 # https://resources.wolframcloud.com/FunctionRepository/resources/PhiNumberSystem/
 # https://mathworld.wolfram.com/PhiNumberSystem.html
 
-# Using N[Sqrt[5], 100] in Wolfram Language
-constant $sqrt5 = 2.236067977499789696409173668731276235440618359611525724270897245410520925637804899414414408378782275.FatRat;
-
-# Fibonacci 401 and 400
-constant $fibonacci401 = 284812298108489611757988937681460995615380088782304890986477195645969271404032323901.FatRat;
-constant $fibonacci400 = 176023680645013966468226945392411250770384383304492191886725992896575345044216019675.FatRat;
-
-#| Golden ratio (phi)
-our constant \phi is export = $fibonacci401 / $fibonacci400;
-our constant \ϕ is export = $fibonacci401 / $fibonacci400;
-#our constant \ϕ is export = (1.FatRat + $sqrt5) / 2.FatRat;
-sub golden-ratio(Bool:D :pre(:$pre-computed) = True) is export {
-    return $pre-computed ?? phi !! (1 + sqrt(5)) / 2;
-}
-
 #| Phi number system.
 #| C<$n> -- An integer number to convert.
 #| C<:$tol> -- Tolerance to stop the conversion with.
 #| C<:$length> -- Max number of digits.
 sub phi-number-system(Int:D $n, Numeric:D :tolerance(:$tol) = 10e-16, :l(:len(:$length)) is copy = Whatever) is export {
+    my $sqrt5 = $Math::NumberTheory::Constants::sqrt5;
     if $length.isa(Whatever) { $length = 2 * ($sqrt5 * abs($n)).log(ϕ).floor + 1; }
     my ($digits, $exp) = real-digits($n.FatRat, ϕ, :$tol, :$length);
     return $exp <<->> ($digits.grep(*== 1, :k) >>+>> 1);

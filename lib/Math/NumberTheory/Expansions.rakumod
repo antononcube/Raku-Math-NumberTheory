@@ -1,6 +1,6 @@
 unit module Math::NumberTheory::Expansions;
 
-use Math::NumberTheory;
+use Math::NumberTheory::Fibonacci;
 
 =begin pod
 =head1 NAME

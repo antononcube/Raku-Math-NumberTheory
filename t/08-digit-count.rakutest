@@ -2,6 +2,7 @@ use Test;
 
 #use lib <. lib>;
 use Math::NumberTheory;
+use Math::NumberTheory::Fibonacci;
 
 plan *;
 

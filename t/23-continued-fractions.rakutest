@@ -3,6 +3,7 @@ use Test;
 
 #use lib <. lib>;
 use Math::NumberTheory;
+use Math::NumberTheory::ContinuedFraction;
 
 plan *;
 
