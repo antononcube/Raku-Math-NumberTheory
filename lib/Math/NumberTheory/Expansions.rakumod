@@ -27,7 +27,7 @@ Math::NumberTheory::Expansions
 # -------------------------
 
 #| Expresses a number as an expansion using any of several methods.
-proto sub number-expansion($x, | --> List) is export {*}
+our proto sub number-expansion($x, | --> List) is export {*}
 
 multi sub number-expansion($x, Str:D $type, $n = Whatever --> List) {
     return do given $n {
@@ -49,7 +49,7 @@ multi sub number-expansion($x, Str:D :t(:$type), :n(:$number-of-terms) = Whateve
 }
 
 #| Gives a rational approximation of a real number using different kinds of commonly known series expansions.
-proto sub from-number-expansion(@terms, |) is export {*}
+our proto sub from-number-expansion(@terms, |) is export {*}
 
 multi sub from-number-expansion(@terms, Str:D $type) {
     return from-number-expansion(@terms, :$type);

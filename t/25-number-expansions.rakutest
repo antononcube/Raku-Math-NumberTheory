@@ -2,7 +2,7 @@
 use v6.d;
 
 use Test;
-use Math::NumberTheory::Expansions;
+use Math::NumberTheory;
 
 plan 8;
 
