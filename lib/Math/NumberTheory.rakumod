@@ -36,15 +36,17 @@ our constant \ϕ is export = $Math::NumberTheory::Constants::phi;
 #| Gives a list of the base $b digits of the integer $n.
 proto sub integer-digits(
         $n,                           #| An integer or list of integers to find the digits of.
-        Int:D $base where 2..36 = 10, #| Base of the digits.
+        |                             #| Base of the digits spec -- positional or :base.
                    ) is export {*}
-
-multi sub integer-digits(Int:D $n, Int:D $base = 10) {
+multi sub integer-digits(Int:D $n, Int:D $base where 2..36 = 10) {
     return $n.base($base).comb.map({ $_.Str.parse-base($base) }).List;
 }
-
 multi sub integer-digits(@n, Int:D $base = 10) {
     return @n.map({ integer-digits($_, $base) }).List;
+}
+
+multi sub integer-digits($n, Int:D :$base = 10) {
+    return integer-digits($n, $base);
 }
 
 #==========================================================
