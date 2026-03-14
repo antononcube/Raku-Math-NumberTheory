@@ -35,8 +35,8 @@ multi sub from-generalized-continued-fraction(@a, @b, :$n is copy = Whatever) {
     note "{$n - @b.elems} tailing elements of the second positional argument are ignored."
     if !@b.is-lazy && @b.elems < $n;
 
-    die 'The arguments are expected to be sequences of integers'
-    unless @a.all ~~ Int:D && @b.all ~~ Int:D;
+    die 'The arguments are expected to be sequences of rationals.'
+    unless @a.all ~~ (Int:D | Rational:D) && @b.all ~~ (Int:D | Rational:D);
 
     my $x = @a[$n - 1];
     $x = @a[$_ - 1] + @b[$_] / $x for reverse 1 ..^ $n;
@@ -61,8 +61,8 @@ multi sub from-generalized-continued-fraction(@a, @b, :$n is copy = Whatever) {
 our proto sub from-continued-fraction(@a, |) is export {*}
 
 multi sub from-continued-fraction(@a) {
-    die 'The first argument is expected to be sequences of integers.'
-    unless @a.all ~~ Int:D;
+    die 'The first argument is expected to be sequences of integers (Int, Rat, or FatRat objects.)'
+    unless @a.all ~~ (Int:D | Rational:D);
     return from-generalized-continued-fraction(@a, (1 xx (@a.elems - 1)));
 }
 
