@@ -1487,7 +1487,7 @@ sub powers-representations(
     }
 
     my @res = search($n, $k, 0);
-    return @res.map({ $_.head($k) }).List;
+    return @res.map({ $_.head($k) })».List.List;
 }
 
 #==========================================================
