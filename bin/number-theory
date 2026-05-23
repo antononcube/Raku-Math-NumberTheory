@@ -13,7 +13,8 @@ my constant @exports = <
   chinese-remainder primitive-root-list multiplicative-order prime next-prime kronecker-delta
   is-composite is-prime-power mangold-lambda are-coprime is-abundant-number is-deficient-number
   is-perfect-number abundant-number deficient-number perfect-number related-primes twin-primes
-  cousin-primes sexy-primes is-happy-number is-harshad-number polygonal-number integer-partitions
+  cousin-primes sexy-primes is-happy-number is-harshad-number polygonal-number
+  integer-partitions power-representations
   continued-fraction from-continued-fraction convergents is-quadratic-irrational
   quotient quotient-reminder
   number-expansion from-number-expansion
