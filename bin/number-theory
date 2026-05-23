@@ -146,11 +146,11 @@ sub MAIN(*@ARGS, *%OPTS) {
 
     # Pretty output: print lists/seqs line by line; everything else via .say
     given $result {
-        when Iterable & !.isa(Str) {
-            .list».say;
+        when $_ ~~ Iterable:D && $_ !~~ Str:D  {
+            .say for |$_.Array;
         }
         default {
-            .say;
+            say $_;
         }
     }
 }
