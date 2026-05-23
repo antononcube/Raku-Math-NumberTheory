@@ -1441,7 +1441,7 @@ sub powers-representations(
     die "k must be non-negative" if $k < 0;
     die "p must be positive"     if $p <= 0;
 
-    my Int $max-base = $n == 0 ?? 0 !! $n ** (1 / $p) .floor;
+    my Int $max-base = $n == 0 ?? 0 !! floor($n ** (1 / $p));
 
     # Avoid repeated exponentiation.
     my @powers = (0 .. $max-base).map({ $_ ** $p });
