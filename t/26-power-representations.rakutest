@@ -1,0 +1,25 @@
+#!/usr/bin/env raku
+use v6.d;
+
+use Test;
+use Math::NumberTheory;
+
+plan 5;
+
+## 1
+is powers-representations(50, 2, 2), ((1, 7), (5, 5)), '50 representation';
+
+
+## 2
+is powers-representations(101, 2, 2), ((1, 10)), '101 representation';
+
+## 3
+is powers-representations(102, 3, 2), ((1, 1, 10), (2, 7, 7)), '102 representation';
+
+## 4
+is powers-representations(1729, 2, 3), ((1, 12), (9, 10)), 'taxicab number 1979';
+
+## 5
+is powers-representations(87539319, 2, 3), ((167, 436), (228, 423), (255, 414)), 'taxicab number 87539319';
+
+done-testing;

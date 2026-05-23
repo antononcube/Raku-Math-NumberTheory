@@ -1428,6 +1428,69 @@ multi sub integer-partitions(Int:D $n, UInt:D :$k-min = 1, Numeric:D :$k-max = I
 }
 
 #==========================================================
+# Power representation
+#==========================================================
+
+#| Give the distinct representations of the integer $n as a sum of $k non-negative $p^th integer powers.
+sub powers-representations(
+        Int:D $n, #= Integer to represent with a sum of powers.
+        Int:D $k, #= Number of terms in the representation.
+        Int:D $p, #= Power for each term.
+                           ) is export {
+    die "n must be non-negative" if $n < 0;
+    die "k must be non-negative" if $k < 0;
+    die "p must be positive"     if $p <= 0;
+
+    my Int $max-base = $n == 0 ?? 0 !! $n ** (1 / $p) .floor;
+
+    # Avoid repeated exponentiation.
+    my @powers = (0 .. $max-base).map({ $_ ** $p });
+
+    my %memo;
+
+    sub search(Int $remaining, Int $slots, Int $min-base) {
+        #say (:$remaining, :$slots, :$min-base);
+
+        my $key = "$remaining|$slots|$min-base";
+        return %memo{$key} if %memo{$key}:exists;
+
+        if $slots == 0 {
+            %memo{$key} = $remaining == 0 ?? [ [], ] !! [];
+            return %memo{$key}
+        }
+
+        if $min-base > $max-base {
+            %memo{$key} = [];
+            return []
+        }
+
+        if $slots * @powers[$min-base] > $remaining {
+            %memo{$key} = [];
+            return []
+        }
+
+        my @out;
+
+        for $min-base .. $max-base -> $a {
+            my $q = @powers[$a];
+            last if $q > $remaining;
+
+            my @tails = search($remaining - $q, $slots - 1, $a);
+            for @tails -> @tail {
+                @out = @out.push([ $a, |@tail ]);
+            }
+        }
+
+        @out = @out.grep(*.elems > $slots);
+        %memo{$key} = @out;
+        return @out;
+    }
+
+    my @res = search($n, $k, 0);
+    return @res.map({ $_.head($k) }).List;
+}
+
+#==========================================================
 # Random prime
 #==========================================================
 # http://reference.wolfram.com/language/ref/RandomPrime.html
