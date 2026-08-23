@@ -19,6 +19,7 @@ my constant @exports = <
   quotient quotient-reminder
   number-expansion from-number-expansion
   random-prime real-digits phi-number-system
+  frobenius-number frobenius-solve
 >.sort;
 
 sub USAGE() {
