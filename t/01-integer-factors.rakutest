@@ -92,4 +92,12 @@ subtest {
     is are-coprime([3, 5, 3]), False, '3, 5, 3 are not coprime';
 }, 'coprimes';
 
+## 12
+subtest {
+    is-deeply extended-gcd(2, 3), (1, (-1, 1)), '2, 3';
+    is-deeply extended-gcd(6, 15, 30), (3, (-2, 1, 0)), '6, 15, 30';
+    is-deeply extended-gcd([6, 15, 30]), (3, (-2, 1, 0)), '[6, 15, 30]';
+    dies-ok {extended-gcd(6, 15.322, 30.3)}, 'fail with non-integer arguments'
+}, 'extended-gcd';
+
 done-testing;

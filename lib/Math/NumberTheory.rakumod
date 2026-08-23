@@ -218,6 +218,58 @@ sub quotient-reminder(Numeric:D $m, Numeric:D $n) is export {
 }
 
 #==========================================================
+# Extended gcd
+#==========================================================
+
+#| Gives the extended greatest common divisor of the integers n[i].
+sub extended-gcd(*@n) is export {
+    die 'The arguments are expected to be integers.'
+    unless @n.all ~~ Int:D;
+
+    die 'At least one integer is expected.' unless @n;
+
+    # Keep coefficients for the gcd accumulated so far.  Extending the
+    # two-argument Euclidean algorithm this way avoids recomputing a gcd
+    # for every prefix of @n.
+    my Int $g = @n[0].abs;
+    my Int $first-coefficient = @n[0] < 0 ?? -1 !! (@n[0] > 0 ?? 1 !! 0);
+    my @coefficients = $first-coefficient;
+
+    for @n.skip(1) -> Int $next {
+        # Find s and t such that s * $g + t * $next is their gcd.
+        my Int $old-remainder = $g;
+        my Int $remainder = $next;
+        my Int $old-s = 1;
+        my Int $s = 0;
+        my Int $old-t = 0;
+        my Int $t = 1;
+
+        while $remainder != 0 {
+            my ($q, $new-remainder) = quotient-reminder(
+                $old-remainder, $remainder
+            );
+            ($old-remainder, $remainder) = ($remainder, $new-remainder);
+            ($old-s, $s) = ($s, $old-s - $q * $s);
+            ($old-t, $t) = ($t, $old-t - $q * $t);
+        }
+
+        # gcd is conventionally non-negative.  The quotient operation also
+        # works with negative divisors, so normalize its resulting sign here.
+        if $old-remainder < 0 {
+            $old-remainder = -$old-remainder;
+            $old-s = -$old-s;
+            $old-t = -$old-t;
+        }
+
+        @coefficients = @coefficients.map({ $_ * $old-s }).List;
+        @coefficients.push($old-t);
+        $g = $old-remainder;
+    }
+
+    return ($g, @coefficients.List);
+}
+
+#==========================================================
 # PrimeQ
 #==========================================================
 # Extending is-prime to deal with Gaussian Integers.
