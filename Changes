@@ -1,5 +1,8 @@
 Changes of the Raku package "Math::NumberTheory".
 
+2026-08-23 0.1.3
+    - Implemented &frobenius-number and &frobenius-solve.
+
 2026-05-23 0.1.2
     - Implemented &powers-representations.
         - Which gives the distinct representations of the integer $n as a sum of $k non-negative $p^th integer powers.
