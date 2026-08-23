@@ -24,6 +24,8 @@ subtest {
     # Show that 43 cannot be represented as a sum of positive integer multiples of 6, 9 and 20:
     is frobenius-solve([6, 9, 20], 43), (), 'no represnatsion for 43';
 
+    # Same result
+    is-deeply frobenius-solve(coeff => @a, rhs => 123), frobenius-solve(@a, 123), 'using named arguments gives the same results';
 }, 'frobenius-solve';
 
 ## 2

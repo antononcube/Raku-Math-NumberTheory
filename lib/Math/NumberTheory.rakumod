@@ -1852,7 +1852,13 @@ sub frobenius-number(*@a) is export {
 #==========================================================
 
 #| Gives a list of all solutions of the Frobenius equation a[0] * x[0] + ... + a[n]*x[n] == b.
-sub frobenius-solve(@a, Int:D $b) is export {
+proto sub frobenius-solve(|) is export {*}
+
+multi sub frobenius-solve(:coeff(:@coefficients)!, Int:D :$rhs!) {
+    frobenius-solve(@coefficients, $rhs)
+}
+
+multi sub frobenius-solve(@a, Int:D $b) {
     die 'At least one generator is expected.' unless @a;
     die 'The generators are expected to be positive integers.'
     unless @a.all ~~ Int:D && @a.all > 0;
