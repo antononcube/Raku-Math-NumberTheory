@@ -1,7 +1,7 @@
 Changes of the Raku package "Math::NumberTheory".
 
 2026-08-23 0.1.3
-    - Implemented &frobenius-number and &frobenius-solve.
+    - Implemented &extended-gcd, &frobenius-number, and &frobenius-solve.
 
 2026-05-23 0.1.2
     - Implemented &powers-representations.
