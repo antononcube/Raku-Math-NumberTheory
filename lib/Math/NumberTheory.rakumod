@@ -1767,5 +1767,140 @@ sub phi-number-system(Int:D $n, Numeric:D :tolerance(:$tol) = 10e-16, :l(:len(:$
     my $sqrt5 = $Math::NumberTheory::Constants::sqrt5;
     if $length.isa(Whatever) { $length = 2 * ($sqrt5 * abs($n)).log(ϕ).floor + 1; }
     my ($digits, $exp) = real-digits($n.FatRat, ϕ, :$tol, :$length);
-    return $exp <<->> ($digits.grep(*== 1, :k) >>+>> 1);
+    return $exp <<->> ($digits.grep( * == 1, :k) >>+>> 1);
+}
+
+#==========================================================
+# Frobenius number
+#==========================================================
+
+#| Gives the Frobenius number of a[0], a[1], ...
+sub frobenius-number(*@a) is export {
+    die 'At least one generator is expected.' unless @a;
+    die 'The generators are expected to be positive integers.'
+    unless @a.all ~~ Int:D && @a.all > 0;
+
+    my @generators = @a.unique.sort;
+    return -1 if @generators[0] == 1;
+
+    my $gcd = @generators.reduce(&infix:<gcd>);
+    die 'The generators must have greatest common divisor 1.' unless $gcd == 1;
+
+    # The least representable number in each residue class modulo the
+    # smallest generator is its Apéry set.  Its largest member minus that
+    # generator is the Frobenius number.  Find the set with Dijkstra's
+    # algorithm, instead of testing every integer up to the answer.
+    my Int $modulus = @generators[0];
+    my @distance = Inf xx $modulus;
+    @distance[0] = 0;
+
+    # A binary min-heap of [distance, residue] entries.  Entries whose
+    # distance has subsequently improved are discarded when popped.
+    my @heap = ([0, 0],);
+    my Int $settled = 0;
+    my Int $maximum = 0;
+
+    while @heap {
+        my $entry = @heap[0];
+        my $last = @heap.pop;
+
+        if @heap {
+            @heap[0] = $last;
+            my Int $index = 0;
+            loop {
+                my Int $left = 2 * $index + 1;
+                last if $left >= @heap.elems;
+                my Int $right = $left + 1;
+                my Int $child = $right < @heap.elems
+                        && @heap[$right][0] < @heap[$left][0]
+                        ?? $right !! $left;
+                last if @heap[$index][0] <= @heap[$child][0];
+                (@heap[$index], @heap[$child]) = (@heap[$child], @heap[$index]);
+                $index = $child;
+            }
+        }
+
+        my ($distance, $residue) = @$entry;
+        next if $distance != @distance[$residue];
+        $settled++;
+        $maximum = $distance if $distance > $maximum;
+        last if $settled == $modulus;
+
+        for @generators.skip(1) -> $generator {
+            my Int $next-residue = ($residue + $generator) mod $modulus;
+            my Int $next-distance = $distance + $generator;
+            next unless $next-distance < @distance[$next-residue];
+
+            @distance[$next-residue] = $next-distance;
+            @heap.push([$next-distance, $next-residue]);
+
+            my Int $index = @heap.end;
+            while $index > 0 {
+                my Int $parent = ($index - 1) div 2;
+                last if @heap[$parent][0] <= @heap[$index][0];
+                (@heap[$parent], @heap[$index]) = (@heap[$index], @heap[$parent]);
+                $index = $parent;
+            }
+        }
+    }
+
+    return $maximum - $modulus;
+}
+
+#==========================================================
+# Frobenius solve
+#==========================================================
+
+#| Gives a list of all solutions of the Frobenius equation a[0] * x[0] + ... + a[n]*x[n] == b.
+sub frobenius-solve(@a, Int:D $b) is export {
+    die 'At least one generator is expected.' unless @a;
+    die 'The generators are expected to be positive integers.'
+    unless @a.all ~~ Int:D && @a.all > 0;
+    die 'The target is expected to be a non-negative integer.' if $b < 0;
+
+    # suffix-gcd[i] is gcd(a[i], ..., a[*-1]).  It lets us eliminate a
+    # branch as soon as its remaining target is not representable modulo the
+    # remaining coefficients.
+    my @suffix-gcd = 0 xx (@a.elems + 1);
+    for @a.end ... 0 -> $index {
+        @suffix-gcd[$index] = @suffix-gcd[$index + 1] == 0
+                ?? @a[$index]
+                !! (@a[$index] gcd @suffix-gcd[$index + 1]);
+    }
+
+    my @solutions;
+    my &search;
+    &search = sub (Int:D $index, Int:D $remainder, @prefix) {
+        if $index == @a.end {
+            if $remainder mod @a[$index] == 0 {
+                @solutions.push([|@prefix, $remainder div @a[$index]]);
+            }
+            return;
+        }
+
+        my Int $coefficient = @a[$index];
+        my Int $next-gcd = @suffix-gcd[$index + 1];
+        my Int $common-divisor = $coefficient gcd $next-gcd;
+        return if $remainder mod $common-divisor != 0;
+
+        # Solve coefficient * x == remainder (mod next-gcd).  Consecutive
+        # viable x values are separated by next-gcd / common-divisor, so we
+        # do not visit branches that the suffix gcd would immediately reject.
+        my Int $step = $next-gcd div $common-divisor;
+        my Int $first = 0;
+        if $step > 1 {
+            my ($gcd, $bezout) = extended-gcd($coefficient, $next-gcd);
+            my Int $inverse = $bezout[0];
+            $first = (($remainder div $common-divisor) * $inverse) mod $step;
+        }
+
+        my Int $limit = $remainder div $coefficient;
+        for $first, $first + $step ... $limit -> $count {
+            search($index + 1, $remainder - $coefficient * $count,
+                   [|@prefix, $count]);
+        }
+    };
+
+    search(0, $b, []);
+    return @solutions.Array;
 }

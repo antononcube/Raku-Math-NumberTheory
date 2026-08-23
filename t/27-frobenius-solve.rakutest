@@ -1,0 +1,39 @@
+#!/usr/bin/env raku
+use v6.d;
+
+use Test;
+use Math::NumberTheory;
+
+plan *;
+
+## 1
+subtest {
+    my @a = 12, 16, 20, 27;
+
+    is-deeply
+            frobenius-solve(@a, 123),
+            [
+                [0, 1, 4, 1], [0, 6, 0, 1], [1, 4, 1, 1], [2, 2, 2, 1],
+                [3, 0, 3, 1], [4, 3, 0, 1], [5, 1, 1, 1], [8, 0, 0, 1]
+            ],
+            '8 representations of 123 with 12, 16, 20, 27';
+
+    # Check
+    is frobenius-solve(@a, 123).map({ sum($_ <<*>> @a) }), 123 xx 8;
+
+    # Show that 43 cannot be represented as a sum of positive integer multiples of 6, 9 and 20:
+    is frobenius-solve([6, 9, 20], 43), (), 'no represnatsion for 43';
+
+}, 'frobenius-solve';
+
+## 2
+subtest {
+    is frobenius-number(12, 16, 20, 27), 89, 'number for 12, 16, 20, 27';
+
+    is-deeply
+            (1...16).rotor(2 => -1).map({ frobenius-number($_) }),
+            (-1, 1, 5, 11, 19, 29, 41, 55, 71, 89, 109, 131, 155, 181, 209),
+            'numbers for pairs';
+}, 'frobenius-number';
+
+done-testing;
