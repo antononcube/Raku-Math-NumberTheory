@@ -4,7 +4,7 @@ use v6.d;
 use Test;
 use Math::NumberTheory;
 
-plan 5;
+plan 10;
 
 ## 1
 is powers-representations(50, 2, 2), ((1, 7), (5, 5)), '50 representation';
@@ -21,5 +21,38 @@ is powers-representations(1729, 2, 3), ((1, 12), (9, 10)), 'taxicab number 1979'
 
 ## 5
 is powers-representations(87539319, 2, 3), ((167, 436), (228, 423), (255, 414)), 'taxicab number 87539319';
+
+subtest 'squares-r: two squares' => {
+    is squares-r(2, 0), 1, 'r_2(0)';
+    is squares-r(2, 1), 4, 'r_2(1)';
+    is squares-r(2, 25), 12, 'r_2(25)';
+    is squares-r(2, 3), 0, 'r_2(3)';
+}
+
+subtest 'squares-r: three squares' => {
+    is squares-r(3, 3), 8, 'small exceptional input';
+    is squares-r(3, 11), 24, 'Gauss formula, n = 3 (mod 8)';
+    is squares-r(3, 14), 48, 'Gauss formula, other squarefree n';
+    is squares-r(3, 16), 6, 'non-squarefree input';
+    is squares-r(3, 7), 0, 'Legendre obstruction';
+}
+
+subtest 'squares-r: four squares' => {
+    is squares-r(4, 1), 8, 'r_4(1)';
+    is squares-r(4, 12), 96, 'r_4(12)';
+    is squares-r(4, 25), 248, 'r_4(25)';
+}
+
+subtest 'squares-r: six squares' => {
+    is squares-r(6, 1), 12, 'r_6(1)';
+    is squares-r(6, 12), 2080, 'r_6(12)';
+    is squares-r(6, 25), 7812, 'r_6(25)';
+}
+
+subtest 'squares-r: eight squares' => {
+    is squares-r(8, 1), 16, 'r_8(1)';
+    is squares-r(8, 12), 31808, 'r_8(12)';
+    is squares-r(8, 25), 252016, 'r_8(25)';
+}
 
 done-testing;

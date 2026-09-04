@@ -1549,6 +1549,105 @@ sub powers-representations(
 }
 
 #==========================================================
+# Squares representation
+#==========================================================
+# See:
+# https://mathworld.wolfram.com/SumofSquaresFunction.html
+# https://en.wikipedia.org/wiki/Sum_of_squares_function
+
+#| Give the number of ways r_d(n) to represent the integer n as a sum of d squares.
+#| r_d(n) gives the number of ways to write n_1^2 + ... + n_d^2 = n, where the n_i can be positive, negative, or zero.
+#| C<:$d> -- Number of squares.
+#| C<:$n> -- Integer to represent with a sum of squares.
+sub squares-r(Int:D $d, Int:D $n) is export {
+    die 'The number of squares must be one of 2, 3, 4, 6, or 8.'
+    unless $d ∈ (2, 3, 4, 6, 8);
+    die 'The integer to represent must be non-negative.' if $n < 0;
+
+    # The origin is the only representation of zero in every dimension.
+    return 1 if $n == 0;
+
+    my @factorization = factor-integer($n);
+    @factorization .= grep({ .head > 1 }); # factor-integer(1) returns the sentinel (1, 1).
+
+    # Construct the divisors from the prime factorization.  This is much less
+    # expensive than testing every integer up to n, as divisors() does.
+    my @divisors = 1,;
+    for @factorization -> @factor {
+        my ($prime, $exponent) = @factor;
+        @divisors = @divisors.map(-> $divisor {
+            (0 .. $exponent).map({ $divisor * $prime ** $_ })
+        }).flat.List;
+    }
+
+    given $d {
+        when 2 {
+            # Jacobi's two-square theorem, in its factorized form.
+            return 0 if @factorization.first(-> @factor {
+                @factor.head % 4 == 3 && @factor.tail % 2 == 1
+            }).defined;
+
+            return 4 * [*] @factorization.map(-> @factor {
+                @factor.head % 4 == 1 ?? @factor.tail + 1 !! 1
+            });
+        }
+        when 3 {
+            # Gauss's formula on the squarefree n > 4 covered by the cited
+            # theorem.  h(D) is computed by counting reduced primitive positive
+            # definite binary quadratic forms of discriminant D.
+            if $n > 4 && @factorization.map(*.tail).all == 1 {
+                return 0 if $n % 8 == 7;
+
+                my $discriminant = $n % 8 == 3 ?? -$n !! -4 * $n;
+                my $class-number = 0;
+                my $limit = floor sqrt(abs($discriminant) / 3);
+
+                for 1 .. $limit -> $a {
+                    for -$a .. $a -> $b {
+                        next unless ($b * $b - $discriminant) %% (4 * $a);
+                        my $c = ($b * $b - $discriminant) div (4 * $a);
+                        next if $a > $c;
+                        next unless ($a gcd $b.abs gcd $c) == 1;
+                        next if ($b.abs == $a || $a == $c) && $b < 0;
+                        $class-number++;
+                    }
+                }
+
+                return ($n % 8 == 3 ?? 24 !! 12) * $class-number;
+            }
+
+            # For non-squarefree n (and the small exceptional values), sum over
+            # the possible final square.  This retains the stated sign and order
+            # conventions and delegates each term to the factorized r_2 formula.
+            my $limit = floor sqrt($n);
+            return squares-r(2, $n)
+                    + 2 * [+] (1 .. $limit).map({ squares-r(2, $n - $_ ** 2) });
+        }
+        when 4 {
+            return 8 * [+] @divisors.grep(* % 4 != 0);
+        }
+        when 6 {
+            sub chi-minus-four(Int:D $value --> Int:D) {
+                return 0 if $value %% 2;
+                $value % 4 == 1 ?? 1 !! -1;
+            }
+
+            return 4 * [+] @divisors.map(-> $divisor {
+                $divisor ** 2 * (
+                    4 * chi-minus-four($n div $divisor)
+                    - chi-minus-four($divisor)
+                )
+            });
+        }
+        when 8 {
+            return 16 * [+] @divisors.map(-> $divisor {
+                (-1) ** ($n + $divisor) * $divisor ** 3
+            });
+        }
+    }
+}
+
+#==========================================================
 # Random prime
 #==========================================================
 # http://reference.wolfram.com/language/ref/RandomPrime.html
