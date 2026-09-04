@@ -7,9 +7,9 @@ use Math::NumberTheory :ALL;
 
 # The exported subs provided by Math::NumberTheory (as given by the user)
 my constant @exports = <
-  integer-digits gcd-gaussian gcd-rational infix:<=> lcm-gaussian lcm-rational
+  integer-digits gcd-gaussian gcd-rational lcm-gaussian lcm-rational
   is-prime-gaussian is-prime factorial fibonacci digit-count factor-integer trial-factor-integer
-  factor-gaussian-integer divisors divisor-sigma euler-phi integer-exponent power-mod modular-inverse
+  divisors divisor-sigma euler-phi integer-exponent power-mod modular-inverse
   chinese-remainder primitive-root-list multiplicative-order prime next-prime kronecker-delta
   is-composite is-prime-power mangold-lambda are-coprime is-abundant-number is-deficient-number
   is-perfect-number abundant-number deficient-number perfect-number related-primes twin-primes
