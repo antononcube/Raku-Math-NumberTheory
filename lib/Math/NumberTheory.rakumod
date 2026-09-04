@@ -319,9 +319,12 @@ multi sub is-prime(@p, *%args --> List) {
 # This has to be refactored -- in "Math::SpecialFunctions" has also &factorial.
 # &factorial should work on reals:
 # factorial($n) = gamma(1+$n)
+
 #| Give the factorial of the argument.
 #| C<:$n> -- Integer.
-multi sub factorial(Int:D $n) is export {
+proto sub factorial($n) is export {*}
+
+multi sub factorial(Int:D $n) {
     ([*] 1 .. $n) or 1
 }
 
@@ -423,7 +426,7 @@ sub factors-of(UInt:D $n is copy, UInt:D $p = 2) {
 }
 
 #----------------------------------------------------------
-sub trial-factor-integer(Int $n is copy, $k = Inf) is export {
+sub trial-factor-integer(Int $n is copy, $k = Inf) {
 
     return ((1, 1),) if $n == 1;
 
@@ -1319,7 +1322,10 @@ sub perfect-number(Int:D $n --> Int:D) is export {
 # Twin, cousin, and sexy primes
 #==========================================================
 
-sub related-primes(UInt:D $n, UInt:D :$step = 2) is export {
+#| Get the first n-pairs of primes that differ by given step.
+#| C<$n> -- Number of first pairs.
+#| C<:diff(:difference(:$step))> -- Difference between each pair.
+sub related-primes(UInt:D $n, UInt:D :diff(:difference(:$step)) = 2) is export {
     # This is slow, but it would be nice if it is made to run faster.
     #my @ps = (1..(2 * $n * log($n)).floor)».&prime;
 
