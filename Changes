@@ -1,5 +1,10 @@
 Changes of the Raku package "Math::NumberTheory".
 
+2026-09-04 0.1.4
+    - First version of &squares-r for 2, 3, 4, 6, and 8.
+    - Added functions descriptions.
+    - Fix: Removed unexported symbol assumed in exported in the CLI script.
+
 2026-08-23 0.1.3
     - Implemented &extended-gcd, &frobenius-number, and &frobenius-solve.
 
