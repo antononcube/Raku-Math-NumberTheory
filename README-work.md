@@ -235,7 +235,8 @@ number-theory random-prime 400..440 6
     - [X] DONE Perfect number
     - [X] DONE Happy number
     - [X] DONE Harshad number
-  - [ ] TODO Sum of squares representation
+  - [X] DONE Sum of squares representation
+    - Only for 2, 3, 4, 6, and 8.
   - [ ] TODO Figure out which memoization approach to use:
     - [ ] Via the package ["Memoize"](https://raku.land/zef:lizmat/Memoize)
     - [ ] Via `use experimental :cached` and `sub blah(...) is cached {...}` 

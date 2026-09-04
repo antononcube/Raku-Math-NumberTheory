@@ -275,7 +275,7 @@ number-theory --help
 #   number-theory divisor-sigma WHY           # prints &divisor-sigma.WHY
 # 
 # Known functions (from Math::NumberTheory):
-#   abundant-number, are-coprime, chinese-remainder, cousin-primes, deficient-number, digit-count, divisor-sigma, divisors, euler-phi, factor-gaussian-integer, factor-integer, factorial, fibonacci, gcd-gaussian, gcd-rational, infix:<=>, integer-digits, integer-exponent, integer-partitions, is-abundant-number, is-composite, is-deficient-number, is-happy-number, is-harshad-number, is-perfect-number, is-prime, is-prime-gaussian, is-prime-power, kronecker-delta, lcm-gaussian, lcm-rational, mangold-lambda, modular-inverse, multiplicative-order, next-prime, perfect-number, phi-number-system, polygonal-number, power-mod, prime, primitive-root-list, random-prime, real-digits, related-primes, sexy-primes, trial-factor-integer, twin-primes
+#   abundant-number, are-coprime, chinese-remainder, continued-fraction, convergents, cousin-primes, deficient-number, digit-count, divisor-sigma, divisors, euler-phi, extended-gcd, factor-integer, factorial, fibonacci, frobenius-number, frobenius-solve, from-continued-fraction, from-number-expansion, gcd-gaussian, gcd-rational, integer-digits, integer-exponent, integer-partitions, is-abundant-number, is-composite, is-deficient-number, is-happy-number, is-harshad-number, is-perfect-number, is-prime, is-prime-gaussian, is-prime-power, is-quadratic-irrational, kronecker-delta, lcm-gaussian, lcm-rational, mangold-lambda, modular-inverse, multiplicative-order, next-prime, number-expansion, perfect-number, phi-number-system, polygonal-number, power-mod, powers-representations, prime, primitive-root-list, quotient, quotient-reminder, random-prime, real-digits, related-primes, sexy-primes, squares-r, trial-factor-integer, twin-primes
 # 
 # True
 ```
@@ -296,10 +296,10 @@ number-theory random-prime 400..440 6
 ```
 ```
 # 409
-# 401
-# 401
-# 439
-# 439
+# 431
+# 419
+# 419
+# 409
 # 431
 ```
 
@@ -328,7 +328,8 @@ number-theory random-prime 400..440 6
     - [X] DONE Perfect number
     - [X] DONE Happy number
     - [X] DONE Harshad number
-  - [ ] TODO Sum of squares representation
+  - [X] DONE Sum of squares representation
+    - Only for 2, 3, 4, 6, and 8.
   - [ ] TODO Figure out which memoization approach to use:
     - [ ] Via the package ["Memoize"](https://raku.land/zef:lizmat/Memoize)
     - [ ] Via `use experimental :cached` and `sub blah(...) is cached {...}` 
