@@ -275,9 +275,7 @@ number-theory --help
 #   number-theory divisor-sigma WHY           # prints &divisor-sigma.WHY
 # 
 # Known functions (from Math::NumberTheory):
-#   abundant-number, are-coprime, chinese-remainder, continued-fraction, convergents, cousin-primes, deficient-number, digit-count, divisor-sigma, divisors, euler-phi, extended-gcd, factor-integer, factorial, fibonacci, frobenius-number, frobenius-solve, from-continued-fraction, from-number-expansion, gcd-gaussian, gcd-rational, integer-digits, integer-exponent, integer-partitions, is-abundant-number, is-composite, is-deficient-number, is-happy-number, is-harshad-number, is-perfect-number, is-prime, is-prime-gaussian, is-prime-power, is-quadratic-irrational, kronecker-delta, lcm-gaussian, lcm-rational, mangold-lambda, modular-inverse, multiplicative-order, next-prime, number-expansion, perfect-number, phi-number-system, polygonal-number, power-mod, powers-representations, prime, primitive-root-list, quotient, quotient-reminder, random-prime, real-digits, related-primes, sexy-primes, squares-r, trial-factor-integer, twin-primes
-# 
-# True
+#   abundant-number, are-coprime, carmichael-lambda, chinese-remainder, continued-fraction, convergents, cousin-primes, deficient-number, digit-count, divisor-sigma, divisors, euler-phi, extended-gcd, factor-integer, factorial, fibonacci, frobenius-number, frobenius-solve, from-continued-fraction, from-generalized-continued-fraction, from-number-expansion, gcd-gaussian, gcd-rational, integer-digits, integer-exponent, integer-partitions, is-abundant-number, is-composite, is-deficient-number, is-happy-number, is-harshad-number, is-perfect-number, is-prime, is-prime-gaussian, is-prime-power, is-quadratic-irrational, is-square-free, kronecker-delta, lcm-gaussian, lcm-rational, liouville-lambda, lucas-l, mangold-lambda, modular-inverse, multiplicative-order, next-prime, number-expansion, perfect-number, phi-number-system, polygonal-number, power-mod, powers-representations, prime, prime-nu, prime-omega, prime-pi, primitive-root-list, quotient, quotient-reminder, random-prime, real-digits, related-primes, sexy-primes, squares-r, trial-factor-integer, twin-primes
 ```
 
 The script takes proper sub names as a first argument or their "conversational" form. For example, these two commands invoke the same sub:
@@ -295,12 +293,12 @@ Using ranges:
 number-theory random-prime 400..440 6
 ```
 ```
-# 421
+# 419
+# 431
 # 409
-# 421
-# 401
-# 421
 # 439
+# 421
+# 433
 ```
 
 -------
