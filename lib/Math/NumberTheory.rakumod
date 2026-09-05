@@ -1142,7 +1142,7 @@ multi sub is-square-free(Complex:D $n, Bool:D :gaussian(:$gaussian-integers) = F
 #==========================================================
 # http://reference.wolfram.com/language/ref/LiouvilleLambda.html
 
-# Gives the Liouville lambda function λ(n).
+#| Gives the Liouville lambda function λ(n).
 proto sub liouville-lambda($n, Bool:D :gaussian(:$gaussian-integers) = False) is export {*}
 
 multi sub liouville-lambda(@n, Bool:D :gaussian(:$gaussian-integers) = False) {
