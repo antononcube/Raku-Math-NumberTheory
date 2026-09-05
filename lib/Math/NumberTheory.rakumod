@@ -1193,6 +1193,8 @@ multi sub carmichael-lambda(Int:D $n is copy) {
 #==========================================================
 # Kronecker delta
 #==========================================================
+# http://reference.wolfram.com/language/ref/KroneckerDelta.html
+
 #| Gives the Kronecker delta value, which is equal to 1 if all the arguments are equal, and 0 otherwise.
 proto sub kronecker-delta(**@n) is export {*}
 
@@ -1217,11 +1219,13 @@ proto sub is-composite($n) is export {*}
 multi sub is-composite(Complex:D $n) { !is-prime-gaussian($n) }
 multi sub is-composite(Int:D $n) { !is-prime($n) }
 
+# http://reference.wolfram.com/language/ref/PrimePowerQ.html
 #| Gives true the number is a power of a prime.
 sub is-prime-power(Int:D $n) is export {
     factor-integer($n).elems == 1;
 }
 
+# http://reference.wolfram.com/language/ref/MangoldtLambda.html
 #| Give Mangold lambda for an integer
 sub mangold-lambda(Int:D $n) is export {
     my @res = factor-integer($n);
