@@ -1066,6 +1066,7 @@ sub legendre-formula(Numeric:D $x) {
 #==========================================================
 #| Give the number of prime factors counting multiplicities Ω(n) in the argument.
 proto sub prime-omega($x) is export {*}
+
 multi sub prime-omega(@x) {
     return @x.map({ prime-omega($_) }).List;
 }
@@ -1081,10 +1082,12 @@ multi sub prime-omega(Complex:D $x) {
 # Prime nu
 #==========================================================
 #| Give the number of distinct primes in the argument.
-multi sub prime-nu($x) is export {*}
+proto sub prime-nu($x) is export {*}
+
 multi sub prime-nu(@x) {
     return @x.map({ prime-nu($_) }).List;
 }
+
 multi sub prime-nu(Int:D $x) {
     return $x == 1 ?? 0 !! factor-integer($x).elems;
 }
