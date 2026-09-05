@@ -1,5 +1,8 @@
 Changes of the Raku package "Math::NumberTheory".
 
+2026-09-05 0.1.5
+    - Fix:Added missing subs in the CLI script number-theory.
+
 2026-09-04 0.1.4
     - First version of &squares-r for 2, 3, 4, 6, and 8.
     - Added functions descriptions.
